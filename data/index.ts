@@ -1,8 +1,8 @@
-import { IoLogoJavascript } from "react-icons/io";
-import { FaFigma, FaReact, FaDocker, FaGit } from "react-icons/fa";
-import { RiSupabaseLine } from "react-icons/ri";
-import { DiPhotoshop } from "react-icons/di";
-import { TbBrandTypescript, TbBrandNextjs } from "react-icons/tb";
+import { IoLogoJavascript } from 'react-icons/io';
+import { FaFigma, FaReact, FaDocker, FaGit } from 'react-icons/fa';
+import { RiSupabaseLine } from 'react-icons/ri';
+import { DiPhotoshop } from 'react-icons/di';
+import { TbBrandTypescript, TbBrandNextjs } from 'react-icons/tb';
 
 export const menuData = [
   {
@@ -97,7 +97,6 @@ export const comments = [
   }
 ];
 
-
 export const skills = [
   {
     name: 'Javascript',
@@ -134,5 +133,5 @@ export const skills = [
   {
     name: 'FaGit',
     icon: FaDocker
-  },
-]
+  }
+];

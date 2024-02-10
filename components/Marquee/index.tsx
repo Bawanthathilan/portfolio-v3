@@ -16,6 +16,7 @@ const CustomMarquee = ({ children, direction = 'right' }: MarqueeProps) => {
       <div className="absolute left-0 w-10 h-[100%] bg-gradient-to-r  dark:from-[#121212] z-10" />
       <div className="absolute right-0 w-10 h-[100%] bg-gradient-to-l  dark:from-[#121212] z-10" />
       <Marqueee
+        autoFill
         direction={direction}
         gradient={currentTheme === 'dark' ? false : true}
         gradientWidth={100}

@@ -289,7 +289,7 @@ const Hero = (props: any): any => {
           <div>
             <CustomMarquee direction="right">
               <div className="flex gap-5">
-                {skills.slice(0, 5).map((skill) => (
+                {skills.slice(0, 4).map((skill) => (
                   <div className="p-3 rounded-md border border-opacity-20 border-green-500 ">
                     <skill.icon className="w-10 h-10" />
                   </div>
@@ -298,7 +298,7 @@ const Hero = (props: any): any => {
             </CustomMarquee>
             <CustomMarquee direction="left">
               <div className="flex gap-5">
-                {skills.slice(5, 9).map((skill) => (
+                {skills.slice(4, 9).map((skill) => (
                   <div className="p-3 rounded-md border border-opacity-20 border-green-500 ">
                     <skill.icon className="w-10 h-10" />
                   </div>

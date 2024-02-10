@@ -1,7 +1,9 @@
 import React from 'react';
 import { VscGithubAlt } from 'react-icons/vsc';
 import { AiOutlineComment } from 'react-icons/ai';
-import Marquee from '@/components/Marquee';
+import CustomMarquee from '@/components/Marquee';
+import { comments } from '@/data';
+import TwitterCard from '@/components/twitterCard';
 
 const Comments = () => {
   return (
@@ -18,7 +20,18 @@ const Comments = () => {
       </div>
 
       <div className="comments mt-10">
-        <Marquee />
+        <CustomMarquee direction="left">
+          {comments.map((comment: any, index: any) => (
+            <div id={index} key={index} className="last-of-type:mr-5">
+              <TwitterCard
+                name={comment.name}
+                comment={comment.comment}
+                handle={comment.twitterHandle}
+                linkedin={comment.linkedin}
+              />
+            </div>
+          ))}
+        </CustomMarquee>
       </div>
     </section>
   );

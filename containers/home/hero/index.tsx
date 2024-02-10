@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import CustomMarquee from '@/components/Marquee';
 import Marquee from 'react-fast-marquee';
 import MyImg from '@/assets/images/my.png';
 import { BsSpotify } from 'react-icons/bs';
@@ -8,14 +9,7 @@ import { motion } from 'framer-motion';
 import { FiDownloadCloud } from 'react-icons/fi';
 import { Meteors } from '@/components/Meteors';
 import { Badge } from '@/components/Badge';
-import { FaReact } from 'react-icons/fa';
-import {
-  TbBrandNextjs,
-  TbBrandFigma,
-  TbBrandGithub,
-  TbBrandJavascript,
-  TbBrandDocker
-} from 'react-icons/tb';
+import { skills } from '@/data/index';
 import { IoLogoNodejs } from 'react-icons/io';
 import { IconContainer } from '@/components/Radar/iconContainer';
 import { Radar } from '@/components/Radar';
@@ -135,109 +129,121 @@ const Hero = (props: any): any => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              {' '}
-              <g clip-path="url(#clip0_231_793)">
-                {' '}
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M50 0H200V50V150L150 200L150 50H0L50 0ZM0 165.067V100L65.067 100L0 165.067ZM100 200H35.7777L100 135.778L100 200Z"
-                  fill="url(#paint0_linear_231_793)"
-                />{' '}
-              </g>{' '}
-              <defs>
-                {' '}
-                <linearGradient
-                  id="paint0_linear_231_793"
-                  x1="177"
-                  y1="-9.23648e-06"
-                  x2="39.5"
-                  y2="152.5"
-                  gradientUnits="userSpaceOnUse"
+              <g clip-path="url(#clip0_1034_10)">
+                <mask
+                  id="mask0_1034_10"
+                  maskUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="200"
+                  height="200"
                 >
-                  {' '}
-                  <stop stop-color="#B0B9FF" />{' '}
-                  <stop offset="1" stop-color="#E7E9FF" />{' '}
-                </linearGradient>{' '}
-                <clipPath id="clip0_231_793">
-                  {' '}
-                  <rect width="200" height="200" fill="white" />{' '}
-                </clipPath>{' '}
-              </defs>{' '}
-            </svg>
-            <svg
-              width="200"
-              height="200"
-              viewBox="0 0 200 200"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {' '}
-              <g clip-path="url(#clip0_238_1331)">
-                {' '}
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M146.371 34.5888C147.629 31.5563 148.272 28.3046 148.265 25.0218C148.267 20.0831 146.806 15.2545 144.066 11.1455C141.326 7.03648 137.431 3.83135 132.871 1.9347C128.311 0.038053 123.291 -0.465076 118.445 0.488832C113.6 1.44274 109.145 3.81092 105.644 7.29439L100.004 12.5471L94.4021 7.31163C89.7108 2.62604 83.3503 -0.00403591 76.7198 4.64873e-06C70.0894 0.00404521 63.7321 2.64187 59.0465 7.33318C54.3609 12.0245 51.7308 18.385 51.7348 25.0155C51.7389 31.6459 54.3767 38.0032 59.068 42.6888L97.5477 81.7374C97.8685 82.0631 98.2508 82.3217 98.6725 82.4983C99.0941 82.6748 99.5467 82.7658 100.004 82.7658C100.461 82.7658 100.914 82.6748 101.335 82.4983C101.757 82.3217 102.139 82.0631 102.46 81.7374L140.94 42.6888C143.268 40.3744 145.114 37.6213 146.371 34.5888ZM53.6286 165.411C52.3712 168.444 51.7276 171.695 51.7349 174.978C51.7327 179.917 53.1938 184.746 55.9336 188.855C58.6735 192.964 62.5693 196.169 67.1293 198.065C71.6892 199.962 76.7089 200.465 81.5546 199.511C86.4003 198.557 90.8547 196.189 94.3556 192.706L99.9961 187.453L105.598 192.688C110.289 197.374 116.65 200.004 123.28 200C129.911 199.996 136.268 197.358 140.954 192.667C145.639 187.976 148.269 181.615 148.265 174.985C148.261 168.354 145.623 161.997 140.932 157.311L102.452 118.263C102.132 117.937 101.749 117.678 101.327 117.502C100.906 117.325 100.453 117.234 99.9961 117.234C99.539 117.234 99.0864 117.325 98.6647 117.502C98.2431 117.678 97.8607 117.937 97.54 118.263L59.0603 157.311C56.7321 159.626 54.8859 162.379 53.6286 165.411ZM174.978 148.266C171.695 148.273 168.444 147.629 165.411 146.372C162.379 145.115 159.626 143.268 157.311 140.94L118.263 102.461C117.937 102.14 117.678 101.757 117.502 101.336C117.325 100.914 117.234 100.462 117.234 100.004C117.234 99.5473 117.325 99.0947 117.502 98.6731C117.678 98.2514 117.937 97.869 118.263 97.5483L157.311 59.0686C161.997 54.3773 168.354 51.7394 174.985 51.7354C181.615 51.7314 187.976 54.3614 192.667 59.047C197.358 63.7326 199.996 70.0899 200 76.7204C200.004 83.3509 197.374 89.7114 192.688 94.4027L187.453 100.004L192.706 105.645C196.189 109.146 198.557 113.6 199.511 118.446C200.465 123.292 199.962 128.311 198.065 132.871C196.169 137.431 192.964 141.327 188.855 144.067C184.746 146.807 179.917 148.268 174.978 148.266ZM34.5888 53.628C31.5563 52.3706 28.3046 51.727 25.0218 51.7343C20.0831 51.7321 15.2544 53.1932 11.1455 55.933C7.03647 58.6729 3.83134 62.5687 1.9347 67.1287C0.0380524 71.6887 -0.465076 76.7083 0.488831 81.554C1.44274 86.3997 3.81091 90.8542 7.29439 94.355L12.5471 99.9956L7.31163 105.597C2.62603 110.289 -0.00403599 116.649 4.64892e-06 123.28C0.00404529 129.91 2.64186 136.267 7.33317 140.953C12.0245 145.639 18.385 148.269 25.0155 148.265C31.6459 148.261 38.0032 145.623 42.6888 140.931L81.7373 102.452C82.063 102.131 82.3217 101.749 82.4982 101.327C82.6748 100.905 82.7657 100.453 82.7657 99.9955C82.7657 99.5384 82.6748 99.0858 82.4982 98.6642C82.3217 98.2425 82.063 97.8602 81.7373 97.5394L42.6888 59.0597C40.3744 56.7315 37.6213 54.8853 34.5888 53.628Z"
-                  fill="url(#paint0_linear_238_1331)"
-                />{' '}
-              </g>{' '}
+                  <path
+                    d="M1.5 1.5H198.5V198.5H1.5V1.5Z"
+                    fill="white"
+                    stroke="white"
+                    stroke-width="3"
+                  />
+                </mask>
+                <g mask="url(#mask0_1034_10)">
+                  <path
+                    d="M198.5 149.379L151.5 196.379V50V48.5H150H3.62132L50.6213 1.5H198.5V50V149.379ZM61.4457 101.5L1.5 161.446V101.5H61.4457ZM98.5 198.5H39.399L98.5 139.399V198.5Z"
+                    stroke="url(#paint0_linear_1034_10)"
+                    stroke-width="3"
+                  />
+                </g>
+              </g>
               <defs>
-                {' '}
                 <linearGradient
-                  id="paint0_linear_238_1331"
-                  x1="177"
-                  y1="-9.23648e-06"
-                  x2="39.5"
-                  y2="152.5"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  {' '}
-                  <stop stop-color="#B0B9FF" />{' '}
-                  <stop offset="1" stop-color="#E7E9FF" />{' '}
-                </linearGradient>{' '}
-                <clipPath id="clip0_238_1331">
-                  {' '}
-                  <rect width="200" height="200" fill="white" />{' '}
-                </clipPath>{' '}
-              </defs>{' '}
-            </svg>
-            <svg
-              width="200"
-              height="200"
-              viewBox="0 0 200 200"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {' '}
-              <g clip-path="url(#clip0_234_869)">
-                {' '}
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M50 0H0V100H50C22.3858 100 0 122.386 0 150V200H100V150C100 177.614 122.386 200 150 200H200V100H150C177.614 100 200 77.6142 200 50V0H100V50C100 22.3858 77.6142 0 50 0ZM100 100H50C77.6142 100 100 122.386 100 150V100ZM100 100V50C100 77.6142 122.386 100 150 100H100Z"
-                  fill="url(#paint0_linear_234_869)"
-                />{' '}
-              </g>{' '}
-              <defs>
-                {' '}
-                <linearGradient
-                  id="paint0_linear_234_869"
+                  id="paint0_linear_1034_10"
                   x1="100"
                   y1="0"
                   x2="100"
                   y2="200"
                   gradientUnits="userSpaceOnUse"
                 >
-                  {' '}
-                  <stop stop-color="#A7B5FF" />{' '}
-                  <stop offset="1" stop-color="#F3ACFF" />{' '}
-                </linearGradient>{' '}
-                <clipPath id="clip0_234_869">
-                  {' '}
-                  <rect width="200" height="200" fill="white" />{' '}
-                </clipPath>{' '}
-              </defs>{' '}
+                  <stop stop-color="#4B467F" />
+                  <stop offset="1" stop-color="#6558F9" />
+                </linearGradient>
+                <clipPath id="clip0_1034_10">
+                  <rect width="200" height="200" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+
+            <svg
+              width="200"
+              height="200"
+              viewBox="0 0 200 200"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1.52347 1.52347C27.0984 2.31261 47.6874 22.9015 48.4765 48.4765C22.9016 47.6874 2.31261 27.0985 1.52347 1.52347ZM101.523 101.523C127.098 102.313 147.687 122.902 148.477 148.477C122.902 147.687 102.313 127.098 101.523 101.523ZM101.523 198.477C102.313 172.902 122.902 152.313 148.477 151.523C147.687 177.098 127.098 197.687 101.523 198.477ZM198.477 198.477C172.902 197.687 152.313 177.098 151.523 151.523C177.098 152.313 197.687 172.902 198.477 198.477ZM198.477 101.523C197.687 127.098 177.098 147.687 151.523 148.477C152.313 122.902 172.902 102.313 198.477 101.523ZM51.5235 48.4765C52.3126 22.9015 72.9016 2.31261 98.4765 1.52347C97.6874 27.0985 77.0984 47.6874 51.5235 48.4765ZM148.477 48.4765C122.902 47.6874 102.313 27.0985 101.523 1.52347C127.098 2.31262 147.687 22.9015 148.477 48.4765ZM148.477 51.5235C147.687 77.0985 127.098 97.6874 101.523 98.4765C102.313 72.9015 122.902 52.3126 148.477 51.5235ZM51.5235 51.5235C77.0984 52.3126 97.6874 72.9015 98.4765 98.4765C72.9016 97.6874 52.3126 77.0985 51.5235 51.5235ZM1.52347 98.4765C2.31261 72.9015 22.9016 52.3126 48.4765 51.5235C47.6874 77.0985 27.0984 97.6874 1.52347 98.4765ZM48.4765 148.477C22.9016 147.687 2.31262 127.098 1.52347 101.523C27.0984 102.313 47.6874 122.902 48.4765 148.477ZM1.52347 198.477C2.31262 172.902 22.9016 152.313 48.4765 151.523C47.6874 177.098 27.0984 197.687 1.52347 198.477ZM98.4765 198.477C72.9016 197.687 52.3126 177.098 51.5235 151.523C77.0984 152.313 97.6874 172.902 98.4765 198.477ZM51.5235 148.477C52.3126 122.902 72.9016 102.313 98.4765 101.523C97.6874 127.098 77.0984 147.687 51.5235 148.477ZM151.523 48.4765C152.313 22.9015 172.902 2.31262 198.477 1.52347C197.687 27.0985 177.098 47.6874 151.523 48.4765ZM198.477 98.4765C172.902 97.6874 152.313 77.0985 151.523 51.5235C177.098 52.3126 197.687 72.9015 198.477 98.4765Z"
+                stroke="url(#paint0_linear_1035_56)"
+                stroke-width="3"
+              />
+              <defs>
+                <linearGradient
+                  id="paint0_linear_1035_56"
+                  x1="100"
+                  y1="0"
+                  x2="100"
+                  y2="200"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#4B467F" />
+                  <stop offset="1" stop-color="#6558F9" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <svg
+              width="200"
+              height="200"
+              viewBox="0 0 200 200"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g clip-path="url(#clip0_1035_68)">
+                <mask
+                  id="mask0_1035_68"
+                  maskUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="200"
+                  height="200"
+                >
+                  <path
+                    d="M0.5 0.5H199.5V199.5H0.5V0.5Z"
+                    fill="white"
+                    stroke="white"
+                  />
+                </mask>
+                <g mask="url(#mask0_1035_68)">
+                  <path
+                    d="M101.5 50V1.5H198.5V50C198.5 76.7858 176.786 98.5 150 98.5C123.214 98.5 101.5 76.7858 101.5 50ZM98.5 50V98.5H50H1.5V1.5H50C76.7858 1.5 98.5 23.2142 98.5 50ZM150 101.5H198.5V198.5H150C123.214 198.5 101.5 176.786 101.5 150V101.5H150ZM98.5 150V198.5H1.5V150C1.5 123.214 23.2142 101.5 50 101.5C76.7858 101.5 98.5 123.214 98.5 150Z"
+                    stroke="url(#paint0_linear_1035_68)"
+                    stroke-width="3"
+                  />
+                </g>
+              </g>
+              <defs>
+                <linearGradient
+                  id="paint0_linear_1035_68"
+                  x1="100"
+                  y1="0"
+                  x2="100"
+                  y2="200"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#4B467F" />
+                  <stop offset="1" stop-color="#6558F9" />
+                </linearGradient>
+                <clipPath id="clip0_1035_68">
+                  <rect width="200" height="200" fill="white" />
+                </clipPath>
+              </defs>
             </svg>
           </div>
 
@@ -276,82 +282,29 @@ const Hero = (props: any): any => {
           animate={{ opacity: 1, y: 0 }}
           className=" flex md:flex bg-secondary dark:bg-darkBg relative group cursor-pointer col-span-3  rounded-2xl p-0  flex-col row-span-1 mt-5 sm:mt-5 md:mt-0 lg:mt-0 h-[300px] md:h-[300px]  lg:h-auto"
         >
-          <div className="rounded-2xl absolute w-full h-full bg-transparent z-50 hidden group-hover:flex">
-            <div className="flex justify-center w-full h-full items-center z-50">
-              <h1 className="bg-secondary dark:bg-darkBg  py-2 rounded-md px-4">
-                Tools and Technologies I Used
-              </h1>
-            </div>
+          <div className="w-full flex items-start p-5">
+            <h1 className=" text-xl font-medium">Tools and Tech I daily use</h1>
           </div>
 
-          <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden px-4 z-10">
-            <div className="mx-auto w-full px-5">
-              <div className="flex w-full items-center justify-center space-x-10 md:justify-between md:space-x-0 ">
-                <IconContainer
-                  delay={0.4}
-                  text="NEXT JS"
-                  icon={
-                    <TbBrandNextjs className=" h-8 w-8 text-textSecondary " />
-                  }
-                />
-                <IconContainer
-                  delay={0.4}
-                  text="React JS"
-                  icon={<FaReact className=" h-8 w-8 text-textSecondary " />}
-                />
-                <IconContainer
-                  text="Figma"
-                  delay={0.3}
-                  icon={
-                    <TbBrandFigma className=" h-8 w-8 text-textSecondary" />
-                  }
-                />
+          <div>
+            <CustomMarquee direction="right">
+              <div className="flex gap-5">
+                {skills.slice(0, 5).map((skill) => (
+                  <div className="p-3 rounded-md border border-opacity-20 border-green-500 ">
+                    <skill.icon className="w-10 h-10" />
+                  </div>
+                ))}
               </div>
-            </div>
-            <div className="mx-auto w-full max-w-md">
-              <div className="flex w-full items-center justify-center space-x-10 md:justify-around md:space-x-0 ">
-                <IconContainer
-                  text="Git"
-                  delay={0.5}
-                  icon={<FaReact className=" h-8 w-8 text-textSecondary" />}
-                />
-                <IconContainer
-                  text="Java Script"
-                  icon={
-                    <TbBrandJavascript className=" h-8 w-8 text-textSecondary" />
-                  }
-                  delay={0.8}
-                />
+            </CustomMarquee>
+            <CustomMarquee direction="left">
+              <div className="flex gap-5">
+                {skills.slice(5, 9).map((skill) => (
+                  <div className="p-3 rounded-md border border-opacity-20 border-green-500 ">
+                    <skill.icon className="w-10 h-10" />
+                  </div>
+                ))}
               </div>
-            </div>
-            <div className="mx-auto w-full max-w-3xl">
-              <div className="flex w-full items-center justify-center space-x-10 md:justify-between md:space-x-0 ">
-                <IconContainer
-                  delay={0.6}
-                  text="GitHub"
-                  icon={
-                    <TbBrandGithub className=" h-8 w-8 text-textSecondary" />
-                  }
-                />
-                <IconContainer
-                  delay={0.7}
-                  text="Node JS"
-                  icon={
-                    <IoLogoNodejs className=" h-8 w-8 text-textSecondary " />
-                  }
-                />
-                <IconContainer
-                  delay={0.7}
-                  text="Docker"
-                  icon={
-                    <TbBrandDocker className=" h-8 w-8 text-textSecondary " />
-                  }
-                />
-              </div>
-            </div>
-
-            <Radar className="absolute -bottom-12" />
-            <div className="absolute bottom-0 z-[41] h-px w-full bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+            </CustomMarquee>
           </div>
         </motion.div>
       </div>

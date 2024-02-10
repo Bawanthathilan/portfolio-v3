@@ -49,7 +49,53 @@ const Hero = (props: any): any => {
         >
           <span className="absolute w-[40%] bottom-0 right-px h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
           <span className="absolute w-px left-0 h-[40%] bg-gradient-to-b from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
-          <div className="image relative h-[450px] w-full">
+          <div className="image relative h-[450px] w-full ">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ rotate: 180, scale: 1 }}
+              transition={{
+                type: 'spring',
+                stiffness: 260,
+                damping: 20
+              }}
+              className="absolute top-5 left-5 z-10"
+            >
+              <svg
+                width="100"
+                height="100"
+                viewBox="0 0 200 200"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {' '}
+                <g clip-path="url(#clip0_118_208)">
+                  {' '}
+                  <path
+                    d="M100 200C97.1048 105.262 94.738 102.91 0 100C94.738 97.1048 97.0903 94.738 100 0C102.895 94.738 105.262 97.0903 200 100C105.262 102.91 102.91 105.233 100 200Z"
+                    fill="url(#paint0_linear_118_208)"
+                  />{' '}
+                </g>{' '}
+                <defs>
+                  {' '}
+                  <linearGradient
+                    id="paint0_linear_118_208"
+                    x1="14"
+                    y1="26"
+                    x2="179"
+                    y2="179.5"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    {' '}
+                    <stop stop-color="#ffffff" />{' '}
+                    <stop offset="1" stop-color="#F9ECFF" />{' '}
+                  </linearGradient>{' '}
+                  <clipPath id="clip0_118_208">
+                    {' '}
+                    <rect width="200" height="200" fill="white" />{' '}
+                  </clipPath>{' '}
+                </defs>{' '}
+              </svg>
+            </motion.div>
             <Image
               src={MyImg}
               alt="my"
@@ -78,12 +124,7 @@ const Hero = (props: any): any => {
 
           <hr />
 
-          <div className="spotify flex gap-5 items-center flex-row flex-wrap">
-            {/* <div className="logo">
-            <BsSpotify className="text-[#1DB954] text-5xl" />
-          </div>
-          <h3 className="text-[#1DB954] font-bold text-2xl">Spotify</h3> */}
-          </div>
+          <div className="spotify flex gap-5 items-center flex-row flex-wrap"></div>
 
           {result?.isPlaying ? (
             <div className="flex items-start">
@@ -288,19 +329,19 @@ const Hero = (props: any): any => {
 
           <div>
             <CustomMarquee direction="right">
-              <div className="flex gap-5">
+              <div className="flex gap-5 last:ml-5">
                 {skills.slice(0, 4).map((skill) => (
-                  <div className="p-3 rounded-md border border-opacity-20 border-green-500 ">
-                    <skill.icon className="w-10 h-10" />
+                  <div className="p-3 rounded-md border border-opacity-20 border-blue-500/40">
+                    <skill.icon className="w-10 h-10 opacity-50" />
                   </div>
                 ))}
               </div>
             </CustomMarquee>
             <CustomMarquee direction="left">
-              <div className="flex gap-5">
+              <div className="flex gap-5 last:ml-5">
                 {skills.slice(4, 9).map((skill) => (
-                  <div className="p-3 rounded-md border border-opacity-20 border-green-500 ">
-                    <skill.icon className="w-10 h-10" />
+                  <div className="p-3 rounded-md border border-opacity-20 border-blue-500/40 ">
+                    <skill.icon className="w-10 h-10 opacity-50" />
                   </div>
                 ))}
               </div>

@@ -11,10 +11,18 @@ const Footer = () => {
         </h3>
         <div className=" flex flex-row gap-5 items-center ">
           <div className="social-links  gap-5 flex">
-            <Link href="https://twitter.com/ThilanBawantha" target="_blank">
+            <Link
+              aria-label="twitter"
+              href="https://twitter.com/ThilanBawantha"
+              target="_blank"
+            >
               <RiTwitterXFill className="text-textPrimary text-2xl" />
             </Link>
-            <Link href="https://github.com/Bawanthathilan" target="_blank">
+            <Link
+              aria-label="github"
+              href="https://github.com/Bawanthathilan"
+              target="_blank"
+            >
               <AiOutlineGithub className="text-textPrimary text-2xl" />
             </Link>
           </div>

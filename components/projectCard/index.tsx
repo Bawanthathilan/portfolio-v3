@@ -96,13 +96,13 @@ const ProjectCard = ({
         </div>
         <div className="icons flex gap-5">
           {link && (
-            <Link href={`${link}`}>
+            <Link href={`${link}`} aria-label="up">
               <BsArrowUpRightCircle className=" text-3xl  md:text-5xl text-textPrimary group-hover:text-primary dark:group-hover:text-white" />
             </Link>
           )}
 
           {github && (
-            <Link href={`${github}`}>
+            <Link aria-label="github" href={`${github}`}>
               <FaGithub className="text-3xl  md:text-5xl text-textPrimary group-hover:text-primary dark:group-hover:text-white" />
             </Link>
           )}
@@ -111,6 +111,7 @@ const ProjectCard = ({
 
       <div className="image relative h-[400px] transition-[all_400ms_cubic-bezier(0.03,0.98,0.52,0.99)_0s] will-change-transform">
         <Image
+          loading="lazy"
           src={image}
           alt={`${title}`}
           fill

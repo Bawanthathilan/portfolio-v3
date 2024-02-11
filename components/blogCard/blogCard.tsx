@@ -13,6 +13,7 @@ const BlogCard = ({ post }: Props) => {
       <div className="blog_content p-5 md:p-10 bg-gradient-to-bl from-transparent via-white to-white dark:via-darkBg dark:to-darkBg grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-5 gap-5">
         <div className="blog_image relative col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-2 h-[400px] sm:h-[400px] md:h-[400px] lg:h-auto">
           <Image
+            loading="lazy"
             src={post.coverImage?.url}
             alt="blog"
             fill

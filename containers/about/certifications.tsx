@@ -12,6 +12,7 @@ const Certifications = () => {
 
       <div className="card_container grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-5 mt-10">
         <Link
+          aria-label="credly - Certificate"
           href="https://www.credly.com/badges/09b8c330-9401-48f7-927a-683a5b49df5d/public_url"
           target="_blank"
           className="group"
@@ -19,6 +20,7 @@ const Certifications = () => {
           <div className="card bg-secondary p-10 rounded-xl flex justify-center relative dark:bg-darkBg">
             <div className="img relative w-[300px] h-[300px]">
               <Image
+                loading="lazy"
                 src={AZ900}
                 alt="az_900"
                 fill
@@ -28,6 +30,7 @@ const Certifications = () => {
           </div>
         </Link>
         <Link
+          aria-label="credly-badges"
           href="https://www.credly.com/badges/98030dab-8152-4ef9-93a4-ee6f7297530e/public_url"
           target="_blank"
           className=" group"
@@ -35,6 +38,7 @@ const Certifications = () => {
           <div className="card bg-secondary p-10 rounded-xl flex justify-center  dark:bg-darkBg">
             <div className="img relative w-[300px] h-[300px]">
               <Image
+                loading="lazy"
                 src={CNCF}
                 alt="az_900"
                 fill

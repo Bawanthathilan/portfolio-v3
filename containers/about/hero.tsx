@@ -50,12 +50,14 @@ const AboutHero = () => {
             src={myImg}
             alt="my"
             fill
+            loading="lazy"
             className="object-cover object-top rounded-xl "
             placeholder="blur"
           />
 
           <div className="ico absolute bottom-2 right-5  bg-gray-900 p-3 rounded-xl text-white cursor-pointer">
             <Link
+              aria-label="stackoverflow"
               href="https://stackoverflow.com/users/9825931/bawantha-rathnayaka"
               target="_blank"
             >

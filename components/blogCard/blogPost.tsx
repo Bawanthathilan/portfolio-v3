@@ -87,6 +87,7 @@ export class BlogPosts extends Component {
     return (
       <div>
         <a
+          aria-label="Read more this article"
           href={`https://bawanthathilan.hashnode.dev/${this.state.posts.slug}`}
           target="_blank"
           rel="noreferrer"

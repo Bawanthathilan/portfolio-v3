@@ -8,6 +8,7 @@ export const Badge = ({ text, url }: string | any) => {
 
   return (
     <a
+      aria-label="download templates"
       href={`${url}`}
       target="__blank"
       className={`${

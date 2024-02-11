@@ -35,12 +35,17 @@ const Acheivement = () => {
 
       <div className="card_container mt-10 flex flex-col gap-5">
         {achievements?.map((achievement: any, index: number) => (
-          <Link href={achievement.link} target="_blank">
+          <Link
+            aria-label="achievement"
+            href={achievement.link}
+            target="_blank"
+          >
             <div className="card relative border border-grey-200 dark:border-[#27272a]  card bg-secondary p-10 rounded-2xl grid  grid-cols-1 sm:grid-cols-1 md:grid-cols-5 lg:grid-cols-5 gap-10 dark:bg-darkBg items-center justify-center">
               <span className="absolute w-[40%] bottom-0 right-px h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
               <span className="absolute w-px left-0 h-[40%] bg-gradient-to-b from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
               <div className="imgg  col-span-1 md:col-span-1">
                 <Image
+                  loading="lazy"
                   src={achievement?.image}
                   alt={achievement?.title}
                   width={300}

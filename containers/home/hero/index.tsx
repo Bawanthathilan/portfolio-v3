@@ -10,9 +10,6 @@ import { FiDownloadCloud } from 'react-icons/fi';
 import { Meteors } from '@/components/Meteors';
 import { Badge } from '@/components/Badge';
 import { skills } from '@/data/index';
-import { IoLogoNodejs } from 'react-icons/io';
-import { IconContainer } from '@/components/Radar/iconContainer';
-import { Radar } from '@/components/Radar';
 
 const Hero = (props: any): any => {
   const [loading, setLoading] = useState<any>(true);
@@ -97,6 +94,7 @@ const Hero = (props: any): any => {
               </svg>
             </motion.div>
             <Image
+              loading="lazy"
               src={MyImg}
               alt="my"
               placeholder="blur"
@@ -140,6 +138,7 @@ const Hero = (props: any): any => {
             <div className="album">
               {result?.isPlaying ? (
                 <img
+                  loading="lazy"
                   className="rounded-full h-8 w-8"
                   src={result?.albumImageUrl}
                   alt={result?.album}
@@ -299,6 +298,7 @@ const Hero = (props: any): any => {
             </p>
             <div className="btn_group flex flex-col md:flex-row lg:flex-row justify-between gap-4 md:gap-0">
               <a
+                aria-label="download cv"
                 href="https://drive.google.com/file/d/1gG4ECmLza1bP8AoafXs-U3otzY0rte0V/view?usp=sharing"
                 target="_blank"
                 className="cv  shadow-[0_10px_50px_rgba(8,_112,_184,_0.7)] bg-primary text-white font-medium flex items-center px-5 py-3 md:py-0 lg:py-0 rounded-xl gap-4 dark:bg-secondary dark:text-primary"
@@ -307,8 +307,15 @@ const Hero = (props: any): any => {
                 Download CV
               </a>
               <div className="buyMeCofee">
-                <a href="https://www.buymeacoffee.com/bawanthathilan">
-                  <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=bawanthathilan&button_colour=FFDD00&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=ffffff" />
+                <a
+                  aria-label="buy me coffee"
+                  href="https://www.buymeacoffee.com/bawanthathilan"
+                >
+                  <img
+                    loading="lazy"
+                    alt="buy me coffee logo"
+                    src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=bawanthathilan&button_colour=FFDD00&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=ffffff"
+                  />
                 </a>
               </div>
             </div>

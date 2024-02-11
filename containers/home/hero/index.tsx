@@ -65,7 +65,7 @@ const Hero = (props: any): any => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 {' '}
-                <g clip-path="url(#clip0_118_208)">
+                <g clipPath="url(#clip0_118_208)">
                   {' '}
                   <path
                     d="M100 200C97.1048 105.262 94.738 102.91 0 100C94.738 97.1048 97.0903 94.738 100 0C102.895 94.738 105.262 97.0903 200 100C105.262 102.91 102.91 105.233 100 200Z"
@@ -83,8 +83,8 @@ const Hero = (props: any): any => {
                     gradientUnits="userSpaceOnUse"
                   >
                     {' '}
-                    <stop stop-color="#ffffff" />{' '}
-                    <stop offset="1" stop-color="#F9ECFF" />{' '}
+                    <stop stopColor="#ffffff" />{' '}
+                    <stop offset="1" stopColor="#F9ECFF" />{' '}
                   </linearGradient>{' '}
                   <clipPath id="clip0_118_208">
                     {' '}
@@ -169,7 +169,7 @@ const Hero = (props: any): any => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g clip-path="url(#clip0_1034_10)">
+              <g clipPath="url(#clip0_1034_10)">
                 <mask
                   id="mask0_1034_10"
                   maskUnits="userSpaceOnUse"
@@ -182,14 +182,14 @@ const Hero = (props: any): any => {
                     d="M1.5 1.5H198.5V198.5H1.5V1.5Z"
                     fill="white"
                     stroke="white"
-                    stroke-width="3"
+                    strokeWidth="3"
                   />
                 </mask>
                 <g mask="url(#mask0_1034_10)">
                   <path
                     d="M198.5 149.379L151.5 196.379V50V48.5H150H3.62132L50.6213 1.5H198.5V50V149.379ZM61.4457 101.5L1.5 161.446V101.5H61.4457ZM98.5 198.5H39.399L98.5 139.399V198.5Z"
                     stroke="url(#paint0_linear_1034_10)"
-                    stroke-width="3"
+                    strokeWidth="3"
                   />
                 </g>
               </g>
@@ -202,8 +202,8 @@ const Hero = (props: any): any => {
                   y2="200"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#4B467F" />
-                  <stop offset="1" stop-color="#6558F9" />
+                  <stop stopColor="#4B467F" />
+                  <stop offset="1" stopColor="#6558F9" />
                 </linearGradient>
                 <clipPath id="clip0_1034_10">
                   <rect width="200" height="200" fill="white" />
@@ -221,7 +221,7 @@ const Hero = (props: any): any => {
               <path
                 d="M1.52347 1.52347C27.0984 2.31261 47.6874 22.9015 48.4765 48.4765C22.9016 47.6874 2.31261 27.0985 1.52347 1.52347ZM101.523 101.523C127.098 102.313 147.687 122.902 148.477 148.477C122.902 147.687 102.313 127.098 101.523 101.523ZM101.523 198.477C102.313 172.902 122.902 152.313 148.477 151.523C147.687 177.098 127.098 197.687 101.523 198.477ZM198.477 198.477C172.902 197.687 152.313 177.098 151.523 151.523C177.098 152.313 197.687 172.902 198.477 198.477ZM198.477 101.523C197.687 127.098 177.098 147.687 151.523 148.477C152.313 122.902 172.902 102.313 198.477 101.523ZM51.5235 48.4765C52.3126 22.9015 72.9016 2.31261 98.4765 1.52347C97.6874 27.0985 77.0984 47.6874 51.5235 48.4765ZM148.477 48.4765C122.902 47.6874 102.313 27.0985 101.523 1.52347C127.098 2.31262 147.687 22.9015 148.477 48.4765ZM148.477 51.5235C147.687 77.0985 127.098 97.6874 101.523 98.4765C102.313 72.9015 122.902 52.3126 148.477 51.5235ZM51.5235 51.5235C77.0984 52.3126 97.6874 72.9015 98.4765 98.4765C72.9016 97.6874 52.3126 77.0985 51.5235 51.5235ZM1.52347 98.4765C2.31261 72.9015 22.9016 52.3126 48.4765 51.5235C47.6874 77.0985 27.0984 97.6874 1.52347 98.4765ZM48.4765 148.477C22.9016 147.687 2.31262 127.098 1.52347 101.523C27.0984 102.313 47.6874 122.902 48.4765 148.477ZM1.52347 198.477C2.31262 172.902 22.9016 152.313 48.4765 151.523C47.6874 177.098 27.0984 197.687 1.52347 198.477ZM98.4765 198.477C72.9016 197.687 52.3126 177.098 51.5235 151.523C77.0984 152.313 97.6874 172.902 98.4765 198.477ZM51.5235 148.477C52.3126 122.902 72.9016 102.313 98.4765 101.523C97.6874 127.098 77.0984 147.687 51.5235 148.477ZM151.523 48.4765C152.313 22.9015 172.902 2.31262 198.477 1.52347C197.687 27.0985 177.098 47.6874 151.523 48.4765ZM198.477 98.4765C172.902 97.6874 152.313 77.0985 151.523 51.5235C177.098 52.3126 197.687 72.9015 198.477 98.4765Z"
                 stroke="url(#paint0_linear_1035_56)"
-                stroke-width="3"
+                strokeWidth="3"
               />
               <defs>
                 <linearGradient
@@ -232,8 +232,8 @@ const Hero = (props: any): any => {
                   y2="200"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#4B467F" />
-                  <stop offset="1" stop-color="#6558F9" />
+                  <stop stopColor="#4B467F" />
+                  <stop offset="1" stopColor="#6558F9" />
                 </linearGradient>
               </defs>
             </svg>
@@ -245,7 +245,7 @@ const Hero = (props: any): any => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g clip-path="url(#clip0_1035_68)">
+              <g clipPath="url(#clip0_1035_68)">
                 <mask
                   id="mask0_1035_68"
                   maskUnits="userSpaceOnUse"
@@ -264,7 +264,7 @@ const Hero = (props: any): any => {
                   <path
                     d="M101.5 50V1.5H198.5V50C198.5 76.7858 176.786 98.5 150 98.5C123.214 98.5 101.5 76.7858 101.5 50ZM98.5 50V98.5H50H1.5V1.5H50C76.7858 1.5 98.5 23.2142 98.5 50ZM150 101.5H198.5V198.5H150C123.214 198.5 101.5 176.786 101.5 150V101.5H150ZM98.5 150V198.5H1.5V150C1.5 123.214 23.2142 101.5 50 101.5C76.7858 101.5 98.5 123.214 98.5 150Z"
                     stroke="url(#paint0_linear_1035_68)"
-                    stroke-width="3"
+                    strokeWidth="3"
                   />
                 </g>
               </g>
@@ -277,8 +277,8 @@ const Hero = (props: any): any => {
                   y2="200"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#4B467F" />
-                  <stop offset="1" stop-color="#6558F9" />
+                  <stop stopColor="#4B467F" />
+                  <stop offset="1" stopColor="#6558F9" />
                 </linearGradient>
                 <clipPath id="clip0_1035_68">
                   <rect width="200" height="200" fill="white" />
@@ -337,8 +337,11 @@ const Hero = (props: any): any => {
           <div>
             <CustomMarquee direction="right">
               <div className="flex gap-5 last:ml-5">
-                {skills.slice(0, 4).map((skill) => (
-                  <div className="p-3 rounded-md border border-opacity-20 border-blue-500/40">
+                {skills.slice(0, 4).map((skill, index) => (
+                  <div
+                    key={index}
+                    className="p-3 rounded-md border border-opacity-20 border-blue-500/40"
+                  >
                     <skill.icon className="w-10 h-10 opacity-50" />
                   </div>
                 ))}
@@ -346,8 +349,11 @@ const Hero = (props: any): any => {
             </CustomMarquee>
             <CustomMarquee direction="left">
               <div className="flex gap-5 last:ml-5">
-                {skills.slice(4, 9).map((skill) => (
-                  <div className="p-3 rounded-md border border-opacity-20 border-blue-500/40 ">
+                {skills.slice(4, 9).map((skill, index) => (
+                  <div
+                    key={index}
+                    className="p-3 rounded-md border border-opacity-20 border-blue-500/40 "
+                  >
                     <skill.icon className="w-10 h-10 opacity-50" />
                   </div>
                 ))}

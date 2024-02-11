@@ -11,7 +11,7 @@ import Head from 'next/head';
 export default function App({ Component, pageProps, session }: any) {
   const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
-    const timer = setTimeout(() => setLoading(true), 6000);
+    const timer = setTimeout(() => setLoading(true), 0);
     return () => clearTimeout(timer);
   }, []);
   return (

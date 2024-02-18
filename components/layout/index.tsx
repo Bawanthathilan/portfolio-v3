@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../navbar';
 import Footer from '../footer';
-import Head from 'next/head';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { useTheme } from 'next-themes';
 
 interface LayoutProps {
@@ -24,6 +24,7 @@ const Layout = ({ children }: LayoutProps) => {
         </div>
       )}
       {children}
+      <SpeedInsights />
       <Footer />
     </div>
   );

@@ -35,7 +35,7 @@ const Navbar = () => {
               currentTheme === 'dark' ? 'text-white' : 'text-textPrimary '
             } text-3xl font-bold`}
           >
-            B.
+            bɔː.wæn.θə
           </span>
         </div>
       </Link>

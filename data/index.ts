@@ -23,7 +23,7 @@ export const menuData = [
   },
   {
     name: 'Blog',
-    link: 'https://bawanthathilan.hashnode.dev'
+    link: 'https://medium.com/@bawantharathnayaka'
   },
   {
     name: 'Contact',

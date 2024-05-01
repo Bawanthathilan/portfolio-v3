@@ -1,64 +1,40 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import ContentLoader from 'react-content-loader';
 import BlogCard from './blogCard';
+import axios from 'axios';
 
-const query = `
-    {
-      publication(host:"bawanthathilan.hashnode.dev"){
-        isTeam
-        title
-        about{
-          markdown
-        }
-        
-        posts(first: 1) {
-          edges {
-            node {
-              slug
-              title
-              brief
-              url
-              coverImage{
-                url
-              }
-            }
-          }
-        }
-        
-      }
+const BlogPosts = () => {
+  const [posts, setPosts] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+
+  const getPostData = () => {
+    try {
+      setLoading(true);
+      axios
+        .get(
+          'https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@bawantharathnayaka'
+        )
+        .then((res: any) => {
+          setPosts(res.data.items[0]);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching blog posts:', error);
+          setLoading(true);
+        });
+    } catch (error: any) {
+      console.log(error.message);
+      setLoading(true);
     }
-  `;
-
-export class BlogPosts extends Component {
-  state: any = {
-    posts: [],
-    loading: true
   };
 
-  componentDidMount() {
-    this.fetchPosts();
-  }
+  useEffect(() => {
+    getPostData();
+  }, []);
 
-  fetchPosts = async () => {
-    const response = await fetch('https://gql.hashnode.com/', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ query })
-    });
-    const ApiResponse = await response.json();
-    console.log(ApiResponse);
-
-    this.setState({
-      posts: ApiResponse.data.publication.posts.edges[0].node,
-      loading: false
-    });
-  };
-
-  render() {
-    if (this.state.loading)
-      return (
+  return (
+    <>
+      {loading ? (
         <div>
           <ContentLoader
             width="100%"
@@ -82,21 +58,20 @@ export class BlogPosts extends Component {
             <rect x="376" y="41" rx="3" ry="3" width="231" height="29" />
           </ContentLoader>
         </div>
-      );
-
-    return (
-      <div>
-        <a
-          aria-label="Read more this article"
-          href={`https://bawanthathilan.hashnode.dev/${this.state.posts.slug}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <BlogCard post={this.state.posts} />
-        </a>
-      </div>
-    );
-  }
-}
+      ) : (
+        <div>
+          <a
+            aria-label="Read more this article"
+            href={posts?.link}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <BlogCard post={posts} />
+          </a>
+        </div>
+      )}
+    </>
+  );
+};
 
 export default BlogPosts;

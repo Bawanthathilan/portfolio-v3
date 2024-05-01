@@ -6,6 +6,10 @@ interface Props {
 }
 
 const BlogCard = ({ post }: Props) => {
+  const ThumbnailImage = post?.description
+    ?.toString()
+    .match(/<img[^>]+src="([^">]+)"/)[1];
+
   return (
     <div className="bg-grid-secondary overflow-hidden bg-grid-slate-100 border border-grey-200 dark:border-[#27272a]  rounded-3xl dark:bg-grid-[#1f1f21] relative">
       <span className="absolute w-[40%] bottom-0 right-px h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
@@ -14,7 +18,7 @@ const BlogCard = ({ post }: Props) => {
         <div className="blog_image relative col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-2 h-[400px] sm:h-[400px] md:h-[400px] lg:h-auto">
           <Image
             loading="lazy"
-            src={post.coverImage?.url}
+            src={ThumbnailImage}
             alt="blog"
             fill
             className=" object-cover rounded-3xl"
@@ -22,9 +26,11 @@ const BlogCard = ({ post }: Props) => {
         </div>
         <div className="blog_info flex flex-col gap-5 col-span-3">
           <h1 className="text-4xl text-primary font-bold dark:text-white">
-            {post.title}
+            {post['title']}
           </h1>
-          <p className="text-textSecondary mt-5">{post.brief}</p>
+          <p className="text-textSecondary mt-5">
+            {`${post.description?.substring(0, 500)} ....`}
+          </p>
         </div>
       </div>
     </div>

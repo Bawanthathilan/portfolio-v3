@@ -5,6 +5,7 @@ const nextConfig = {
   images: {
     domains: [
       'cdn.hashnode.com',
+      'cdn-images-1.medium.com',
       'raw.githubusercontent.com',
       'github.com',
       'res.cloudinary.com',

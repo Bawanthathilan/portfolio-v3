@@ -29,7 +29,7 @@ const BlogCard = ({ post }: Props) => {
             {post['title']}
           </h1>
           <p className="text-textSecondary mt-5">
-            {`${post.description?.substring(0, 500)} ....`}
+            {`${post.description?.substring(0, 500).replace(/<[^>]*>/g, '')} ....`}
           </p>
         </div>
       </div>

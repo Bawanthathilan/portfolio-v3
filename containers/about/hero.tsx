@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import myImg from '@/assets/images/myImg.png';
-import ContentLoader from "react-content-loader"
+import ContentLoader from 'react-content-loader';
 import { BsStackOverflow } from 'react-icons/bs';
 import Link from 'next/link';
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@/config/keys';
@@ -85,31 +85,31 @@ const AboutHero = () => {
           </div>
 
           <div className="flex flex-col gap-5">
-            
-              <div className="div flex flex-row justify-between items-center flex-nowrap w-full gap-3">
-                <ol className="relative border-s border-gray-200">
+            <div className="div flex flex-row justify-between items-center flex-nowrap w-full gap-3">
+              <ol className="relative border-s border-gray-200">
                 {work?.map((workItem: any, index: number) => (
                   <li className="mb-10 ms-4" key={index}>
-                    <div className={`absolute w-3 h-3 ${workItem.endYear && workItem.endYear === 'Current' ? 'bg-gray-500' : ' bg-gray-200'}  rounded-full mt-1.5 -start-1.5 border`}></div>
+                    <div
+                      className={`absolute w-3 h-3 ${workItem.endYear && workItem.endYear === 'Current' ? 'bg-gray-500' : ' bg-gray-200'}  rounded-full mt-1.5 -start-1.5 border`}
+                    ></div>
                     <div className="flex flex-row items-center gap-2">
                       <div className="text-md font-medium">
-                      {workItem.Company_name}
+                        {workItem.Company_name}
                       </div>
-                      {workItem.endYear && workItem.endYear === 'Current'&& (
+                      {workItem.endYear && workItem.endYear === 'Current' && (
                         <div className="inline-block uppercase text-xs rounded-full px-1 py-0 border border-gray-500 text-gray-500">
-                        present
-                      </div>
+                          present
+                        </div>
                       )}
-                      
                     </div>
                     <div className="mb-4 text-sm font-normal text-textPrimary">
-                    {workItem.Desc} - ({workItem.startYear} - {workItem.endYear})
+                      {workItem.Desc} - ({workItem.startYear} -{' '}
+                      {workItem.endYear})
                     </div>
                   </li>
-                  ))}
-                </ol>
-              </div>
-            
+                ))}
+              </ol>
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import myImg from '@/assets/images/myImg.png';
-import { motion } from 'framer-motion';
+import ContentLoader from "react-content-loader"
 import { BsStackOverflow } from 'react-icons/bs';
 import Link from 'next/link';
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@/config/keys';
@@ -18,7 +18,7 @@ const AboutHero = () => {
       const { data, error }: any = await supabase
         .from('work')
         .select()
-        .order('id', { ascending: true });
+        .order('position', { ascending: true });
       setWork(data);
       setLoading(false);
       if (error) throw error;
@@ -85,20 +85,31 @@ const AboutHero = () => {
           </div>
 
           <div className="flex flex-col gap-5">
-            {work?.map((workItem: any, index: number) => (
+            
               <div className="div flex flex-row justify-between items-center flex-nowrap w-full gap-3">
-                <div className="title w-full">
-                  <h2>{workItem.Company_name}</h2>
-                  <p className="text-textPrimary">{workItem.Desc}</p>
-                </div>
-                <hr className="w-full" />
-                <div className="date w-full">
-                  <span className="text-sm">
-                    {workItem.startYear} - {workItem.endYear}
-                  </span>
-                </div>
+                <ol className="relative border-s border-gray-200">
+                {work?.map((workItem: any, index: number) => (
+                  <li className="mb-10 ms-4" key={index}>
+                    <div className={`absolute w-3 h-3 ${workItem.endYear && workItem.endYear === 'Current' ? 'bg-gray-500' : ' bg-gray-200'}  rounded-full mt-1.5 -start-1.5 border`}></div>
+                    <div className="flex flex-row items-center gap-2">
+                      <div className="text-md font-medium">
+                      {workItem.Company_name}
+                      </div>
+                      {workItem.endYear && workItem.endYear === 'Current'&& (
+                        <div className="inline-block uppercase text-xs rounded-full px-1 py-0 border border-gray-500 text-gray-500">
+                        present
+                      </div>
+                      )}
+                      
+                    </div>
+                    <div className="mb-4 text-sm font-normal text-textPrimary">
+                    {workItem.Desc} - ({workItem.startYear} - {workItem.endYear})
+                    </div>
+                  </li>
+                  ))}
+                </ol>
               </div>
-            ))}
+            
           </div>
         </div>
       </div>

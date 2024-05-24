@@ -32,7 +32,7 @@ const Hero = (props: any): any => {
     <React.Fragment>
       <div className=" flex justify-center items-center my-5">
         <Badge
-          text="Buy Next JS Portfolio Templates"
+          text="Buy Next JS Portfolio Templates & More"
           url="https://www.buymeacoffee.com/bawanthathilan"
         />
       </div>
@@ -299,7 +299,7 @@ const Hero = (props: any): any => {
             <div className="btn_group flex flex-col md:flex-row lg:flex-row justify-between gap-4 md:gap-0">
               <a
                 aria-label="download cv"
-                href="https://drive.google.com/file/d/1gG4ECmLza1bP8AoafXs-U3otzY0rte0V/view?usp=sharing"
+                href="https://drive.google.com/drive/folders/191j6y4c-BGXbQJD_Lp5nZW7JnGIe2NDS?usp=sharing"
                 target="_blank"
                 className="cv  shadow-[0_10px_50px_rgba(8,_112,_184,_0.7)] bg-primary text-white font-medium flex items-center px-5 py-3 md:py-0 lg:py-0 rounded-xl gap-4 dark:bg-secondary dark:text-primary"
               >

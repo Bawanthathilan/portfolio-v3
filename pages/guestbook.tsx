@@ -23,7 +23,6 @@ const Guestbook = () => {
         .order('created_at', { ascending: false });
 
       setMessage(data);
-      console.log(data);
       setLoading(false);
     } catch (error) {
       console.log(error);

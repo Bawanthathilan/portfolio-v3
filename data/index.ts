@@ -18,6 +18,10 @@ export const menuData = [
     link: '/about'
   },
   {
+    name: 'Uses',
+    link: '/uses'
+  },
+  {
     name: 'Guestbook',
     link: '/guestbook'
   },

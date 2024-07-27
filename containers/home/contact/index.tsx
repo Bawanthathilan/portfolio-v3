@@ -24,8 +24,6 @@ const Contact = () => {
           Send an email
         </a>
 
-        
-
         <svg
           width="397"
           height="238"

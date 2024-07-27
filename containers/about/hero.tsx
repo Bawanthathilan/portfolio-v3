@@ -33,10 +33,9 @@ const AboutHero = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid  grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-6 gap-5 ">
+      {/* <div className="grid  grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-6 gap-5 ">
         <div className="title bg-secondary p-5 rounded-xl relative dark:bg-darkBg col-span-3 md:col-span-4 lg:col-span-2  flex flex-col gap-5 order-1 justify-center">
           <div className=" text-[30px] sm:text-6xl lg:text-[5vh] font-bold text-primary dark:text-white">
-            {/* <span className="titleFont font-sm">Get to know me!</span> */}
             <span className="titleFont font-sm">Hey, I'm Bawantha 👋</span>
           </div>
 
@@ -65,7 +64,7 @@ const AboutHero = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-5 w-full">
         <div className="p-5 rounded-xl relative bg-secondary dark:bg-darkBg flex flex-col gap-5">
           <div className=" text-[30px] lg:text-[5vh] font-bold text-primary dark:text-white">

@@ -10,7 +10,7 @@ const Slider = () => {
       <div className="columns-2 sm:columns-3 gap-4 my-8">
         <div className="relative h-40 mb-4">
           <Image
-            src="https://res.cloudinary.com/sliit123/image/upload/v1689487693/IMG_1385_lkm7x0.jpg"
+            src="https://res.cloudinary.com/sliit123/image/upload/v1722056054/452512503_488795937180664_7271840043657978943_n_sonkaw.jpg"
             alt="img"
             loading="lazy"
             fill

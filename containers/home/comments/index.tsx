@@ -1,5 +1,4 @@
 import React from 'react';
-import { VscGithubAlt } from 'react-icons/vsc';
 import { AiOutlineComment } from 'react-icons/ai';
 import CustomMarquee from '@/components/Marquee';
 import { comments } from '@/data';

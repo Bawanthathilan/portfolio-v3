@@ -1,40 +1,19 @@
-import React, { useState, useEffect } from 'react';
 import ContentLoader from 'react-content-loader';
 import BlogCard from './blogCard';
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 
 const BlogPosts = () => {
-  const [posts, setPosts] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
-
-  const getPostData = () => {
-    try {
-      setLoading(true);
-      axios
-        .get(
-          'https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@bawantharathnayaka'
-        )
-        .then((res: any) => {
-          setPosts(res.data.items[0]);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching blog posts:', error);
-          setLoading(true);
-        });
-    } catch (error: any) {
-      console.log(error.message);
-      setLoading(true);
-    }
-  };
-
-  useEffect(() => {
-    getPostData();
-  }, []);
+  const { isPending, error, data } = useQuery({
+    queryKey: ['blogData'],
+    queryFn: () =>
+      fetch(
+        'https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@bawantharathnayaka'
+      ).then((res) => res.json())
+  });
 
   return (
     <>
-      {loading ? (
+      {isPending || error ? (
         <div>
           <ContentLoader
             width="100%"
@@ -62,11 +41,11 @@ const BlogPosts = () => {
         <div>
           <a
             aria-label="Read more this article"
-            href={posts?.link}
+            href={data?.items[0]?.link}
             target="_blank"
             rel="noreferrer"
           >
-            <BlogCard post={posts} />
+            <BlogCard post={data?.items[0]} />
           </a>
         </div>
       )}

@@ -1,35 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import myImg from '@/assets/images/myImg.png';
-import ContentLoader from 'react-content-loader';
-import { BsStackOverflow } from 'react-icons/bs';
-import Link from 'next/link';
-import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@/config/keys';
-import { createClient } from '@supabase/supabase-js';
+import React from 'react';
+import useSupabaseBrowser from '@/utils/supabase-browser';
+import { getWorkData } from '@/queries';
+import { useQuery } from '@supabase-cache-helpers/postgrest-react-query';
 
 const AboutHero = () => {
-  const [work, setWork] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = useSupabaseBrowser();
+  const { data: work, isLoading, isError } = useQuery(getWorkData(supabase));
 
-  const getWorkData = async () => {
-    try {
-      setLoading(true);
-      const { data, error }: any = await supabase
-        .from('work')
-        .select()
-        .order('position', { ascending: true });
-      setWork(data);
-      setLoading(false);
-      if (error) throw error;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  useEffect(() => {
-    getWorkData();
-  }, []);
+  if (isError || !work) {
+    return <div>Error</div>;
+  }
 
   return (
     <div className="flex flex-col gap-5">

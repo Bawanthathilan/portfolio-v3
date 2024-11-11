@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from 'react';
 
 import Link from 'next/link';
@@ -26,6 +27,14 @@ const Navbar = () => {
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true); // Ensure the component renders only after the client mounts
+  }, []);
+
+  if (!mounted) return null; 
 
   return (
     <nav className="px-5 md:px-0 lg:px-0 w-full py-2 mt-5 flex flex-row justify-between items-center sticky top-0 z-50 bg-white dark:bg-[#121212] bg-opacity-60 ">

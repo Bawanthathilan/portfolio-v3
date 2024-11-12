@@ -154,7 +154,6 @@ const Navbar = () => {
         >
           <FaTiktok className="text-textPrimary dark:text-white text-md" />
         </Link>
-        
       </div>
 
       <div className="theme-switcher flex gap-5">

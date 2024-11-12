@@ -6,7 +6,9 @@ import {
   FaFacebookF,
   FaInstagram,
   FaGithub,
-  FaLinkedinIn
+  FaLinkedinIn,
+  FaTiktok,
+  FaYoutube
 } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
 import { CiDark, CiMenuFries } from 'react-icons/ci';
@@ -138,6 +140,21 @@ const Navbar = () => {
         >
           <FaLinkedinIn className="text-textPrimary dark:text-white text-md" />
         </Link>
+        <Link
+          aria-label="linkedin"
+          href="https://www.youtube.com/@bawantharathnayaka"
+          target="_blank"
+        >
+          <FaYoutube className="text-textPrimary dark:text-white text-md" />
+        </Link>
+        <Link
+          aria-label="linkedin"
+          href="https://www.tiktok.com/@bawwa_98"
+          target="_blank"
+        >
+          <FaTiktok className="text-textPrimary dark:text-white text-md" />
+        </Link>
+        
       </div>
 
       <div className="theme-switcher flex gap-5">

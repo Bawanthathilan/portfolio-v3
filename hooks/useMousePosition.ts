@@ -11,6 +11,7 @@ export function useMousePosition(
         top: 0,
         left: 0
       };
+      
 
       callback?.({ x: clientX - left, y: clientY - top });
     };

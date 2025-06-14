@@ -4,6 +4,7 @@ import Work from '@/containers/home/work';
 import Blog from '@/containers/home/blog';
 import Comments from '@/containers/home/comments';
 import Contact from '@/containers/home/contact';
+import Sessions from '@/containers/home/sessions';
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <Hero />
       <Work />
       <Blog />
+      <Sessions/>
       <Comments />
       <Contact />
     </main>

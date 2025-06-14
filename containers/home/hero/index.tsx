@@ -37,7 +37,6 @@ const Hero = (props: any): any => {
           url="https://www.buymeacoffee.com/bawanthathilan"
         />
       </div>
-      
 
       <div className="relative mt-0 md:mt-0 lg:mt-0 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-5 grid-rows-3 gap-0 sm:gap-0 md:gap-5 lg:gap-5 grid-flow-row ">
         <motion.div
@@ -291,9 +290,12 @@ const Hero = (props: any): any => {
 
           <span className="absolute z-10 w-[40%] bottom-0 right-px h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
           <span className="absolute w-px left-0 h-[40%] bg-gradient-to-b from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
-          
+
           <div className="content z-10 flex flex-col gap-5  h-full justify-between ">
-            <AnimatedCursor text='Hi' classNameDiv='justify-end absolute bottom-40 right-10 md:right-10 sm:left-10'/>
+            <AnimatedCursor
+              text="Hi"
+              classNameDiv="justify-end absolute bottom-40 right-10 md:right-10 sm:left-10"
+            />
             <p className="text-primary font-bold text-4xl dark:text-white ">
               Software Engineer , Tech Blogger and {''}
               <span className="text-textSecondary">Traveller</span>, opensource

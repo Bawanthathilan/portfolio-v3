@@ -12,7 +12,7 @@ export default function Home() {
       <Hero />
       <Work />
       <Blog />
-      <Sessions/>
+      <Sessions />
       <Comments />
       <Contact />
     </main>

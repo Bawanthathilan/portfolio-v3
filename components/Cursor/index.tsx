@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { cn } from '@/utils/cn'
+import { motion } from 'framer-motion';
+import { cn } from '@/utils/cn';
 
 export const Cursor = () => (
   <svg fill="none" height="18" viewBox="0 0 17 18" width="17">
@@ -12,13 +12,13 @@ export const Cursor = () => (
       strokeWidth="1.5"
     />
   </svg>
-)
+);
 
-export const AnimatedCursor: React.FC<{ className?: string; classNameDiv?:string; text: string }> = ({
-  className,
-  classNameDiv,
-  text
-}) => (
+export const AnimatedCursor: React.FC<{
+  className?: string;
+  classNameDiv?: string;
+  text: string;
+}> = ({ className, classNameDiv, text }) => (
   <motion.div
     initial={{ translateX: '0', translateY: '0' }}
     animate={{ translateX: ['0', '20px', '0'], translateY: ['0', '40px', '0'] }}
@@ -35,4 +35,4 @@ export const AnimatedCursor: React.FC<{ className?: string; classNameDiv?:string
     </div>
     <Cursor />
   </motion.div>
-)
+);

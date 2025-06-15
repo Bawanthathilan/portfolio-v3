@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import CustomMarquee from '@/components/Marquee';
 import Marquee from 'react-fast-marquee';
-import MyImg from '@/assets/images/my.webp';
+import MyImg from '@/assets/images/ascii.png';
 import { BsSpotify } from 'react-icons/bs';
 import getNowPlayingItem from '@/utils/spotify';
 import { motion } from 'framer-motion';

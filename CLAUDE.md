@@ -32,12 +32,12 @@ There are no automated tests in this project.
 
 ### Pages
 
-| Page | Route | Notes |
-|---|---|---|
-| `pages/index.tsx` | `/` | Composes Hero, Work, Blog, Sessions, Comments, Contact |
-| `pages/about.tsx` | `/about` | Composes about section containers |
-| `pages/guestbook.tsx` | `/guestbook` | Auth-gated with NextAuth |
-| `pages/api/auth/[...nextauth].js` | `/api/auth/*` | NextAuth handler |
+| Page                              | Route         | Notes                                                  |
+| --------------------------------- | ------------- | ------------------------------------------------------ |
+| `pages/index.tsx`                 | `/`           | Composes Hero, Work, Blog, Sessions, Comments, Contact |
+| `pages/about.tsx`                 | `/about`      | Composes about section containers                      |
+| `pages/guestbook.tsx`             | `/guestbook`  | Auth-gated with NextAuth                               |
+| `pages/api/auth/[...nextauth].js` | `/api/auth/*` | NextAuth handler                                       |
 
 ## Style Guide
 
@@ -45,13 +45,13 @@ There are no automated tests in this project.
 
 Custom Tailwind tokens (defined in `tailwind.config.js`):
 
-| Token | Value | Usage |
-|---|---|---|
-| `primary` | `#1E1E1E` | Main text / dark backgrounds |
-| `secondary` | `#fafafa` | Card / light backgrounds |
-| `textPrimary` | `#747474` | Body text, icon color |
-| `textSecondary` | `#949494` | Muted / subtitle text |
-| `darkBg` | `#161616` | Dark mode card backgrounds |
+| Token           | Value     | Usage                        |
+| --------------- | --------- | ---------------------------- |
+| `primary`       | `#1E1E1E` | Main text / dark backgrounds |
+| `secondary`     | `#fafafa` | Card / light backgrounds     |
+| `textPrimary`   | `#747474` | Body text, icon color        |
+| `textSecondary` | `#949494` | Muted / subtitle text        |
+| `darkBg`        | `#161616` | Dark mode card backgrounds   |
 
 ### Typography
 
@@ -68,11 +68,13 @@ Custom Tailwind tokens (defined in `tailwind.config.js`):
 ### Cards / Panels
 
 Standard card pattern:
+
 ```tsx
 <div className="bg-secondary dark:bg-darkBg rounded-2xl border border-grey-200 dark:border-[#27272a] p-8">
 ```
 
 Decorative accent lines (blue gradient) used on card edges:
+
 ```tsx
 <span className="absolute w-[40%] bottom-0 right-px h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
 ```
@@ -80,6 +82,7 @@ Decorative accent lines (blue gradient) used on card edges:
 ### Section Layout
 
 Each page section uses `<section className="mt-20">` with a `<Title>` component at the top:
+
 ```tsx
 <section id="work" className="mt-20">
   <Title title="Work" />
@@ -90,6 +93,7 @@ Each page section uses `<section className="mt-20">` with a `<Title>` component 
 ### Animations
 
 Framer Motion is used for all entry animations. Standard staggered entry pattern:
+
 ```tsx
 <motion.div
   transition={{ delay: 0.2 }}

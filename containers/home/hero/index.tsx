@@ -116,7 +116,7 @@ const Hero = (props: any): any => {
               </span>{' '}
               <br />
               <span className="font-bold text-primary  titleFont dark:text-white">
-                Bawantha Thian 👋
+                Bawantha Thilan 👋
               </span>
             </h1>
           </motion.div>

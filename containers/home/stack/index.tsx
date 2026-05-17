@@ -17,7 +17,7 @@ const row2 = [
   ['Tw', 'Tailwind'],
   ['Gh', 'GitHub'],
   ['Fg', 'Figma'],
-  ['Vt', 'Vite'],
+  ['Vt', 'Vite']
 ];
 
 const Chip = ({ mark, name }: { mark: string; name: string }) => (

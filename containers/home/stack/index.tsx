@@ -2,28 +2,22 @@ import React from 'react';
 
 const row1 = [
   ['Ts', 'TypeScript'],
-  ['Go', 'Go'],
   ['Py', 'Python'],
   ['Nx', 'Next.js'],
   ['Re', 'React'],
   ['No', 'Node.js'],
   ['Sb', 'Supabase'],
   ['Pg', 'Postgres'],
-  ['Rd', 'Redis'],
   ['Dk', 'Docker']
 ];
 
 const row2 = [
-  ['K8', 'Kubernetes'],
   ['Aw', 'AWS'],
-  ['Cf', 'Cloudflare'],
   ['Vc', 'Vercel'],
   ['Tw', 'Tailwind'],
   ['Gh', 'GitHub'],
   ['Fg', 'Figma'],
   ['Vt', 'Vite'],
-  ['Pr', 'Prisma'],
-  ['Gp', 'GraphQL']
 ];
 
 const Chip = ({ mark, name }: { mark: string; name: string }) => (

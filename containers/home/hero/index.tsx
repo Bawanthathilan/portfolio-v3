@@ -58,7 +58,6 @@ const Hero = () => {
         {/* Caption */}
         <div className="hp-meta">
           <div className="hp-meta-k">No. 001</div>
-          <div className="hp-meta-v">Bawantha · Software Engineer</div>
         </div>
       </div>
 

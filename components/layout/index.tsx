@@ -1,31 +1,36 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Navbar from '../navbar';
 import Footer from '../footer';
+import SpotifyIsland from '../SpotifyIsland';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { useTheme } from 'next-themes';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const { systemTheme, theme, setTheme } = useTheme();
-  const currentTheme = theme === 'system' ? systemTheme : theme;
+  const spotRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (spotRef.current) {
+        spotRef.current.style.setProperty('--mx', e.clientX + 'px');
+        spotRef.current.style.setProperty('--my', e.clientY + 'px');
+      }
+    };
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
-    <div className="container">
+    <div className="min-h-screen bg-[var(--bg)]" suppressHydrationWarning>
+      <div className="guides" />
+      <div className="spotlight" ref={spotRef} />
       <Navbar />
-      {currentTheme === 'dark' ? (
-        <div className="h-full w-full bg-white">
-          <div className="absolute z-[-1] bottom-0 left-0 right-0 top-0 bg-[radial-gradient(#4f4f4f2e_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-        </div>
-      ) : (
-        <div className="h-full w-full bg-white">
-          <div className="absolute z-[-1] bottom-0 left-0 right-0 top-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-        </div>
-      )}
-      {children}
+      <main className="port-col">{children}</main>
       <SpeedInsights />
       <Footer />
+      <SpotifyIsland />
     </div>
   );
 };

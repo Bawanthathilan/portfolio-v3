@@ -3,175 +3,174 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../config/keys';
 import { AiOutlineGithub } from 'react-icons/ai';
-import ContentLoader from 'react-content-loader';
-import Title from '@/components/Title';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+interface GuestEntry {
+  id: number;
+  username: string;
+  message: string;
+  created_at: string;
+}
+
+const SendIcon = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M5 12h14M13 5l7 7-7 7" />
+  </svg>
+);
+
+const formatDate = (iso: string) => {
+  try {
+    return new Date(iso).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  } catch {
+    return iso;
+  }
+};
 
 const Guestbook = () => {
-  const { data: session }: any = useSession<any>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<any>('');
-  const [userMsg, setUserMsg] = useState<any>([]);
+  const { data: session }: any = useSession();
+  const [entries, setEntries] = useState<GuestEntry[]>([]);
+  const [userMsg, setUserMsg] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const getGuestBookData = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('guestbook')
-        .select()
-        .order('created_at', { ascending: false });
-
-      setMessage(data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+  const fetchEntries = async () => {
+    setLoading(true);
+    const { data } = await supabase
+      .from('guestbook')
+      .select()
+      .order('created_at', { ascending: false });
+    setEntries(data || []);
+    setLoading(false);
   };
 
   useEffect(() => {
-    getGuestBookData();
+    fetchEntries();
   }, []);
 
-  const handleInput = (e: any) => {
-    setUserMsg(e.target.value);
-  };
-
-  const createMessage = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const { data, error }: any = await supabase.from('guestbook').insert([
-        {
-          message: userMsg,
-          user_id: session?.user?.id,
-          username: session?.user?.name
-        }
-      ]);
-      setUserMsg('');
-      getGuestBookData();
-    } catch (error) {
-      console.log(error);
-    }
+    if (!userMsg.trim()) return;
+    setSubmitting(true);
+    await supabase.from('guestbook').insert([
+      {
+        message: userMsg.trim(),
+        user_id: session?.user?.id,
+        username: session?.user?.name
+      }
+    ]);
+    setUserMsg('');
+    await fetchEntries();
+    setSubmitting(false);
   };
 
   return (
-    <div className=" h-[100vh] overflow-y-auto mt-10 z-50">
-      <div className="relative">
-        <Title title="GuestBook" />
-        <p className="mt-2 text-textPrimary">
-          Write anything for future visitors of this website.🤩
-        </p>
+    <div className="port-wrap port-section min-h-screen">
+      {/* Header */}
+      <div className="section-head">
+        <span className="section-num">/ guestbook</span>
+        <h2 className="section-title">Guestbook</h2>
+        <span className="section-kicker">leave a note</span>
       </div>
 
-      <div className="mt-10">
-        {session ? (
-          <>
-            <div className="flex flex-col gap-5">
-              <h4 className="text-lg">sign in as {session.user.name}</h4>
-              <div>
-                <form onSubmit={createMessage} className="flex flex-row gap-3">
-                  <input
-                    type="text"
-                    value={userMsg}
-                    onChange={handleInput}
-                    className="border-2 p-2 rounded-md w-full"
-                    placeholder="Enter Your Message"
-                  />
-                  <button
-                    type="submit"
-                    className=" bg-primary px-5 rounded-md text-white w-[250px]"
-                  >
-                    Submit
-                  </button>
-                </form>
-              </div>
+      <p className="text-[var(--fg-muted)] text-[14.5px] leading-relaxed mb-10 max-w-lg">
+        Write anything for future visitors — thoughts, hellos, or just a wave.
+      </p>
 
-              <button
-                onClick={() => signOut()}
-                className="bg-primary text-white flex flex-row gap-3 items-center p-3 rounded-md w-[250px] justify-center"
-              >
-                <span>
-                  <AiOutlineGithub size={20} />
-                </span>{' '}
-                Sign out
-              </button>
-            </div>
-            <div className="mt-10 flex flex-col gap-3">
-              {loading && (
-                <ContentLoader
-                  speed={2}
-                  width="100%"
-                  height={160}
-                  viewBox="0 0 1024 160"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
-                >
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                </ContentLoader>
-              )}
-              {message &&
-                message.map((item: any, index: number) => (
-                  <div
-                    key={index}
-                    className="flex flex-row gap-5 bg-secondary p-5 rounded-xl justify-between mt-5"
-                  >
-                    <div className="left flex flex-row gap-5">
-                      <p style={{ color: '#525252' }}>{item.username} : </p>
-                      <p style={{ color: '#525252' }}>{item.message}</p>
-                    </div>
-
-                    <p style={{ color: '#525252' }}>{item.created_at}</p>
-                  </div>
-                ))}
-            </div>
-          </>
-        ) : (
-          <div>
-            <div className=" flex flex-col justify-center">
-              <h4>Your are not signed in</h4> <br />
-              <button
-                onClick={() => signIn('github')}
-                className=" bg-gray-900 flex flex-row justify-center gap-5 rounded-xl text-white px-5 py-3"
-              >
-                <span>
-                  <AiOutlineGithub size={20} />
-                </span>{' '}
-                Sign in with Github
-              </button>
-            </div>
-            <div className="mt-10 flex flex-col gap-3">
-              {loading && (
-                <ContentLoader
-                  speed={2}
-                  width="100%"
-                  height={160}
-                  viewBox="0 0 1024 160"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
-                >
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                </ContentLoader>
-              )}
-              {message &&
-                message.map((item: any, index: number) => (
-                  <div
-                    key={index}
-                    className="flex flex-row gap-5 bg-secondary p-5 rounded-xl justify-between"
-                  >
-                    <div className="left flex flex-row gap-5">
-                      <p style={{ color: '#525252' }}>{item.username} : </p>
-                      <p style={{ color: '#525252' }}>{item.message}</p>
-                    </div>
-
-                    <p style={{ color: '#525252' }}>{item.created_at}</p>
-                  </div>
-                ))}
-            </div>
+      {/* Auth + compose */}
+      {session ? (
+        <div className="flex flex-col gap-4 mb-10">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[12px] text-[var(--fg-subtle)]">
+              signed in as{' '}
+              <span className="text-[var(--fg)]">{session.user.name}</span>
+            </span>
+            <button
+              onClick={() => signOut()}
+              className="font-mono text-[11.5px] text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors duration-150 underline underline-offset-2"
+            >
+              sign out
+            </button>
           </div>
+
+          <form onSubmit={handleSubmit} className="flex gap-3">
+            <input
+              type="text"
+              value={userMsg}
+              onChange={(e) => setUserMsg(e.target.value)}
+              placeholder="Your message…"
+              className="flex-1 bg-[var(--bg-elev)] border border-[var(--line)] rounded-[10px] px-4 py-2.5 text-[14px] text-[var(--fg)] placeholder:text-[var(--fg-subtle)] outline-none focus:border-[var(--line-strong)] transition-colors duration-150"
+            />
+            <button
+              type="submit"
+              disabled={submitting || !userMsg.trim()}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[var(--fg)] text-[var(--bg)] rounded-[10px] font-mono text-[12px] font-medium disabled:opacity-40 transition-opacity duration-150 hover:opacity-80"
+            >
+              {submitting ? (
+                '…'
+              ) : (
+                <>
+                  <span>Send</span>
+                  <SendIcon />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      ) : (
+        <div className="mb-10">
+          <button
+            onClick={() => signIn('github')}
+            className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[var(--fg)] text-[var(--bg)] rounded-[10px] font-mono text-[12.5px] font-medium hover:opacity-80 transition-opacity duration-150"
+          >
+            <AiOutlineGithub size={16} />
+            Sign in with GitHub
+          </button>
+        </div>
+      )}
+
+      {/* Entries */}
+      <div className="flex flex-col gap-px border border-[var(--line)] rounded-2xl overflow-hidden">
+        {loading ? (
+          <div className="py-16 text-center font-mono text-[12px] text-[var(--fg-subtle)]">
+            Loading…
+          </div>
+        ) : entries.length === 0 ? (
+          <div className="py-16 text-center font-mono text-[12px] text-[var(--fg-subtle)]">
+            No entries yet — be the first.
+          </div>
+        ) : (
+          entries.map((item, i) => (
+            <div
+              key={item.id ?? i}
+              className="flex items-baseline justify-between gap-6 px-5 py-4 bg-[var(--bg-elev)] hover:bg-[var(--chip)] transition-colors duration-150"
+            >
+              <div className="flex items-baseline gap-3 min-w-0">
+                <span className="font-mono text-[11.5px] text-[var(--accent)] shrink-0">
+                  {item.username}
+                </span>
+                <span className="text-[14px] text-[var(--fg)] leading-relaxed truncate">
+                  {item.message}
+                </span>
+              </div>
+              <span className="font-mono text-[11px] text-[var(--fg-subtle)] shrink-0">
+                {formatDate(item.created_at)}
+              </span>
+            </div>
+          ))
         )}
       </div>
     </div>

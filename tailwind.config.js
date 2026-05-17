@@ -18,6 +18,11 @@ module.exports = withMT({
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["'Geist'", "'Helvetica Neue'", 'sans-serif'],
+        mono: ["'Geist Mono'", 'monospace'],
+        serif: ["'Instrument Serif'", 'serif']
+      },
       colors: {
         primary: '#1E1E1E',
         secondary: '#fafafa',
@@ -30,9 +35,14 @@ module.exports = withMT({
       },
       animation: {
         'meteor-effect': 'meteor 5s linear infinite',
-        'radar-spin': 'radar-spin 10s linear infinite'
+        'radar-spin': 'radar-spin 10s linear infinite',
+        'tl-pulse': 'tlPulse 2s ease-out infinite'
       },
       keyframes: {
+        tlPulse: {
+          '0%': { transform: 'scale(0.8)', opacity: '0.7' },
+          '100%': { transform: 'scale(1.8)', opacity: '0' }
+        },
         meteor: {
           '0%': { transform: 'rotate(215deg) translateX(0)', opacity: 1 },
           '70%': { opacity: 1 },

@@ -115,7 +115,7 @@ const ProjectCard = ({
           src={image}
           alt={`${title}`}
           fill
-          className="object-cover rounded-2xl saturate-0 group-hover:saturate-100 transition-all duration-500 ease-in-out group-hover:scale-105 "
+          className="object-cover rounded-2xl saturate-0 group-hover:saturate-100 transition-[transform,filter] duration-300 ease-out group-hover:scale-105"
         />
       </div>
     </div>

@@ -122,7 +122,7 @@ const Navbar = () => {
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="w-9 h-9 grid place-items-center bg-transparent border border-[var(--line)] rounded-[9px] text-[var(--fg)] cursor-pointer transition-all duration-150 hover:bg-[var(--chip)] hover:border-[var(--line-strong)]"
+              className="w-9 h-9 grid place-items-center bg-transparent border border-[var(--line)] rounded-[9px] text-[var(--fg)] cursor-pointer transition-[background-color,border-color] duration-150 ease-out hover:bg-[var(--chip)] hover:border-[var(--line-strong)]"
             >
               {currentTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
             </button>

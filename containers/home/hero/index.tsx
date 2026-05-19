@@ -81,14 +81,14 @@ const Hero = () => {
       </h1>
 
       {/* Subtitle with role rotator */}
-      <p className="hero-sub-constrained text-[clamp(18px,1.8vw,22px)] text-[var(--fg-muted)] mb-9 leading-[1.5] opacity-0 [animation:rise_0.7s_0.6s_ease-out_forwards]">
+      <p className="hero-sub-constrained text-[clamp(18px,1.8vw,22px)] text-[var(--fg-muted)] mb-9 leading-[1.5] opacity-0 [animation:rise_0.7s_0.4s_ease-out_forwards]">
         Software Engineer, Tech Blogger and Traveller, opensource enthusiast,
         practicing minimalist, and Pop Music in search of flow. Working with my
         hands to make magic happen on the internet.
       </p>
 
       {/* Actions */}
-      <div className="flex gap-3 flex-wrap opacity-0 [animation:rise_0.7s_0.75s_ease-out_forwards]">
+      <div className="flex gap-3 flex-wrap opacity-0 [animation:rise_0.7s_0.55s_ease-out_forwards]">
         {[
           {
             href: '#work',
@@ -152,7 +152,7 @@ const Hero = () => {
             href={btn.href}
             target={(btn as any).target}
             rel={(btn as any).target ? 'noopener noreferrer' : undefined}
-            className={`inline-flex items-center gap-2 px-[18px] py-[11px] rounded-[10px] text-sm font-medium no-underline transition-all duration-150 cursor-pointer ${
+            className={`inline-flex items-center gap-2 px-[18px] py-[11px] rounded-[10px] text-sm font-medium no-underline transition-[transform,background-color,border-color] duration-150 ease-out cursor-pointer ${
               btn.primary
                 ? 'bg-[var(--fg)] text-[var(--bg)] border border-transparent hover:-translate-y-px'
                 : 'bg-[var(--bg-elev)] text-[var(--fg)] border border-[var(--line)] hover:bg-[var(--chip)] hover:border-[var(--line-strong)]'
@@ -164,7 +164,7 @@ const Hero = () => {
       </div>
 
       {/* Meta strip */}
-      <div className="flex gap-7 flex-wrap mt-11 pt-6 border-t border-[var(--line)] opacity-0 [animation:rise_0.7s_0.9s_ease-out_forwards]">
+      <div className="flex gap-7 flex-wrap mt-11 pt-6 border-t border-[var(--line)] opacity-0 [animation:rise_0.7s_0.7s_ease-out_forwards]">
         {[
           { label: 'Location', value: 'Colombo, Sri Lanka · Hybrid' },
           { label: 'Focus', value: 'Web · Cloud · Developer Tools' },

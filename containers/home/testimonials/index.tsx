@@ -146,7 +146,7 @@ const Testimonials = () => {
                   restart();
                 }}
                 aria-label={`${btn.label} testimonial`}
-                className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-[var(--fg)] cursor-pointer grid place-items-center transition-all duration-150 hover:bg-[var(--chip)] hover:border-[var(--line-strong)]"
+                className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-[var(--fg)] cursor-pointer grid place-items-center transition-[background-color,border-color] duration-150 ease-out hover:bg-[var(--chip)] hover:border-[var(--line-strong)]"
               >
                 <svg
                   width="13"

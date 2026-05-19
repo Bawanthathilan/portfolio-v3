@@ -100,7 +100,7 @@ const Video = () => {
               href={`https://www.youtube.com/watch?v=${VIDEO_ID}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-[7px] px-3.5 py-[9px] rounded-[9px] bg-[var(--bg)] border border-[var(--line)] text-[var(--fg)] no-underline text-[13px] font-medium transition-all duration-150 hover:bg-[var(--chip)] hover:border-[var(--line-strong)]"
+              className="inline-flex items-center gap-[7px] px-3.5 py-[9px] rounded-[9px] bg-[var(--bg)] border border-[var(--line)] text-[var(--fg)] no-underline text-[13px] font-medium transition-[background-color,border-color] duration-150 ease-out hover:bg-[var(--chip)] hover:border-[var(--line-strong)]"
             >
               <svg
                 width="13"

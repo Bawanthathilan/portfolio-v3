@@ -67,7 +67,7 @@ const Experience = () => {
               <span
                 className={[
                   'absolute left-[-22px] top-[6px] w-[14px] h-[14px] rounded-full z-10',
-                  'border-2 transition-all duration-200',
+                  'border-2 transition-[border-color,background-color] duration-200 ease-out',
                   exp.isCurrent
                     ? 'border-[var(--accent)] bg-[var(--accent)]'
                     : 'border-[var(--line-strong)] bg-[var(--bg)] group-hover:border-[var(--fg)]'
@@ -87,7 +87,7 @@ const Experience = () => {
               </span>
 
               {/* Card */}
-              <div className="bg-[var(--bg-elev)] border border-[var(--line)] rounded-[14px] p-5 transition-all duration-200 group-hover:border-[var(--line-strong)] group-hover:translate-x-1 group-hover:shadow-[var(--shadow)]">
+              <div className="bg-[var(--bg-elev)] border border-[var(--line)] rounded-[14px] p-5 transition-[transform,border-color,box-shadow] duration-200 ease-out group-hover:border-[var(--line-strong)] group-hover:translate-x-1 group-hover:shadow-[var(--shadow)]">
                 {/* Meta row */}
                 <div className="flex flex-wrap items-center gap-[10px] mb-[10px]">
                   <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-[var(--fg-subtle)]">

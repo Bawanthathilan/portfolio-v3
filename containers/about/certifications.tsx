@@ -24,7 +24,7 @@ const Certifications = () => {
                 src={AZ900}
                 alt="az_900"
                 fill
-                className=" object-cover transition-all duration-500 ease-in-out group-hover:scale-105"
+                className=" object-cover transition-transform duration-300 ease-out group-hover:scale-105"
               />
             </div>
           </div>
@@ -42,7 +42,7 @@ const Certifications = () => {
                 src={CNCF}
                 alt="az_900"
                 fill
-                className=" object-cover transition-all duration-500 ease-in-out group-hover:scale-105"
+                className=" object-cover transition-transform duration-300 ease-out group-hover:scale-105"
               />
             </div>
           </div>

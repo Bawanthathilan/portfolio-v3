@@ -104,7 +104,7 @@ const Navbar = () => {
               <Link
                 key={link.label}
                 href={link.href}
-                className="font-mono text-[12.5px] text-[var(--fg-muted)] no-underline transition-colors duration-150 hover:text-[var(--fg)]"
+                className="nav-link font-mono text-[12.5px] text-[var(--fg-muted)] no-underline transition-colors duration-150 hover:text-[var(--fg)]"
               >
                 {link.label}
               </Link>

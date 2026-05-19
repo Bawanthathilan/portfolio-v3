@@ -117,6 +117,7 @@ const Work = () => {
                 target={isExternal ? '_blank' : undefined}
                 rel={isExternal ? 'noopener noreferrer' : undefined}
                 className={`proj-card${isFeatured ? ' proj-feature' : ''} relative overflow-hidden`}
+                style={{ animationDelay: `${i * 45}ms` }}
               >
                 {/* Image overlay */}
                 {project.img && (

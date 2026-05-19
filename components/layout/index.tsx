@@ -22,6 +22,37 @@ const Layout = ({ children }: LayoutProps) => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    const attach = () => {
+      document
+        .querySelectorAll('.port-section:not(.is-visible)')
+        .forEach((s) => io.observe(s));
+    };
+
+    attach();
+
+    // Re-scan when DOM changes (page navigation, async data renders)
+    const mo = new MutationObserver(attach);
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[var(--bg)]" suppressHydrationWarning>
       <div className="guides" />

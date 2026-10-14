@@ -38,3 +38,6 @@ next-env.d.ts
 .branches
 .temp
 .env
+
+# yarn
+.yarn/install-state.gz

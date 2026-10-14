@@ -6,6 +6,7 @@ import {
 } from '@/config/keys';
 
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`;
+const RECENTLY_PLAYED_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played?limit=1`;
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 
 const client_id = SPOTIFY_CLIENT_ID;
@@ -48,28 +49,50 @@ export const getNowPlaying = async (
   });
 };
 
+const toTrack = (item) => ({
+  albumImageUrl: item.album.images[0]?.url,
+  artist: item.artists.map((_artist) => _artist.name).join(', '),
+  songUrl: item.external_urls.spotify,
+  title: item.name
+});
+
+// Falls back to the last played track when nothing is playing. That needs the
+// `user-read-recently-played` scope on the refresh token; without it Spotify
+// answers 401/403 and we just report "not playing".
+async function getRecentlyPlayed(access_token) {
+  const response = await fetch(RECENTLY_PLAYED_ENDPOINT, {
+    headers: { Authorization: `Bearer ${access_token}` }
+  });
+  if (!response.ok) return false;
+  const { items } = await response.json();
+  if (!items?.length) return false;
+  return {
+    ...toTrack(items[0].track),
+    isPlaying: false,
+    playedAt: items[0].played_at
+  };
+}
+
 export default async function getNowPlayingItem(
   client_id,
   client_secret,
   refresh_token
 ) {
-  const response = await getNowPlaying(client_id, client_secret, refresh_token);
-  if (response.status === 204 || response.status > 400) {
-    return false;
+  const { access_token } = await getAccessToken(
+    client_id,
+    client_secret,
+    refresh_token
+  );
+
+  const response = await fetch(NOW_PLAYING_ENDPOINT, {
+    headers: { Authorization: `Bearer ${access_token}` }
+  });
+
+  if (response.status === 200) {
+    const song = await response.json();
+    // `item` is null for ads and some podcasts
+    if (song.item) return { ...toTrack(song.item), isPlaying: song.is_playing };
   }
 
-  const song = await response.json();
-  const albumImageUrl = song.item.album.images[0].url;
-  const artist = song.item.artists.map((_artist) => _artist.name).join(', ');
-  const isPlaying = song.is_playing;
-  const songUrl = song.item.external_urls.spotify;
-  const title = song.item.name;
-
-  return {
-    albumImageUrl,
-    artist,
-    isPlaying,
-    songUrl,
-    title
-  };
+  return getRecentlyPlayed(access_token);
 }

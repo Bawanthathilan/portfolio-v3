@@ -14,7 +14,9 @@ const nextConfig = {
       'user-images.githubusercontent.com',
       'pbs.twimg.com',
       'localhost',
-      'lumoz-v2.web.app'
+      'lumoz-v2.web.app',
+      'image.api.playstation.com',
+      'media.rockstargames.com'
     ]
   }
 };

@@ -16,8 +16,17 @@ module.exports = withMT({
   ],
 
   darkMode: 'class',
+  // Only apply hover: styles on devices that can really hover, so taps on
+  // touch screens don't leave elements stuck in their hover state.
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
+      // Stronger curves than the CSS built-ins; `ease-out` and `ease-in-out`
+      // classes now use these.
+      transitionTimingFunction: {
+        out: 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'in-out': 'cubic-bezier(0.77, 0, 0.175, 1)'
+      },
       fontFamily: {
         sans: ["'Geist'", "'Helvetica Neue'", 'sans-serif'],
         mono: ["'Geist Mono'", 'monospace'],

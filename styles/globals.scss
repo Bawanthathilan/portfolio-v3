@@ -6,13 +6,20 @@
 
 /* ───── Design System CSS Variables ───── */
 :root {
-  --bg: #f6f4ef;
-  --bg-elev: #fbfaf6;
-  --fg: #1a1815;
-  --fg-muted: #6b6760;
-  --fg-subtle: #a39f97;
-  --line: #e6e2d8;
-  --line-strong: #d6d1c4;
+  --bg: #fafafa;
+  --bg-elev: #ffffff;
+  --card: #f0f0f0;
+  --card-hover: #e8e8e8;
+  --heat-0: #ebedf0;
+  --heat-1: #9be9a8;
+  --heat-2: #40c463;
+  --heat-3: #30a14e;
+  --heat-4: #216e39;
+  --fg: #171717;
+  --fg-muted: #6b6b6b;
+  --fg-subtle: #a3a3a3;
+  --line: #e5e5e5;
+  --line-strong: #d4d4d4;
   --accent: oklch(0.62 0.14 45);
   --grid: rgba(20, 18, 15, 0.06);
   --grid-strong: rgba(20, 18, 15, 0.1);
@@ -22,13 +29,20 @@
 }
 
 .dark {
-  --bg: #0e0d0c;
-  --bg-elev: #16140f;
-  --fg: #f3efe6;
-  --fg-muted: #8b867d;
-  --fg-subtle: #5a564e;
-  --line: #25221c;
-  --line-strong: #34302a;
+  --bg: #0a0a0a;
+  --bg-elev: #141414;
+  --card: #161616;
+  --card-hover: #1f1f1f;
+  --heat-0: #1b1b1b;
+  --heat-1: #0e4429;
+  --heat-2: #006d32;
+  --heat-3: #26a641;
+  --heat-4: #39d353;
+  --fg: #ededed;
+  --fg-muted: #a0a0a0;
+  --fg-subtle: #5c5c5c;
+  --line: #222222;
+  --line-strong: #333333;
   --accent: oklch(0.72 0.14 55);
   --grid: rgba(243, 239, 230, 0.045);
   --grid-strong: rgba(243, 239, 230, 0.09);
@@ -39,6 +53,36 @@
 
 html {
   scroll-behavior: smooth;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Scroll-in reveal (see <Reveal>). CSS rather than JS so it stays smooth
+   while the page is still busy loading data. */
+.reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 400ms var(--ease-out),
+    transform 400ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-visible='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Keep the fade, drop the movement */
+  .reveal {
+    transform: none;
+    transition: opacity 200ms ease;
+  }
 }
 
 body {
@@ -152,19 +196,11 @@ body {
 }
 
 /* ───── Portfolio Section Blocks ───── */
+/* Visible by default: the layout script that used to add `.is-visible` is
+   gone in v3 (sections use <Reveal> instead). */
 .port-section {
   padding: 80px 0;
   position: relative;
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 0.55s cubic-bezier(0.23, 1, 0.32, 1),
-    transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.port-section.is-visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 @media (max-width: 640px) {
@@ -1366,13 +1402,14 @@ button:active,
 }
 
 /* ───── Reduced motion ───── */
+/* Stop looping keyframe motion (marquee, meteors, radar). Transitions are left
+   alone: reduced motion means gentler, not none, so fades still play. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
 }
 

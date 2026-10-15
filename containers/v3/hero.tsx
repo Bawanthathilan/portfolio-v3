@@ -76,28 +76,28 @@ const Hero = () => {
   const stats = [
     {
       icon: GoGitMerge,
-      tint: 'text-deep-purple-400 bg-deep-purple-500/15',
+      tint: 'text-deep-purple-400 bg-deep-purple-500/[0.15]',
       value: prs?.total,
       label: 'PRs merged upstream',
       href: `https://github.com/search?q=author%3A${profile.github}+is%3Apr+is%3Amerged&type=pullrequests`
     },
     {
       icon: GoPulse,
-      tint: 'text-green-400 bg-green-500/15',
+      tint: 'text-green-400 bg-green-500/[0.15]',
       value: contributions?.total,
       label: 'GitHub contributions this year',
       href: profile.socials.github
     },
     {
       icon: GoRepo,
-      tint: 'text-light-blue-400 bg-light-blue-500/15',
+      tint: 'text-light-blue-400 bg-light-blue-500/[0.15]',
       value: user?.public_repos,
       label: 'public repositories',
       href: `${profile.socials.github}?tab=repositories`
     },
     {
       icon: GoPeople,
-      tint: 'text-amber-400 bg-amber-500/15',
+      tint: 'text-amber-400 bg-amber-500/[0.15]',
       value: user?.followers,
       label: 'followers on GitHub',
       href: `${profile.socials.github}?tab=followers`

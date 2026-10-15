@@ -27,19 +27,15 @@ const SpotifyLogo = ({ size = 13 }: { size?: number }) => (
   </svg>
 );
 
-// Equaliser bars. Constant motion, so it's a looping keyframe; the global
-// reduced-motion rule stops it.
+// Equaliser bars (`.eq-bar` in globals.scss). The global reduced-motion rule
+// stops them.
 const Bars = () => (
   <span className="inline-flex h-[10px] items-end gap-[2px]" aria-hidden="true">
     {[0, 1, 2].map((i) => (
       <span
         key={i}
-        className="h-full w-[2px] origin-bottom rounded-[1px]"
-        style={{
-          background: SPOTIFY_GREEN,
-          animation: 'wave-bar 0.9s ease-in-out infinite',
-          animationDelay: `${i * 0.15}s`
-        }}
+        className="eq-bar h-full w-[2px] rounded-[1px]"
+        style={{ background: SPOTIFY_GREEN }}
       />
     ))}
   </span>
@@ -93,7 +89,7 @@ const SpotifyPill = () => {
         onClick={toggle}
         aria-expanded={open}
         aria-label={`Spotify: ${status}`}
-        className="rounded-full bg-[var(--card)] px-3 py-1.5 transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.97]"
+        className="rounded-full bg-[var(--card)] px-3 py-1.5 transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.96]"
       >
         {pillRow}
       </button>

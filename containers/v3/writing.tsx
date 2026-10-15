@@ -49,7 +49,7 @@ const Writing = () => {
                   {date.toLocaleDateString('en-US', { month: 'short' })} &apos;
                   {String(date.getFullYear()).slice(2)}
                 </span>
-                <span className="text-sm text-[var(--fg)] decoration-[var(--line-strong)] underline-offset-[5px] group-hover:underline">
+                <span className="text-sm text-[var(--fg)] underline decoration-transparent underline-offset-[5px] transition-[color,text-decoration-color] duration-150 group-hover:text-[var(--fg-muted)] group-hover:decoration-[var(--line-strong)]">
                   {post.title}
                 </span>
               </Link>

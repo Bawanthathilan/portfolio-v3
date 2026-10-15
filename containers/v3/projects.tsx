@@ -37,10 +37,10 @@ const ProjectCard = ({ p, i }: { p: Project; i: number }) => {
       target="_blank"
       className={`group relative flex flex-col overflow-hidden rounded-2xl bg-[var(--card)] bg-gradient-to-br ${
         TINTS[i % TINTS.length]
-      } to-transparent p-3 transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.98]`}
+      } to-transparent p-3 transition-transform duration-150 ease-out active:scale-[0.985]`}
     >
       <div className="flex items-start justify-between">
-        <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-xl bg-[var(--bg)] text-sm font-semibold text-[var(--fg)]">
+        <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-xl bg-[var(--bg)] text-sm font-semibold text-[var(--fg)] transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-rotate-6 group-hover:scale-105 group-hover:duration-200 group-hover:ease-out group-focus-visible:-rotate-6 group-focus-visible:scale-105">
           {p.img ? (
             <Image
               src={p.img}
@@ -59,7 +59,7 @@ const ProjectCard = ({ p, i }: { p: Project; i: number }) => {
               <Star className="text-amber-400" /> {stars.toLocaleString()}
             </span>
           )}
-          <ArrowUpRight className="transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          <ArrowUpRight className="transition-[transform,color] duration-150 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--fg)]" />
         </span>
       </div>
       <div className="px-1 pb-1 pt-7">

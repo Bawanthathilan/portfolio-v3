@@ -180,9 +180,12 @@ const LocationPill = () => {
 
   const pillRow = (
     <span className="flex items-center gap-2 text-xs text-[var(--fg)]">
+      {/* Pings while I'm around; a still grey dot when I'm not */}
       <span
-        className={`h-2 w-2 rounded-full ${
-          info && !info.awake ? 'bg-[var(--fg-subtle)]' : 'bg-green-400'
+        className={`relative h-2 w-2 rounded-full ${
+          info && !info.awake
+            ? 'bg-[var(--fg-subtle)]'
+            : 'sonar bg-green-400 text-green-400'
         }`}
       />
       {profile.location}
@@ -207,7 +210,7 @@ const LocationPill = () => {
         onClick={toggle}
         aria-expanded={open}
         aria-label={`${profile.location}, local time and availability`}
-        className="rounded-full bg-[var(--card)] px-3 py-1.5 transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.97]"
+        className="rounded-full bg-[var(--card)] px-3 py-1.5 transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.96]"
       >
         {pillRow}
       </button>

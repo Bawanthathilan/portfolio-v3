@@ -6,7 +6,7 @@ import { FaXTwitter } from 'react-icons/fa6';
 import { GoGitMerge, GoRepo, GoPeople, GoPulse } from 'react-icons/go';
 import Avatar from '@/assets/images/my.webp';
 import { profile } from '@/data/profile';
-import { Card, Doc, Mail, Reveal } from '@/components/v3';
+import { Doc, Mail, Reveal } from '@/components/v3';
 import LocationPill from '@/components/v3/location-pill';
 import SpotifyPill from '@/components/v3/spotify-pill';
 import {
@@ -27,25 +27,29 @@ const Hero = () => {
       icon: GoGitMerge,
       tint: 'text-deep-purple-400 bg-deep-purple-500/15',
       value: fmt(prs?.total),
-      label: 'PRs merged upstream'
+      label: 'PRs merged upstream',
+      href: `https://github.com/search?q=author%3A${profile.github}+is%3Apr+is%3Amerged&type=pullrequests`
     },
     {
       icon: GoPulse,
       tint: 'text-green-400 bg-green-500/15',
       value: fmt(contributions?.total),
-      label: 'GitHub contributions this year'
+      label: 'GitHub contributions this year',
+      href: profile.socials.github
     },
     {
       icon: GoRepo,
       tint: 'text-light-blue-400 bg-light-blue-500/15',
       value: fmt(user?.public_repos),
-      label: 'public repositories'
+      label: 'public repositories',
+      href: `${profile.socials.github}?tab=repositories`
     },
     {
       icon: GoPeople,
       tint: 'text-amber-400 bg-amber-500/15',
       value: fmt(user?.followers),
-      label: 'followers on GitHub'
+      label: 'followers on GitHub',
+      href: `${profile.socials.github}?tab=followers`
     }
   ];
 
@@ -84,7 +88,7 @@ const Hero = () => {
 
       <Reveal
         delay={0.1}
-        className="mt-6 space-y-4 text-sm leading-[1.6] text-[var(--fg-muted)] [&_a]:text-[var(--fg)] [&_a]:underline [&_a]:decoration-[var(--line-strong)] [&_a]:underline-offset-4 hover:[&_a]:decoration-[var(--fg)]"
+        className="mt-6 space-y-4 text-sm leading-[1.6] text-[var(--fg-muted)] [&_a]:text-[var(--fg)] [&_a]:underline [&_a]:decoration-[var(--line-strong)] [&_a]:underline-offset-4 [&_a]:transition-[text-decoration-color] [&_a]:duration-150 [&_a]:ease-out hover:[&_a]:decoration-[var(--fg)] [&_.wipe-link]:no-underline"
       >
         <p>
           I&apos;m a Senior Software Engineer at OREL IT in Colombo, and a
@@ -102,7 +106,11 @@ const Hero = () => {
             Medium
           </Link>
           , and the rest of my experiments live on{' '}
-          <Link href={profile.socials.github} target="_blank">
+          <Link
+            href={profile.socials.github}
+            target="_blank"
+            className="wipe-link"
+          >
             GitHub
           </Link>
           .
@@ -113,10 +121,16 @@ const Hero = () => {
         delay={0.15}
         className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-4"
       >
-        {stats.map(({ icon: Icon, tint, value, label }) => (
-          <Card key={label} className="p-3">
+        {stats.map(({ icon: Icon, tint, value, label, href }) => (
+          <Link
+            key={label}
+            href={href}
+            target="_blank"
+            className="group rounded-2xl bg-[var(--card)] p-3 transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.985]"
+          >
+            {/* Tilts in quickly on hover, springs back on leave */}
             <span
-              className={`grid h-6 w-6 place-items-center rounded-md ${tint}`}
+              className={`grid h-6 w-6 place-items-center rounded-md ${tint} transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-rotate-[8deg] group-hover:scale-110 group-hover:duration-200 group-hover:ease-out group-focus-visible:-rotate-[8deg] group-focus-visible:scale-110`}
             >
               <Icon size={13} />
             </span>
@@ -126,7 +140,7 @@ const Hero = () => {
             <div className="mt-0.5 text-[11px] leading-snug text-[var(--fg-muted)]">
               {label}
             </div>
-          </Card>
+          </Link>
         ))}
       </Reveal>
 
@@ -134,13 +148,13 @@ const Hero = () => {
         <Link
           href={profile.resume}
           target="_blank"
-          className="inline-flex items-center gap-1.5 rounded-full bg-[var(--fg)] px-4 py-2 text-xs font-medium text-[var(--bg)] transition-transform duration-150 ease-out active:scale-[0.97]"
+          className="inline-flex items-center gap-1.5 rounded-full bg-[var(--fg)] px-4 py-2 text-xs font-medium text-[var(--bg)] transition-transform duration-150 ease-out active:scale-[0.96]"
         >
           <Doc /> Resume
         </Link>
         <Link
           href={`mailto:${profile.email}`}
-          className="inline-flex items-center gap-1.5 rounded-full bg-[var(--card)] px-4 py-2 text-xs font-medium text-[var(--fg)] transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.97]"
+          className="inline-flex items-center gap-1.5 rounded-full bg-[var(--card)] px-4 py-2 text-xs font-medium text-[var(--fg)] transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.96]"
         >
           <Mail /> Say hi
         </Link>
@@ -151,7 +165,7 @@ const Hero = () => {
               href={href}
               target="_blank"
               aria-label={label}
-              className="grid h-8 w-8 place-items-center rounded-full text-[var(--fg-muted)] transition-[color,transform] duration-150 ease-out hover:text-[var(--fg)] active:scale-[0.95]"
+              className="grid h-8 w-8 place-items-center rounded-full text-[var(--fg-muted)] transition-colors duration-150 hover:text-[var(--fg)]"
             >
               <Icon size={14} />
             </Link>

@@ -20,6 +20,46 @@ const PLACEHOLDERS = [
   'Jump to projects…'
 ];
 
+// Types each phrase out, holds it, deletes it, then moves on. Paused while
+// `active` is false; with reduced motion it just swaps whole phrases.
+function useTypewriter(phrases: string[], active: boolean) {
+  const [text, setText] = useState(phrases[0]);
+  useEffect(() => {
+    if (!active) return;
+    const reduce = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    let i = 0;
+    let chars = phrases[0].length;
+    let deleting = true;
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      if (reduce) {
+        i = (i + 1) % phrases.length;
+        setText(phrases[i]);
+        timer = setTimeout(tick, 4000);
+        return;
+      }
+      if (deleting) {
+        chars -= 1;
+        if (chars <= 0) {
+          deleting = false;
+          i = (i + 1) % phrases.length;
+        }
+      } else {
+        chars += 1;
+      }
+      setText(phrases[i].slice(0, Math.max(chars, 0)));
+      const done = !deleting && chars >= phrases[i].length;
+      if (done) deleting = true;
+      timer = setTimeout(tick, done ? 2200 : deleting ? 22 : 45);
+    };
+    timer = setTimeout(tick, 2200);
+    return () => clearTimeout(timer);
+  }, [active, phrases]);
+  return text;
+}
+
 // Floating search pill. `/` focuses it; typing filters jump-to commands and
 // anything that matches nothing can be sent as an email.
 const Dock = () => {
@@ -28,8 +68,9 @@ const Dock = () => {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
-  const [placeholder, setPlaceholder] = useState(0);
   const [showTop, setShowTop] = useState(false);
+  const idle = !open && !query;
+  const typed = useTypewriter(PLACEHOLDERS, idle);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -40,14 +81,9 @@ const Dock = () => {
       inputRef.current?.focus();
     };
     const onScroll = () => setShowTop(window.scrollY > 600);
-    const t = setInterval(
-      () => setPlaceholder((p) => (p + 1) % PLACEHOLDERS.length),
-      4000
-    );
     window.addEventListener('keydown', onKey);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
-      clearInterval(t);
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('scroll', onScroll);
     };
@@ -152,17 +188,29 @@ const Dock = () => {
           )}
           <label className="flex h-11 items-center gap-2.5 rounded-full border border-[var(--line)] bg-[color-mix(in_srgb,var(--bg)_90%,transparent)] pl-4 pr-2 shadow-lg backdrop-blur-xl transition-colors focus-within:border-[var(--line-strong)]">
             <Search size={14} className="shrink-0 text-[var(--fg-muted)]" />
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setOpen(true)}
-              onBlur={() => setOpen(false)}
-              onKeyDown={onKeyDown}
-              placeholder={PLACEHOLDERS[placeholder]}
-              aria-label="Search or send a message"
-              className="min-w-0 flex-1 bg-transparent text-[13px] text-[var(--fg)] outline-none placeholder:text-[var(--fg-muted)]"
-            />
+            <span className="relative flex min-w-0 flex-1">
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onFocus={() => setOpen(true)}
+                onBlur={() => setOpen(false)}
+                onKeyDown={onKeyDown}
+                placeholder={idle ? '' : PLACEHOLDERS[0]}
+                aria-label="Search or send a message"
+                className="min-w-0 flex-1 bg-transparent text-[13px] text-[var(--fg)] outline-none placeholder:text-[var(--fg-muted)]"
+              />
+              {/* Typed hint with a blinking caret while the dock is idle */}
+              {idle && (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 left-0 flex items-center whitespace-nowrap text-[13px] text-[var(--fg-muted)]"
+                >
+                  {typed}
+                  <span className="caret ml-px inline-block h-[14px] w-px bg-[var(--fg-muted)]" />
+                </span>
+              )}
+            </span>
             <kbd className="grid h-6 w-6 place-items-center rounded-md bg-[var(--card)] font-mono text-[11px] text-[var(--fg-muted)]">
               /
             </kbd>
@@ -187,9 +235,12 @@ const Dock = () => {
               transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
             }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-5 right-5 z-40 hidden h-11 w-11 place-items-center rounded-full border border-[var(--line)] bg-[var(--bg)] text-[var(--fg)] shadow-lg transition-transform duration-150 ease-out active:scale-[0.95] sm:grid"
+            className="fixed bottom-5 right-5 z-40 hidden h-11 w-11 place-items-center rounded-full border border-[var(--line)] bg-[var(--bg)] text-[var(--fg)] group shadow-lg transition-transform duration-150 ease-out active:scale-[0.96] sm:grid"
           >
-            <ArrowUp size={16} />
+            <ArrowUp
+              size={16}
+              className="transition-transform duration-150 ease-out group-hover:-translate-y-0.5"
+            />
           </motion.button>
         )}
       </AnimatePresence>

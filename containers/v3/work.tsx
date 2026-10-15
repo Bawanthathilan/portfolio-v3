@@ -47,7 +47,7 @@ const Work = () => {
                 type="button"
                 onClick={() => expandable && setOpen(expanded ? -1 : i)}
                 aria-expanded={expandable ? expanded : undefined}
-                className="-mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-[var(--card)]"
+                className="group -mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-xl px-2 py-2.5 text-left"
               >
                 <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg bg-[var(--card-hover)] text-[13px] font-semibold text-[var(--fg)] ring-1 ring-inset ring-[var(--line)]">
                   {LOGOS[name.trim().toLowerCase()] ? (
@@ -77,7 +77,7 @@ const Work = () => {
                 </span>
                 <Chevron
                   className={cn(
-                    'shrink-0 text-[var(--fg-muted)] transition-transform duration-200 ease-in-out',
+                    'shrink-0 text-[var(--fg-muted)] transition-[transform,color] duration-[250ms] ease-out group-hover:text-[var(--fg)]',
                     expanded && 'rotate-180',
                     !expandable && 'invisible'
                   )}

@@ -23,14 +23,27 @@ const OpenSource = () => {
       <div className="mb-4 flex items-center gap-3">
         <div className="flex -space-x-2">
           {owners.slice(0, 8).map((o) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Link
               key={o}
-              src={`https://github.com/${o}.png?size=56`}
-              alt={o}
-              title={o}
-              className="h-7 w-7 rounded-full bg-[var(--card)] ring-2 ring-[var(--bg)]"
-            />
+              href={`https://github.com/${o}`}
+              target="_blank"
+              aria-label={o}
+              className="group relative transition-transform duration-150 ease-out hover:z-10 hover:-translate-y-0.5 focus-visible:z-10"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`https://github.com/${o}.png?size=56`}
+                alt=""
+                className="h-7 w-7 rounded-full bg-[var(--card)] ring-2 ring-[var(--bg)]"
+              />
+              {/* Tooltip: waits 80ms before showing, hides faster than it shows */}
+              <span
+                role="tooltip"
+                className="pointer-events-none invisible absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 translate-y-0.5 scale-[0.97] whitespace-nowrap rounded-md bg-[var(--fg)] px-1.5 py-0.5 text-[11px] text-[var(--bg)] opacity-0 transition-[opacity,transform,visibility] duration-100 ease-out group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-hover:delay-[80ms] group-hover:duration-150 group-focus-visible:visible group-focus-visible:translate-y-0 group-focus-visible:scale-100 group-focus-visible:opacity-100"
+              >
+                {o}
+              </span>
+            </Link>
           ))}
         </div>
         <p className="text-[13px] text-[var(--fg-muted)]">
@@ -49,7 +62,7 @@ const OpenSource = () => {
               <Link
                 href={pr.url}
                 target="_blank"
-                className="flex items-center gap-3 rounded-xl px-2.5 py-2.5 transition-colors hover:bg-[var(--card-hover)]"
+                className="group flex items-center gap-3 rounded-xl px-2.5 py-2.5"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -58,7 +71,7 @@ const OpenSource = () => {
                   className="h-6 w-6 shrink-0 rounded-md"
                 />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[13px] text-[var(--fg)]">
+                  <span className="block truncate text-[13px] text-[var(--fg)] transition-colors duration-150 group-hover:text-[var(--fg-muted)]">
                     {pr.title}
                   </span>
                   <span className="block truncate font-mono text-[11px] text-[var(--fg-muted)]">

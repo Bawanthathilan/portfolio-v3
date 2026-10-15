@@ -61,7 +61,7 @@ export const Section = ({
             className="group flex items-center gap-1 text-[13px] text-[var(--fg-muted)] transition-colors hover:text-[var(--fg)]"
           >
             {action.label}
-            <ArrowRight className="transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+            <ArrowRight className="transition-transform duration-150 ease-out group-hover:translate-x-0.5" />
           </Link>
         )}
       </div>

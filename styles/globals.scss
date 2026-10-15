@@ -57,20 +57,119 @@ html {
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-/* Scroll-in reveal (see <Reveal>). CSS rather than JS so it stays smooth
-   while the page is still busy loading data. */
+/* Scroll-in reveal (see <Reveal>): a short blur-in. CSS rather than JS so it
+   stays smooth while the page is still busy loading data. */
 .reveal {
   opacity: 0;
-  transform: translateY(8px);
+  filter: blur(2px);
+  transform: translateY(4px);
   transition:
-    opacity 400ms var(--ease-out),
-    transform 400ms var(--ease-out);
+    opacity 240ms var(--ease-out),
+    filter 240ms var(--ease-out),
+    transform 240ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
 .reveal[data-visible='true'] {
   opacity: 1;
+  filter: none;
   transform: none;
+}
+
+/* Expanding ring behind the "available" dot */
+@keyframes sonar {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.sonar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: sonar 2s var(--ease-out) infinite;
+}
+
+/* Equaliser bars: out-of-phase durations so they never sync up */
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  25% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.5);
+  }
+  75% {
+    transform: scaleY(0.8);
+  }
+}
+
+.eq-bar {
+  transform-origin: bottom;
+  animation: eq 0.9s ease-in-out infinite;
+}
+.eq-bar:nth-child(2) {
+  animation-duration: 1.1s;
+  animation-delay: -300ms;
+}
+.eq-bar:nth-child(3) {
+  animation-duration: 1.3s;
+  animation-delay: -600ms;
+}
+
+/* Blinking caret for the dock's typed placeholder */
+@keyframes caret {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  animation: caret 1.06s step-end infinite;
+}
+
+/* Underline that wipes in from the left on hover and retracts faster */
+.wipe-link {
+  position: relative;
+  text-decoration: none;
+}
+
+.wipe-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 180ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wipe-link:hover::after {
+    clip-path: inset(0 0 0 0);
+    transition-duration: 240ms;
+  }
+}
+
+.wipe-link:focus-visible::after {
+  clip-path: inset(0 0 0 0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -78,10 +177,22 @@ html {
     scroll-behavior: auto;
   }
 
-  /* Keep the fade, drop the movement */
+  /* Keep the fade, drop the movement and blur */
   .reveal {
     transform: none;
+    filter: none;
     transition: opacity 200ms ease;
+  }
+
+  /* Static underline instead of the wipe */
+  .wipe-link::after {
+    clip-path: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+  .wipe-link:hover::after,
+  .wipe-link:focus-visible::after {
+    opacity: 1;
   }
 }
 

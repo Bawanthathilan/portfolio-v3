@@ -145,7 +145,7 @@ const Caption = ({
       </p>
     </div>
     {arrow && (
-      <ArrowUpRight className="mb-1 shrink-0 text-[var(--fg-muted)] transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      <ArrowUpRight className="mb-1 shrink-0 text-[var(--fg-muted)] transition-[transform,color] duration-150 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--fg)]" />
     )}
   </div>
 );
@@ -170,7 +170,7 @@ const PhotoTile = ({
     onClick={() => onOpen(index)}
     className={`group flex flex-col ${
       wide ? 'sm:flex-row sm:items-center sm:gap-4' : ''
-    } rounded-2xl bg-[var(--card)] p-1.5 text-left transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.99] ${className}`}
+    } rounded-2xl bg-[var(--card)] p-1.5 text-left transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.985] ${className}`}
   >
     <div
       className={`relative min-h-[180px] w-full flex-1 overflow-hidden rounded-xl ${
@@ -182,7 +182,7 @@ const PhotoTile = ({
         alt={PHOTOS[index].alt}
         fill
         sizes="(max-width: 640px) 100vw, 420px"
-        className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+        className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
       />
     </div>
     <Caption title={title} sub={sub} />
@@ -214,7 +214,7 @@ const Lightbox = ({
   }, [onClose, onStep]);
 
   const navButton =
-    'grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white backdrop-blur-md transition-[background-color,transform] duration-150 ease-out hover:bg-white/20 active:scale-[0.95]';
+    'grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white backdrop-blur-md transition-[background-color,transform] duration-150 ease-out hover:bg-white/20 active:scale-[0.96]';
 
   return (
     <motion.div
@@ -321,13 +321,15 @@ const OffTheClock = () => {
           onOpen={setOpen}
         />
 
-        <Card className="flex flex-col justify-between p-1.5">
+        <Card className="group flex flex-col justify-between p-1.5">
           <div className="grid grid-cols-3 gap-1.5">
-            {GAMES.map((g) => (
+            {GAMES.map((g, i) => (
               <div
                 key={g.title}
                 title={g.title}
-                className={`relative flex aspect-[4/3] items-end sm:aspect-[3/4] overflow-hidden rounded-lg bg-gradient-to-br ${g.tile} p-2`}
+                // Covers lift one after another on hover, then settle together
+                style={{ '--d': `${i * 40}ms` } as React.CSSProperties}
+                className={`relative flex aspect-[4/3] items-end sm:aspect-[3/4] overflow-hidden rounded-lg bg-gradient-to-br ${g.tile} p-2 transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:[transition-delay:var(--d)]`}
               >
                 <span className="absolute right-1.5 top-1 text-[10px] font-medium uppercase tracking-wider text-white/60">
                   {g.mark}

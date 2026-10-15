@@ -23,7 +23,7 @@ const Navbar = () => {
           type="button"
           aria-label="Toggle theme"
           onClick={() => setTheme(dark ? 'light' : 'dark')}
-          className="grid h-8 w-8 place-items-center rounded-full text-[var(--fg-muted)] transition-[color,transform] duration-150 ease-out hover:text-[var(--fg)] active:scale-[0.95]"
+          className="grid h-8 w-8 place-items-center rounded-full text-[var(--fg-muted)] transition-[color,background-color,transform] duration-150 ease-out hover:bg-[var(--card)] hover:text-[var(--fg)] active:scale-[0.96]"
         >
           {mounted && (
             <svg

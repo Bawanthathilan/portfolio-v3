@@ -33,6 +33,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      certifications: {
+        Row: {
+          badge: string | null;
+          display: boolean;
+          id: number;
+          issuer: string | null;
+          link: string | null;
+          name: string;
+          position: number | null;
+          year: string | null;
+        };
+        Insert: {
+          badge?: string | null;
+          display?: boolean;
+          id?: number;
+          issuer?: string | null;
+          link?: string | null;
+          name: string;
+          position?: number | null;
+          year?: string | null;
+        };
+        Update: {
+          badge?: string | null;
+          display?: boolean;
+          id?: number;
+          issuer?: string | null;
+          link?: string | null;
+          name?: string;
+          position?: number | null;
+          year?: string | null;
+        };
+        Relationships: [];
+      };
       guestbook: {
         Row: {
           created_at: string | null;
@@ -85,7 +118,9 @@ export type Database = {
         Row: {
           category: string | null;
           desc: string | null;
+          display: boolean | null;
           github: string | null;
+          icon: string | null;
           id: number;
           img: string | null;
           name: string | null;
@@ -95,7 +130,9 @@ export type Database = {
         Insert: {
           category?: string | null;
           desc?: string | null;
+          display?: boolean | null;
           github?: string | null;
+          icon?: string | null;
           id?: number;
           img?: string | null;
           name?: string | null;
@@ -105,7 +142,9 @@ export type Database = {
         Update: {
           category?: string | null;
           desc?: string | null;
+          display?: boolean | null;
           github?: string | null;
+          icon?: string | null;
           id?: number;
           img?: string | null;
           name?: string | null;
@@ -118,6 +157,7 @@ export type Database = {
         Row: {
           Company_name: string | null;
           Desc: string | null;
+          description: string[] | null;
           endYear: string | null;
           id: number;
           position: number | null;
@@ -126,6 +166,7 @@ export type Database = {
         Insert: {
           Company_name?: string | null;
           Desc?: string | null;
+          description?: string[] | null;
           endYear?: string | null;
           id: number;
           position?: number | null;
@@ -134,6 +175,7 @@ export type Database = {
         Update: {
           Company_name?: string | null;
           Desc?: string | null;
+          description?: string[] | null;
           endYear?: string | null;
           id?: number;
           position?: number | null;

@@ -2,56 +2,180 @@
 @tailwind components;
 @tailwind utilities;
 
-// @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
-@import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
+/* ───── Theme ───── */
+:root {
+  --bg: #fafafa;
+  --card: #f0f0f0;
+  --card-hover: #e8e8e8;
+  --fg: #171717;
+  --fg-muted: #6b6b6b;
+  --fg-subtle: #a3a3a3;
+  --line: #e5e5e5;
+  --line-strong: #d4d4d4;
+  /* Availability badge: hairline edge + lift shadows, status lights */
+  --badge-edge: rgb(0 0 0 / 0.28);
+  --badge-lift: rgb(0 0 0 / 0.08);
+  --status-available: #16a34a;
+  --status-busy: #d97706;
+  --status-away: #8f8f8f;
+  /* GitHub's diff and contribution colours */
+  --diff-add: #1a7f37;
+  --diff-del: #cf222e;
+  --heat-0: #ebedf0;
+  --heat-1: #9be9a8;
+  --heat-2: #40c463;
+  --heat-3: #30a14e;
+  --heat-4: #216e39;
+}
 
+.dark {
+  --bg: #0a0a0a;
+  --card: #161616;
+  --card-hover: #1f1f1f;
+  --fg: #ededed;
+  --fg-muted: #a0a0a0;
+  --fg-subtle: #5c5c5c;
+  --line: #222222;
+  --line-strong: #333333;
+  --badge-edge: rgb(255 255 255 / 0.22);
+  --badge-lift: rgb(0 0 0 / 0.5);
+  --status-available: #3fcf6e;
+  --status-busy: #f5a524;
+  --status-away: #737373;
+  --diff-add: #3fb950;
+  --diff-del: #f85149;
+  --heat-0: #1b1b1b;
+  --heat-1: #0e4429;
+  --heat-2: #006d32;
+  --heat-3: #26a641;
+  --heat-4: #39d353;
+}
+
+/* ───── Base ───── */
 html {
   scroll-behavior: smooth;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 body {
-  font-family: 'Helvetica Neue', sans-serif;
-  letter-spacing: normal;
+  font-family: 'Geist', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+  overflow-x: hidden;
 }
 
-.titleFont {
-  font-family: 'Helvetica Neue', sans-serif;
-  font-weight: bolder;
-  letter-spacing: -2px;
+/* ───── Motion ───── */
+
+/* Scroll-in reveal (see <Reveal>): a short blur-in. CSS rather than JS so it
+   stays smooth while the page is still busy loading data. */
+.reveal {
+  opacity: 0;
+  filter: blur(2px);
+  transform: translateY(4px);
+  transition:
+    opacity 240ms var(--ease-out),
+    filter 240ms var(--ease-out),
+    transform 240ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
-.marq {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+.reveal[data-visible='true'] {
+  opacity: 1;
+  filter: none;
+  transform: none;
 }
 
-$path-length: 1000.2890625px;
-$size: 10rem;
-$bg: #fff;
-$text-color: rgba(#000, 0.8);
+/* Expanding ring behind a status dot (current role) */
+@keyframes sonar {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
 
-.mySvg {
-  width: $size;
-  animation: move 1s ease forwards 1.5s;
-  path {
-    fill: none;
-    stroke: rgba($text-color, 0.2);
-    stroke-width: 12.5;
-    z-index: 2;
-    &.track {
-      stroke: $text-color;
-      stroke-dashoffset: $path-length;
-      stroke-dasharray: $path-length;
-      stroke-linecap: round;
-      animation: anim 5s ease forwards;
-      @keyframes anim {
-        0% {
-          stroke-dashoffset: $path-length;
-        }
-        100% {
-          stroke-dashoffset: $path-length * 2;
-        }
-      }
-    }
+.sonar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: sonar 2s var(--ease-out) infinite;
+}
+
+/* Spotify equaliser bars: out-of-phase durations so they never sync up */
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  25% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.5);
+  }
+  75% {
+    transform: scaleY(0.8);
+  }
+}
+
+.eq-bar {
+  transform-origin: bottom;
+  animation: eq 0.9s ease-in-out infinite;
+}
+.eq-bar:nth-child(2) {
+  animation-duration: 1.1s;
+  animation-delay: -300ms;
+}
+.eq-bar:nth-child(3) {
+  animation-duration: 1.3s;
+  animation-delay: -600ms;
+}
+
+/* Blinking caret for the dock's typed placeholder */
+@keyframes caret {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  animation: caret 1.06s step-end infinite;
+}
+
+/* ───── Reduced motion ───── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Keep the fade, drop the movement and blur */
+  .reveal {
+    transform: none;
+    filter: none;
+    transition: opacity 200ms ease;
+  }
+
+  /* Stop looping keyframe motion (pings, equaliser, caret). Transitions are
+     left alone: reduced motion means gentler, not none, so fades still play. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

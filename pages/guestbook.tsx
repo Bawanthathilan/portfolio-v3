@@ -1,180 +1,231 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { createClient } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../config/keys';
 import { AiOutlineGithub } from 'react-icons/ai';
-import ContentLoader from 'react-content-loader';
-import Title from '@/components/Title';
+import useSupabaseBrowser from '@/utils/supabase-browser';
+import { ArrowRight, Card, Reveal } from '@/components/v3';
+import { cn } from '@/utils/cn';
+
+interface GuestEntry {
+  id: string;
+  username: string | null;
+  message: string | null;
+  created_at: string | null;
+}
+
+const MAX_LENGTH = 280;
+
+const formatDate = (iso: string | null) =>
+  iso
+    ? new Date(iso).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      })
+    : '';
+
+const QUOTE_TINTS = [
+  'text-pink-400',
+  'text-deep-purple-400',
+  'text-amber-400',
+  'text-light-blue-400',
+  'text-green-400'
+];
 
 const Guestbook = () => {
-  const { data: session }: any = useSession<any>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<any>('');
-  const [userMsg, setUserMsg] = useState<any>([]);
+  const supabase = useSupabaseBrowser();
+  const { data: session, status } = useSession();
+  const [entries, setEntries] = useState<GuestEntry[]>([]);
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const getGuestBookData = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('guestbook')
-        .select()
-        .order('created_at', { ascending: false });
-
-      setMessage(data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+  const fetchEntries = async () => {
+    const { data, error } = await supabase
+      .from('guestbook')
+      .select('id, username, message, created_at')
+      .order('created_at', { ascending: false });
+    if (error) setError('Could not load the guestbook. Try refreshing.');
+    setEntries(data ?? []);
+    setLoading(false);
   };
 
   useEffect(() => {
-    getGuestBookData();
+    fetchEntries();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleInput = (e: any) => {
-    setUserMsg(e.target.value);
-  };
-
-  const createMessage = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const { data, error }: any = await supabase.from('guestbook').insert([
-        {
-          message: userMsg,
-          user_id: session?.user?.id,
-          username: session?.user?.name
-        }
-      ]);
-      setUserMsg('');
-      getGuestBookData();
-    } catch (error) {
-      console.log(error);
+    const text = message.trim();
+    if (!text || !session?.user) return;
+    setSubmitting(true);
+    setError(null);
+    const { error } = await supabase.from('guestbook').insert({
+      message: text,
+      username: session.user.name ?? session.user.email ?? 'Anonymous'
+    });
+    if (error) {
+      setError('Your note did not go through. Please try again.');
+    } else {
+      setMessage('');
+      await fetchEntries();
     }
+    setSubmitting(false);
   };
 
   return (
-    <div className=" h-[100vh] overflow-y-auto mt-10 z-50">
-      <div className="relative">
-        <Title title="GuestBook" />
-        <p className="mt-2 text-textPrimary">
-          Write anything for future visitors of this website.🤩
-        </p>
-      </div>
+    <>
+      <Head>
+        <title>Guestbook · Bawantha Thilan</title>
+      </Head>
 
-      <div className="mt-10">
-        {session ? (
-          <>
-            <div className="flex flex-col gap-5">
-              <h4 className="text-lg">sign in as {session.user.name}</h4>
-              <div>
-                <form onSubmit={createMessage} className="flex flex-row gap-3">
-                  <input
-                    type="text"
-                    value={userMsg}
-                    onChange={handleInput}
-                    className="border-2 p-2 rounded-md w-full"
-                    placeholder="Enter Your Message"
-                  />
-                  <button
-                    type="submit"
-                    className=" bg-primary px-5 rounded-md text-white w-[250px]"
-                  >
-                    Submit
-                  </button>
-                </form>
-              </div>
+      <section className="pt-16 sm:pt-20">
+        <Reveal>
+          <Link
+            href="/#guestbook"
+            className="group mb-6 inline-flex items-center gap-1 text-[13px] text-[var(--fg-muted)] transition-colors hover:text-[var(--fg)]"
+          >
+            <ArrowRight className="rotate-180 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
+            Back home
+          </Link>
+          <h1 className="text-[26px] font-medium tracking-[-0.02em] text-[var(--fg)]">
+            Guestbook
+          </h1>
+          <p className="mt-2 text-sm leading-[1.6] text-[var(--fg-muted)]">
+            Leave a note for me and future visitors. A hello, some feedback, or
+            just a wave.
+          </p>
+        </Reveal>
 
+        <Reveal delay={0.05} className="mt-8">
+          {status === 'loading' ? (
+            <Card className="h-[120px] animate-pulse" />
+          ) : session?.user ? (
+            <Card className="p-4">
+              <form onSubmit={handleSubmit}>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    // ⌘/Ctrl + Enter submits, like most comment boxes.
+                    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey))
+                      handleSubmit(e);
+                  }}
+                  maxLength={MAX_LENGTH}
+                  rows={3}
+                  placeholder="Write something nice…"
+                  aria-label="Your note"
+                  className="w-full resize-none bg-transparent text-sm leading-[1.6] text-[var(--fg)] outline-none placeholder:text-[var(--fg-muted)]"
+                />
+                <div className="mt-3 flex items-center justify-between gap-3">
+                  <span className="truncate text-xs text-[var(--fg-muted)]">
+                    Signing as{' '}
+                    <span className="text-[var(--fg)]">
+                      {session.user.name}
+                    </span>
+                    <span className="mx-1.5">·</span>
+                    <button
+                      type="button"
+                      onClick={() => signOut({ redirect: false })}
+                      className="underline underline-offset-2 transition-colors hover:text-[var(--fg)]"
+                    >
+                      sign out
+                    </button>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-3">
+                    <span
+                      className={cn(
+                        'text-xs tabular-nums text-[var(--fg-muted)]',
+                        message.length > MAX_LENGTH - 20 && 'text-amber-400'
+                      )}
+                    >
+                      {MAX_LENGTH - message.length}
+                    </span>
+                    <button
+                      type="submit"
+                      disabled={submitting || !message.trim()}
+                      className="rounded-full bg-[var(--fg)] px-4 py-1.5 text-xs font-medium text-[var(--bg)] transition-[opacity,transform] duration-150 ease-out active:scale-[0.97] disabled:opacity-40"
+                    >
+                      {submitting ? 'Signing…' : 'Sign'}
+                    </button>
+                  </span>
+                </div>
+              </form>
+            </Card>
+          ) : (
+            <Card className="flex flex-col items-start gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-[13px] text-[var(--fg-muted)]">
+                Sign in with GitHub to leave a note. Only your name is shown.
+              </p>
               <button
-                onClick={() => signOut()}
-                className="bg-primary text-white flex flex-row gap-3 items-center p-3 rounded-md w-[250px] justify-center"
-              >
-                <span>
-                  <AiOutlineGithub size={20} />
-                </span>{' '}
-                Sign out
-              </button>
-            </div>
-            <div className="mt-10 flex flex-col gap-3">
-              {loading && (
-                <ContentLoader
-                  speed={2}
-                  width="100%"
-                  height={160}
-                  viewBox="0 0 1024 160"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
-                >
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                </ContentLoader>
-              )}
-              {message &&
-                message.map((item: any, index: number) => (
-                  <div
-                    key={index}
-                    className="flex flex-row gap-5 bg-secondary p-5 rounded-xl justify-between mt-5"
-                  >
-                    <div className="left flex flex-row gap-5">
-                      <p style={{ color: '#525252' }}>{item.username} : </p>
-                      <p style={{ color: '#525252' }}>{item.message}</p>
-                    </div>
-
-                    <p style={{ color: '#525252' }}>{item.created_at}</p>
-                  </div>
-                ))}
-            </div>
-          </>
-        ) : (
-          <div>
-            <div className=" flex flex-col justify-center">
-              <h4>Your are not signed in</h4> <br />
-              <button
+                type="button"
                 onClick={() => signIn('github')}
-                className=" bg-gray-900 flex flex-row justify-center gap-5 rounded-xl text-white px-5 py-3"
+                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[var(--fg)] px-4 py-2 text-xs font-medium text-[var(--bg)] transition-transform duration-150 ease-out active:scale-[0.97]"
               >
-                <span>
-                  <AiOutlineGithub size={20} />
-                </span>{' '}
-                Sign in with Github
+                <AiOutlineGithub size={15} />
+                Sign in with GitHub
               </button>
-            </div>
-            <div className="mt-10 flex flex-col gap-3">
-              {loading && (
-                <ContentLoader
-                  speed={2}
-                  width="100%"
-                  height={160}
-                  viewBox="0 0 1024 160"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
-                >
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                  <rect x="-1" y="48" rx="3" ry="3" width="100%" height="40" />
-                </ContentLoader>
-              )}
-              {message &&
-                message.map((item: any, index: number) => (
-                  <div
-                    key={index}
-                    className="flex flex-row gap-5 bg-secondary p-5 rounded-xl justify-between"
-                  >
-                    <div className="left flex flex-row gap-5">
-                      <p style={{ color: '#525252' }}>{item.username} : </p>
-                      <p style={{ color: '#525252' }}>{item.message}</p>
-                    </div>
+            </Card>
+          )}
+          {error && (
+            <p role="alert" className="mt-3 text-[13px] text-pink-400">
+              {error}
+            </p>
+          )}
+        </Reveal>
 
-                    <p style={{ color: '#525252' }}>{item.created_at}</p>
-                  </div>
-                ))}
+        <Reveal delay={0.1} className="mt-12">
+          <h2 className="mb-5 font-mono text-xs text-[var(--fg-muted)]">
+            notes
+            <span className="text-[var(--fg-subtle)]">
+              <span className="mx-2">/</span>
+              {loading ? '…' : `${entries.length} signed`}
+            </span>
+          </h2>
+
+          {loading ? (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {[0, 1, 2, 3].map((i) => (
+                <Card key={i} className="h-[120px] animate-pulse" />
+              ))}
             </div>
-          </div>
-        )}
-      </div>
-    </div>
+          ) : entries.length === 0 ? (
+            <Card className="p-8 text-center text-[13px] text-[var(--fg-muted)]">
+              No notes yet. Be the first to sign.
+            </Card>
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {entries.map((entry, i) => (
+                <Card key={entry.id} className="flex flex-col p-4">
+                  <p className="whitespace-pre-line break-words text-[13px] leading-[1.6] text-[var(--fg)]">
+                    <span
+                      className={`mr-0.5 ${QUOTE_TINTS[i % QUOTE_TINTS.length]}`}
+                    >
+                      &ldquo;
+                    </span>
+                    {entry.message}
+                  </p>
+                  <div className="mt-auto flex items-center justify-between gap-2 pt-4 text-xs text-[var(--fg-muted)]">
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[var(--card-hover)] text-[10px] text-[var(--fg)]">
+                        {(entry.username ?? '?').charAt(0)}
+                      </span>
+                      <span className="truncate">{entry.username}</span>
+                    </span>
+                    <span className="shrink-0">
+                      {formatDate(entry.created_at)}
+                    </span>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </Reveal>
+      </section>
+    </>
   );
 };
 

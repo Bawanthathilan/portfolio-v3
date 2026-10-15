@@ -1,0 +1,553 @@
+// Adapted from ui lab by Yash Bavadiya (MIT, see THIRD_PARTY_NOTICES.md):
+// https://github.com/xevrion/ui-lab/blob/main/src/lab/components/availability-badge.tsx
+// Changes: React 18 / Tailwind v3, theme colours from CSS variables instead
+// of light-dark(), a compact pill size, status derived from working hours
+// when not given, the wrapper reserves the pill's width so neighbours don't
+// slide under it, no demo.
+import React, {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore
+} from 'react';
+import { cn } from '@/utils/cn';
+
+/* The badge is one card clipped down to a pill. Opening animates clip-path
+   from the pill's box to the card's box, so the pill you're pointing at never
+   moves or redraws; the rest of the card is uncovered around it. The strip
+   below answers the visitor's real question: when are we both working? */
+
+export type Availability = 'available' | 'busy' | 'away';
+
+const STATUS: Record<Availability, { label: string; dot: string }> = {
+  available: { label: 'Available for work', dot: 'var(--status-available)' },
+  busy: { label: 'Booked up for now', dot: 'var(--status-busy)' },
+  away: { label: 'Away right now', dot: 'var(--status-away)' }
+};
+
+const PULSE_CSS = `
+@keyframes availability-sonar { from { transform: scale(1); opacity: .55 } to { transform: scale(2.6); opacity: 0 } }
+@keyframes availability-beat { 0%, 40%, 100% { transform: scale(1) } 12% { transform: scale(1.35) } 26% { transform: scale(1.15) } }
+@media (prefers-reduced-motion: reduce) { .availability-pulse { animation: none !important } }
+`;
+
+const DAY = 1440;
+
+/* Time */
+
+function offsetMinutes(timeZone: string, at: Date) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hourCycle: 'h23',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  }).formatToParts(at);
+  const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+  const asUtc = Date.UTC(
+    get('year'),
+    get('month') - 1,
+    get('day'),
+    get('hour'),
+    get('minute')
+  );
+  return Math.round((asUtc - Math.floor(at.getTime() / 60000) * 60000) / 60000);
+}
+
+const minutesIn = (timeZone: string, at: Date) => {
+  const utc = at.getUTCHours() * 60 + at.getUTCMinutes();
+  return (((utc + offsetMinutes(timeZone, at)) % DAY) + DAY) % DAY;
+};
+
+function clock(minutes: number) {
+  const h = Math.floor(minutes / 60) % 24;
+  const m = minutes % 60;
+  const suffix = h < 12 ? 'am' : 'pm';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return m === 0
+    ? `${h12}${suffix}`
+    : `${h12}:${String(m).padStart(2, '0')}${suffix}`;
+}
+
+const city = (timeZone: string) =>
+  timeZone.split('/').pop()!.replace(/_/g, ' ');
+
+// One shared minute clock. It ticks on the minute boundary, not every 60s
+// from mount, so the displayed time never lags the real one.
+const minuteStore = (() => {
+  let now = 0;
+  const subs = new Set<() => void>();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const tick = () => {
+    now = Date.now();
+    subs.forEach((f) => f());
+    timer = setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
+  };
+  return {
+    subscribe(f: () => void) {
+      subs.add(f);
+      if (subs.size === 1) tick();
+      return () => {
+        subs.delete(f);
+        if (subs.size === 0) clearTimeout(timer);
+      };
+    },
+    get: () => now
+  };
+})();
+
+// Zero on the server and during hydration, so nothing time-based renders
+// until the client knows the real time.
+const useNow = () =>
+  useSyncExternalStore(minuteStore.subscribe, minuteStore.get, () => 0);
+
+const noop = () => () => {};
+const useVisitorZone = () =>
+  useSyncExternalStore(
+    noop,
+    () => Intl.DateTimeFormat().resolvedOptions().timeZone,
+    () => null
+  );
+
+/* Ranges on a 24h clock, split where they wrap past midnight. */
+
+type Span = [number, number];
+
+function spans(start: number, end: number): Span[] {
+  const s = ((start % DAY) + DAY) % DAY;
+  const len = (((end - start) % DAY) + DAY) % DAY || DAY;
+  return s + len <= DAY
+    ? [[s, s + len]]
+    : [
+        [s, DAY],
+        [0, s + len - DAY]
+      ];
+}
+
+function intersect(a: Span[], b: Span[]): Span[] {
+  const out: Span[] = [];
+  for (const [a0, a1] of a)
+    for (const [b0, b1] of b) {
+      const s = Math.max(a0, b0);
+      const e = Math.min(a1, b1);
+      if (e > s) out.push([s, e]);
+    }
+  // A window crossing midnight comes back as two pieces; the one starting
+  // later in the day is where it really begins.
+  return out.sort((x, y) => x[0] - y[0]);
+}
+
+/* The little sky: a sun by day, a moon by night, riding one arc. */
+
+function Sky({ minutes }: { minutes: number }) {
+  const day = minutes >= 360 && minutes < 1080;
+  // 6am to 6pm maps across the arc for the sun, 6pm to 6am for the moon.
+  const t = ((minutes - (day ? 360 : 1080) + DAY) % DAY) / 720;
+  const angle = Math.PI * (1 - t);
+  const x = 12 + 9 * Math.cos(angle);
+  const y = 12 - 8 * Math.sin(angle);
+  return (
+    <svg
+      viewBox="0 0 24 14"
+      className="h-3.5 w-6 shrink-0 overflow-visible"
+      aria-hidden
+    >
+      <path
+        d="M3 12a9 8 0 0 1 18 0"
+        fill="none"
+        stroke="currentColor"
+        strokeOpacity={0.45}
+        strokeWidth={1}
+        strokeDasharray="1.5 1.5"
+      />
+      <path
+        d="M1.5 12h21"
+        stroke="currentColor"
+        strokeOpacity={0.45}
+        strokeWidth={1}
+      />
+      <g
+        style={{ transform: `translate(${x}px, ${y}px)` }}
+        className="transition-transform duration-700 ease-out"
+      >
+        {day ? (
+          <circle r={2.8} fill="currentColor" />
+        ) : (
+          <path
+            d="M1.2-2.4a2.6 2.6 0 1 0 1.3 3.6A2.1 2.1 0 0 1 1.2-2.4z"
+            fill="currentColor"
+          />
+        )}
+      </g>
+    </svg>
+  );
+}
+
+function StatusDot({ status }: { status: Availability }) {
+  const color = STATUS[status].dot;
+  return (
+    <span
+      aria-hidden
+      className="relative flex h-2 w-2 shrink-0 items-center justify-center"
+    >
+      {status === 'available' && (
+        // Sonar: open for business, broadcasting.
+        <span
+          className="availability-pulse absolute inset-0 rounded-full"
+          style={{
+            background: color,
+            animation:
+              'availability-sonar 2s cubic-bezier(0.23,1,0.32,1) infinite'
+          }}
+        />
+      )}
+      <span
+        className={cn(
+          'availability-pulse relative h-2 w-2 rounded-full',
+          status === 'away' && 'border-2 bg-transparent'
+        )}
+        style={
+          status === 'busy'
+            ? // Heartbeat: alive and working, just not taking more.
+              {
+                background: color,
+                animation: 'availability-beat 1.6s ease-out infinite'
+              }
+            : status === 'away'
+              ? // Hollow and still: nobody at the desk.
+                { borderColor: color }
+              : { background: color }
+        }
+      />
+    </span>
+  );
+}
+
+// Translucent foreground fills; Tailwind v3 can't put an opacity modifier
+// on a CSS-variable colour, so mix it explicitly.
+const fg = (pct: number) =>
+  `color-mix(in srgb, var(--fg) ${pct}%, transparent)`;
+
+export function AvailabilityBadge({
+  timeZone,
+  hours = [9, 18],
+  status,
+  label,
+  replyHint = 'Replies within a day',
+  name = 'me',
+  place,
+  zoneName,
+  visitorTimeZone,
+  visitorHours = [9, 18],
+  className
+}: {
+  // IANA zone of the owner, like "Asia/Colombo".
+  timeZone: string;
+  // Working hours in the owner's local time, 24h. Fractions allowed: 9.5 is 9:30.
+  hours?: [number, number];
+  // Left out: "available" during working hours, "away" outside them.
+  status?: Availability;
+  label?: string;
+  replyHint?: string;
+  name?: string;
+  // Where the owner is, when it isn't the time zone's namesake city
+  // (Belihuloya is on Asia/Colombo time). Defaults to that city.
+  place?: string;
+  // What to call the shared zone ("Sri Lanka time"). Defaults to the city.
+  zoneName?: string;
+  // Defaults to the visitor's own zone from Intl.
+  visitorTimeZone?: string;
+  // The visitor's assumed working day, for the overlap.
+  visitorHours?: [number, number];
+  className?: string;
+}) {
+  const id = useId();
+  const nowMs = useNow();
+  const detected = useVisitorZone();
+  const zone = visitorTimeZone ?? detected;
+  const [open, setOpen] = useState(false);
+  const card = useRef<HTMLDivElement>(null);
+  const pill = useRef<HTMLButtonElement>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>();
+  // How much of the card to cut away on the right and bottom to leave just
+  // the pill, plus the pill's width so the wrapper holds its place in the
+  // row. Only changes on resize, never while opening.
+  const [clip, setClip] = useState({ right: 0, bottom: 0, pillWidth: 0 });
+
+  useLayoutEffect(() => {
+    const c = card.current;
+    const p = pill.current;
+    if (!c || !p) return;
+    const measure = () =>
+      setClip({
+        right: c.offsetWidth - p.offsetWidth,
+        bottom: c.offsetHeight - p.offsetHeight,
+        pillWidth: p.offsetWidth
+      });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(c);
+    ro.observe(p);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  // A press anywhere outside closes it. Blur can't be relied on: iOS Safari
+  // doesn't focus buttons on tap or blur them on an outside tap, so a card
+  // opened by touch would otherwise stay stuck open.
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) {
+        clearTimeout(closeTimer.current);
+        setOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  const show = () => {
+    clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  // A short grace period, so crossing the gap between pill and card edge,
+  // or a jittery pointer, never snaps it shut.
+  const hide = () => {
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  const ready = nowMs > 0 && zone !== null;
+  const now = new Date(nowMs);
+  const ownerMinutes = ready ? minutesIn(timeZone, now) : 0;
+  const visitorMinutes = ready ? minutesIn(zone, now) : 0;
+  const shift = ready
+    ? offsetMinutes(zone, now) - offsetMinutes(timeZone, now)
+    : 0;
+  const same = shift === 0;
+
+  // Everything below is drawn on the visitor's clock.
+  const owner = spans(hours[0] * 60 + shift, hours[1] * 60 + shift);
+  const visitor = spans(visitorHours[0] * 60, visitorHours[1] * 60);
+  const both = intersect(owner, visitor);
+  // Rejoin a window split at midnight for the sentence.
+  const best: Span | null =
+    both.length === 0
+      ? null
+      : both.length === 2 && both[0][0] === 0 && both[1][1] === DAY
+        ? [both[1][0], both[0][1] + DAY]
+        : both.reduce((a, b) => (b[1] - b[0] > a[1] - a[0] ? b : a));
+
+  const sentence = !ready
+    ? ' '
+    : best
+      ? `Best time to reach me: ${clock(best[0] % DAY)} to ${clock(best[1] % DAY)} your time`
+      : `Our days don't overlap. I start at ${clock(owner[0][0])} your time`;
+
+  const working = owner.some(
+    ([s, e]) => visitorMinutes >= s && visitorMinutes < e
+  );
+  const effectiveStatus: Availability =
+    status ?? (!ready || working ? 'available' : 'away');
+  const pct = (m: number) => `${(m / DAY) * 100}%`;
+  const here = place ?? city(timeZone);
+
+  return (
+    <div
+      ref={root}
+      className={cn('relative h-8 max-w-full', className)}
+      // Hold the pill's place in the row; the card itself is absolute.
+      style={{ width: clip.pillWidth || undefined }}
+      onPointerEnter={(e) => {
+        if (e.pointerType !== 'touch') show();
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType !== 'touch') hide();
+      }}
+      // No open on focus: the keyboard opens it with Enter or Space, which
+      // would otherwise shut the card that focus had just opened.
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) hide();
+      }}
+    >
+      <style>{PULSE_CSS}</style>
+      {/* Shadows sit on a wrapper: a filter on the parent follows the
+          clipped shape, while a box-shadow on the card would be clipped
+          away. A hairline stands in for a border (a real border would be
+          clipped at the pill's edge), plus the lift. */}
+      <div className="pointer-events-none absolute left-0 top-0 z-20 [filter:drop-shadow(0_0_0.5px_var(--badge-edge))_drop-shadow(0_6px_14px_var(--badge-lift))]">
+        <div
+          ref={card}
+          style={{
+            clipPath: open
+              ? 'inset(0 0 0 0 round 16px)'
+              : `inset(0 ${clip.right}px ${clip.bottom}px 0 round 16px)`
+          }}
+          className={cn(
+            // The wrapper above ignores the pointer (it spans the full card
+            // width even when closed, over the neighbouring pills); this card
+            // takes it back, and its clip-path limits hits to what's visible.
+            'pointer-events-auto w-[360px] max-w-[calc(100vw-32px)] bg-[var(--card)] text-[var(--fg)]',
+            '[transition-property:clip-path] ease-out motion-reduce:duration-0',
+            // Opening is what's being looked at; closing just gets out of
+            // the way, so it's quicker.
+            open ? 'duration-[260ms]' : 'duration-[180ms]'
+          )}
+        >
+          <button
+            ref={pill}
+            type="button"
+            aria-expanded={open}
+            aria-controls={`${id}-panel`}
+            // A mouse already opened it on hover, so its click must not shut
+            // it again; touch and keyboard toggle.
+            onClick={(e) => {
+              const n = e.nativeEvent;
+              const fromMouse =
+                typeof PointerEvent !== 'undefined' &&
+                n instanceof PointerEvent &&
+                n.pointerType === 'mouse';
+              setOpen((o) => (fromMouse ? true : !o));
+            }}
+            className="flex h-8 w-fit touch-manipulation items-center gap-2 whitespace-nowrap rounded-full pl-3 pr-3.5 text-xs outline-none transition-transform duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--fg)] active:scale-[0.96]"
+          >
+            <StatusDot status={effectiveStatus} />
+            <span>{label ?? STATUS[effectiveStatus].label}</span>
+            <span aria-hidden className="h-3.5 w-px bg-[var(--line-strong)]" />
+            <span className="flex items-center gap-1.5 tabular-nums text-[var(--fg-muted)]">
+              {ready && <Sky minutes={ownerMinutes} />}
+              <span className="min-w-[4.5ch]">
+                {ready ? clock(ownerMinutes) : ''}
+              </span>
+              <span className="sr-only">in {here}</span>
+            </span>
+          </button>
+
+          <div
+            id={`${id}-panel`}
+            // React 18 has no `inert` prop yet; pass the attribute directly.
+            {...(!open ? { inert: '' } : {})}
+            className={cn(
+              'px-4 pb-4 pt-2 transition-[opacity,filter,transform] ease-out motion-reduce:translate-y-0',
+              open
+                ? 'translate-y-0 opacity-100 blur-none delay-75 duration-200'
+                : '-translate-y-1 opacity-0 blur-[4px] duration-100'
+            )}
+          >
+            <p className="text-[13px] text-[var(--fg-muted)]">
+              {replyHint}
+              {ready && (
+                <>
+                  {' · '}
+                  {working ? 'working now' : 'off the clock right now'} in{' '}
+                  {here}
+                </>
+              )}
+            </p>
+
+            <div className="mt-4 flex gap-3 text-xs text-[var(--fg-muted)]">
+              <div className="flex w-[40px] shrink-0 flex-col gap-2 pt-1.5">
+                <span className="h-3 truncate leading-3">
+                  {name === 'me' ? 'Me' : name}
+                </span>
+                <span className="h-3 truncate leading-3">You</span>
+              </div>
+              <div className="relative min-w-0 flex-1 pt-1.5">
+                {/* The shared window, lit through both tracks */}
+                {both.map(([s, e]) => (
+                  <span
+                    key={`w${s}`}
+                    aria-hidden
+                    className="absolute top-0 h-[42px] rounded-md"
+                    style={{
+                      left: pct(s),
+                      width: pct(e - s),
+                      background: fg(7)
+                    }}
+                  />
+                ))}
+                <div className="flex flex-col gap-2">
+                  <Track spans={owner} both={both} />
+                  <Track spans={visitor} both={both} />
+                </div>
+                <div className="relative mt-2 h-4">
+                  {[0, 6, 12, 18].map((h) => (
+                    <span
+                      key={h}
+                      className="absolute top-0 -translate-x-1/2 tabular-nums first:translate-x-0"
+                      style={{ left: pct(h * 60) }}
+                    >
+                      {clock(h * 60)}
+                    </span>
+                  ))}
+                </div>
+                {/* "Now" on the visitor's clock, through both tracks */}
+                {ready && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute top-0 h-[42px] w-0.5 -translate-x-1/2 rounded-full bg-[var(--fg)] ring-2 ring-[var(--card)]"
+                    style={{ left: pct(visitorMinutes) }}
+                  />
+                )}
+              </div>
+            </div>
+
+            <p
+              aria-live="polite"
+              className="mt-4 text-[13px] font-medium [text-wrap:pretty]"
+            >
+              {sentence}
+            </p>
+            <p className="mt-0.5 text-xs text-[var(--fg-muted)]">
+              {ready &&
+                (same
+                  ? `We're both on ${zoneName ?? city(timeZone)} time`
+                  : `You're in ${city(zone)}, I'm in ${here}`)}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Track({ spans, both }: { spans: Span[]; both: Span[] }) {
+  const pct = (m: number) => `${(m / DAY) * 100}%`;
+  return (
+    <div
+      className="relative h-3 overflow-hidden rounded-full"
+      style={{ background: fg(6) }}
+    >
+      {spans.map(([s, e]) => (
+        <span
+          key={s}
+          className="absolute inset-y-0 rounded-full"
+          style={{ left: pct(s), width: pct(e - s), background: fg(20) }}
+        />
+      ))}
+      {both.map(([s, e]) => (
+        <span
+          key={`o${s}`}
+          className="absolute inset-y-0 rounded-full bg-[var(--fg)]"
+          style={{ left: pct(s), width: pct(e - s) }}
+        />
+      ))}
+    </div>
+  );
+}

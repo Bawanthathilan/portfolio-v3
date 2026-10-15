@@ -1,0 +1,42 @@
+import React from 'react';
+import Link from 'next/link';
+import { profile } from '@/data/profile';
+import { CopyEmail } from '@/components/lab/copy-email';
+import { Signature } from '@/components/lab/signature';
+
+const Footer = () => {
+  return (
+    <footer className="mx-auto mt-28 max-w-[672px] px-4 pb-32 text-[13px] text-[var(--fg-muted)]">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Signature label={`${profile.name}'s signature`} className="h-7" />
+          <span>
+            © {new Date().getFullYear()} {profile.name}
+          </span>
+        </div>
+        <span className="hidden items-center gap-2 sm:flex">
+          Press
+          <kbd className="rounded-md bg-[var(--card)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--fg)]">
+            /
+          </kbd>
+          to open the dock
+        </span>
+      </div>
+      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+        {Object.entries(profile.socials).map(([label, href]) => (
+          <Link
+            key={label}
+            href={href}
+            target="_blank"
+            className="capitalize transition-colors hover:text-[var(--fg)]"
+          >
+            {label === 'x' ? 'X' : label}
+          </Link>
+        ))}
+        <CopyEmail email={profile.email} className="ml-auto" />
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

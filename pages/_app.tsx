@@ -49,7 +49,7 @@ export default function App({ Component, pageProps, session }: any) {
           content="https://res.cloudinary.com/sliit123/image/upload/v1689186241/og_ewdw57.png"
         />
       </Head>
-      <ThemeProvider attribute="class">
+      <ThemeProvider attribute="class" defaultTheme="dark">
         <SessionProvider session={session}>
           <ReactQueryClientProvider>
             <Layout>

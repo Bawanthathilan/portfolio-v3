@@ -4,110 +4,60 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
+Yarn 4 is the package manager (`packageManager` in package.json); use `yarn add` / `yarn remove`.
+
 ```bash
-npm run dev       # Start dev server (localhost:3000)
-npm run build     # Production build
-npm run lint      # ESLint
-npm run format    # Prettier (formats all files in place)
+yarn dev          # Start dev server (localhost:3000)
+yarn build        # Production build
+yarn format       # Prettier (formats all files in place; also runs on pre-commit)
+npx tsc --noEmit  # Typecheck
 ```
 
-There are no automated tests in this project.
+There are no automated tests and no ESLint config.
 
 ## Architecture
 
-**Next.js 13 Pages Router** — all routes live in `pages/`. The app wraps every page in `components/layout/index.tsx` via `_app.tsx`, which provides the sticky Navbar, Footer, dot-grid background, and Vercel SpeedInsights.
+**Next.js 13 Pages Router**, React 18, TypeScript, Tailwind CSS 3.3.
 
-### Two-layer component pattern
+| Route             | File                              | Notes                                                |
+| ----------------- | --------------------------------- | ---------------------------------------------------- |
+| `/`               | `pages/index.tsx`                 | Composes the `containers/v3/*` sections              |
+| `/guestbook`      | `pages/guestbook.tsx`             | Sign in with GitHub (NextAuth) to leave a note       |
+| `/api/auth/*`     | `pages/api/auth/[...nextauth].js` | NextAuth GitHub provider                             |
+| `/api/spotify`    | `pages/api/spotify.ts`            | Now playing / last played (`utils/spotify.js`)       |
+| `/api/github/prs` | `pages/api/github/prs.ts`         | Merged PRs with line counts, edge-cached for an hour |
 
-- **`containers/`** — page-section components (e.g. `containers/home/hero`, `containers/home/work`). These are composed directly in page files and may fetch data.
-- **`components/`** — reusable, presentational UI (Badge, Title, Marquee, Meteors, Cursor, ProjectCard, etc). Each lives in its own folder with an `index.tsx`.
+`components/layout` wraps every page (via `_app.tsx`) with the navbar, footer and the `/` command dock.
 
-### Data layer
+### Folders
 
-- Dynamic content (projects, work history, achievements) is fetched from **Supabase**. Query functions are defined in `queries/index.ts` and called with `@supabase-cache-helpers/postgrest-react-query`'s `useQuery` hook.
-- The Supabase browser client is a singleton from `utils/supabase-browser.ts` (via `useSupabaseBrowser()` hook); `utils/supabase-server.ts` is for server-side usage.
-- Supabase credentials and all env vars are re-exported from `config/keys.tsx` — always import keys from there, not directly from `process.env`.
-- Blog posts are fetched client-side from the Medium RSS-to-JSON API (`api.rss2json.com`) using plain `@tanstack/react-query`.
-- Static content (nav links, skills, testimonials) lives in `data/index.ts`.
+- **`containers/v3/`**: page sections (hero, work, projects, highlights, certifications, open source, writing, off the clock, contributions, guestbook).
+- **`components/v3/`**: site UI: `Section`, `Card`, `Reveal` and icons (`index.tsx`), navbar, footer, dock, Spotify pill, `useHoverCard`.
+- **`components/lab/`**: components adapted from [ui lab](https://github.com/xevrion/ui-lab) (MIT). Each file names its source; keep the header and `THIRD_PARTY_NOTICES.md` when editing.
+- **`data/profile.ts`**: static profile content (name, location, hours, socials, OpenMRS stage) and the dock's section list. `data/index.ts` holds the guestbook fallback comments.
+- **`queries/`**: Supabase queries (`index.ts`) and GitHub hooks (`github.ts`).
+- **`config/keys.tsx`**: all env vars; import keys from here, not `process.env`. Server-only secrets must not use the `NEXT_PUBLIC_` prefix (e.g. `GITHUB_TOKEN`).
 
-### Pages
+### Data
 
-| Page                              | Route         | Notes                                                  |
-| --------------------------------- | ------------- | ------------------------------------------------------ |
-| `pages/index.tsx`                 | `/`           | Composes Hero, Work, Blog, Sessions, Comments, Contact |
-| `pages/about.tsx`                 | `/about`      | Composes about section containers                      |
-| `pages/guestbook.tsx`             | `/guestbook`  | Auth-gated with NextAuth                               |
-| `pages/api/auth/[...nextauth].js` | `/api/auth/*` | NextAuth handler                                       |
+- **Supabase** (`useSupabaseBrowser()` from `utils/supabase-browser.ts`, queried with `@supabase-cache-helpers/postgrest-react-query`): `work`, `projects`, `achivements` (sic), `certifications`, `guestbook`. `projects` and `certifications` have a `display` flag; `work.description` and `projects.icon` drive the expandable rows and card icons. Regenerate `utils/database.types.ts` after schema changes.
+- **GitHub**: user stats and contributions are fetched in the browser; merged PRs go through `/api/github/prs`.
+- **Medium**: posts via `api.rss2json.com`.
+- Images referenced from the database live in `public/logos`, `public/certs` and `public/project-icons`. Remote image domains must be listed in `next.config.js`.
 
-## Style Guide
+## Style guide
 
-### Colors
-
-Custom Tailwind tokens (defined in `tailwind.config.js`):
-
-| Token           | Value     | Usage                        |
-| --------------- | --------- | ---------------------------- |
-| `primary`       | `#1E1E1E` | Main text / dark backgrounds |
-| `secondary`     | `#fafafa` | Card / light backgrounds     |
-| `textPrimary`   | `#747474` | Body text, icon color        |
-| `textSecondary` | `#949494` | Muted / subtitle text        |
-| `darkBg`        | `#161616` | Dark mode card backgrounds   |
-
-### Typography
-
-- Font: **Helvetica Neue** loaded via CDN (`fonts.cdnfonts.com`) in `styles/globals.scss`.
-- Use the `.titleFont` CSS class for bold section/page headers — applies `font-weight: bolder; letter-spacing: -2px`.
-- Global body is already set to Helvetica Neue; no need to specify it on individual elements.
-
-### Dark Mode
-
-- `next-themes` with `attribute="class"` — dark class is on `<html>`.
-- Always use `dark:` Tailwind variants. Never hard-code theme logic outside of Tailwind classes or the `useTheme()` hook.
-- Common patterns: `dark:bg-darkBg`, `dark:text-white`, `dark:border-[#27272a]`.
-
-### Cards / Panels
-
-Standard card pattern:
-
-```tsx
-<div className="bg-secondary dark:bg-darkBg rounded-2xl border border-grey-200 dark:border-[#27272a] p-8">
-```
-
-Decorative accent lines (blue gradient) used on card edges:
-
-```tsx
-<span className="absolute w-[40%] bottom-0 right-px h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-blue-500/0 dark:from-blue-400/0 dark:via-blue-400/40 dark:to-blue-400/0"></span>
-```
-
-### Section Layout
-
-Each page section uses `<section className="mt-20">` with a `<Title>` component at the top:
-
-```tsx
-<section id="work" className="mt-20">
-  <Title title="Work" />
-  ...
-</section>
-```
-
-### Animations
-
-Framer Motion is used for all entry animations. Standard staggered entry pattern:
-
-```tsx
-<motion.div
-  transition={{ delay: 0.2 }}
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
->
-```
-
-Custom Tailwind keyframes available: `animate-meteor-effect`, `animate-radar-spin`.
-
-### Utilities & Conventions
-
-- Use `cn()` from `utils/cn.ts` (`clsx` + `tailwind-merge`) for all conditional/merged class names.
-- `@/` maps to the repo root — always use `@/` imports, never relative paths.
+- **Theme colours are CSS variables** in `styles/globals.scss` (`--bg`, `--card`, `--fg`, `--fg-muted`, `--line`, …), defined for `:root` and `.dark`. Use them as `bg-[var(--card)]`. Dark mode is `next-themes` with the `dark` class on `<html>`.
+- Tailwind 3.3 can't put an opacity modifier on a CSS-variable colour, and its opacity scale has no 15/35/45… steps; use `color-mix(...)` or an explicit value like `bg-green-500/[0.15]`. Colour names such as `deep-purple` and `light-blue` come from Material Tailwind (`withMT` in `tailwind.config.js`).
+- Font: Geist (Geist Mono for `font-mono`), loaded in `pages/_document.tsx`.
+- Layout: a single `max-w-[672px]` column. Sections use `<Section id title meta action>` from `components/v3`.
+- `@/` maps to the repo root; use `cn()` from `utils/cn.ts` for conditional classes.
 - Prettier: `singleQuote: true`, `semi: true`, `trailingComma: "none"`, `printWidth: 80`.
-- Most components use default exports; named exports for `Badge`, `Meteors`, `AnimatedCursor`.
-- External image domains must be whitelisted in `next.config.js` under `images.domains`.
+
+### Motion
+
+- Easing: `ease-out` / `ease-in-out` Tailwind classes use strong curves (`cubic-bezier(0.23,1,0.32,1)` / `(0.77,0,0.175,1)`).
+- Presses scale to `0.96` (buttons, pills) or `0.985` (cards); hover only applies on real pointers (`hoverOnlyWhenSupported`).
+- Scroll-in reveals are the CSS `.reveal` class via `<Reveal>`, not Framer Motion.
+- `components/lab` uses `motion` (`motion/react`); other components use `framer-motion`. Animate with full `transform` strings, and use `useReducedMotion` from `utils/use-reduced-motion.ts`.
+- Respect `prefers-reduced-motion`: keep fades, drop movement and looping animations.

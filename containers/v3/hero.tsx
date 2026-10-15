@@ -28,6 +28,21 @@ const OpenMrsThumb = () => (
   </span>
 );
 
+// The /dev/3 stage as a badge beside the OpenMRS logo, for the Talk link
+const OpenMrsTalkThumb = () => (
+  <span className="flex h-full w-full items-center justify-center gap-3 bg-[color-mix(in_srgb,#e66d2c_10%,var(--card))]">
+    <Image src={OpenMrsLogo} alt="" width={44} height={44} />
+    <span>
+      <span className="block font-mono text-lg font-medium text-[var(--fg)]">
+        {profile.openmrsStage}
+      </span>
+      <span className="block text-xs text-[var(--fg-muted)]">
+        OpenMRS developer stage
+      </span>
+    </span>
+  </span>
+);
+
 const GithubThumb = ({ repos }: { repos?: number }) => (
   <span className="flex h-full w-full items-center gap-3 px-4">
     <Image
@@ -131,8 +146,16 @@ const Hero = () => {
         className="mt-6 space-y-4 text-sm leading-[1.6] text-[var(--fg-muted)]"
       >
         <p>
-          I&apos;m a Senior Software Engineer at OREL IT in Colombo, and a
-          contributor to{' '}
+          I&apos;m a Senior Software Engineer at OREL IT in Colombo, and a{' '}
+          <HoverPreviewLink
+            href={profile.openmrsTalk}
+            title={`${profile.openmrsStage} developer on OpenMRS Talk`}
+            domain="talk.openmrs.org/u/bawanthathilan"
+            image={<OpenMrsTalkThumb />}
+          >
+            {profile.openmrsStage} developer
+          </HoverPreviewLink>{' '}
+          at{' '}
           <HoverPreviewLink
             href="https://github.com/openmrs"
             title="OpenMRS"

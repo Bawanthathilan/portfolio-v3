@@ -14,6 +14,9 @@ export const profile = {
   email: 'bawantharathnayaka@gmail.com',
   github: 'Bawanthathilan',
   medium: 'bawantharathnayaka',
+  // OpenMRS developer stage and community forum profile
+  openmrsStage: '/dev/3',
+  openmrsTalk: 'https://talk.openmrs.org/u/bawanthathilan/summary',
   resume:
     'https://drive.google.com/drive/folders/191j6y4c-BGXbQJD_Lp5nZW7JnGIe2NDS?usp=sharing',
   socials: {

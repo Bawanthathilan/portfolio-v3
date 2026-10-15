@@ -11,10 +11,44 @@ import { AvailabilityBadge } from '@/components/lab/availability-badge';
 import { Odometer } from '@/components/lab/odometer';
 import SpotifyPill from '@/components/v3/spotify-pill';
 import {
+  ArticleThumb,
+  HoverPreviewLink
+} from '@/components/lab/hover-preview-link';
+import OpenMrsLogo from '@/public/logos/openmrs.png';
+import {
   useContributions,
   useGithubUser,
   useMergedPrs
 } from '@/queries/github';
+
+// Preview thumbnails for the bio links, from images already in the site
+const OpenMrsThumb = () => (
+  <span className="grid h-full w-full place-items-center bg-[color-mix(in_srgb,#e66d2c_10%,var(--card))]">
+    <Image src={OpenMrsLogo} alt="" width={56} height={56} />
+  </span>
+);
+
+const GithubThumb = ({ repos }: { repos?: number }) => (
+  <span className="flex h-full w-full items-center gap-3 px-4">
+    <Image
+      src={Avatar}
+      alt=""
+      width={56}
+      height={56}
+      className="h-14 w-14 rounded-full object-cover ring-1 ring-[var(--line)]"
+    />
+    <span className="min-w-0">
+      <span className="block truncate text-[13px] font-medium text-[var(--fg)]">
+        @{profile.github}
+      </span>
+      {repos !== undefined && (
+        <span className="block text-xs text-[var(--fg-muted)]">
+          {repos} public repositories
+        </span>
+      )}
+    </span>
+  </span>
+);
 
 const Hero = () => {
   const { data: user } = useGithubUser();
@@ -94,31 +128,42 @@ const Hero = () => {
 
       <Reveal
         delay={0.1}
-        className="mt-6 space-y-4 text-sm leading-[1.6] text-[var(--fg-muted)] [&_a]:text-[var(--fg)] [&_a]:underline [&_a]:decoration-[var(--line-strong)] [&_a]:underline-offset-4 [&_a]:transition-[text-decoration-color] [&_a]:duration-150 [&_a]:ease-out hover:[&_a]:decoration-[var(--fg)] [&_.wipe-link]:no-underline"
+        className="mt-6 space-y-4 text-sm leading-[1.6] text-[var(--fg-muted)]"
       >
         <p>
           I&apos;m a Senior Software Engineer at OREL IT in Colombo, and a
           contributor to{' '}
-          <Link href="https://github.com/openmrs" target="_blank">
+          <HoverPreviewLink
+            href="https://github.com/openmrs"
+            title="OpenMRS"
+            domain="github.com/openmrs"
+            image={<OpenMrsThumb />}
+          >
             OpenMRS
-          </Link>
+          </HoverPreviewLink>
           , the open source medical records platform used by health systems
           around the world.
         </p>
         <p>
           I build full-stack systems and developer tools, mostly with React,
           Next.js and TypeScript. I write about what I learn on{' '}
-          <Link href={profile.socials.medium} target="_blank">
+          <HoverPreviewLink
+            href={profile.socials.medium}
+            title={`${profile.name} on Medium`}
+            domain={`medium.com/@${profile.medium}`}
+            image={<ArticleThumb />}
+          >
             Medium
-          </Link>
+          </HoverPreviewLink>
           , and the rest of my experiments live on{' '}
-          <Link
+          <HoverPreviewLink
             href={profile.socials.github}
-            target="_blank"
-            className="wipe-link"
+            title={`${profile.name} on GitHub`}
+            domain={`github.com/${profile.github}`}
+            image={<GithubThumb repos={user?.public_repos} />}
           >
             GitHub
-          </Link>
+          </HoverPreviewLink>
           .
         </p>
       </Reveal>

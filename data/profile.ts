@@ -5,7 +5,8 @@ export const profile = {
   name: 'Bawantha Thilan',
   handle: 'bawantha',
   role: 'Senior Software Engineer | OpenSource Contributor',
-  location: 'Colombo, Sri Lanka',
+  location: 'Belihuloya, Sri Lanka',
+  city: 'Belihuloya',
   timeZone: 'Asia/Colombo',
   timeZoneLabel: 'Sri Lanka',
   // Hours (local, 24h) when I'm usually around to reply.

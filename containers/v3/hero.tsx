@@ -85,6 +85,8 @@ const Hero = () => {
           timeZone={profile.timeZone}
           hours={[profile.hours.start, profile.hours.end]}
           label={profile.location}
+          place={profile.city}
+          zoneName={profile.timeZoneLabel}
           replyHint="The dock below is the quickest way to reach me"
         />
         <SpotifyPill />

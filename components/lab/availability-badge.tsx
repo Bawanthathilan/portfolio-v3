@@ -239,6 +239,8 @@ export function AvailabilityBadge({
   label,
   replyHint = 'Replies within a day',
   name = 'me',
+  place,
+  zoneName,
   visitorTimeZone,
   visitorHours = [9, 18],
   className
@@ -252,6 +254,11 @@ export function AvailabilityBadge({
   label?: string;
   replyHint?: string;
   name?: string;
+  // Where the owner is, when it isn't the time zone's namesake city
+  // (Belihuloya is on Asia/Colombo time). Defaults to that city.
+  place?: string;
+  // What to call the shared zone ("Sri Lanka time"). Defaults to the city.
+  zoneName?: string;
   // Defaults to the visitor's own zone from Intl.
   visitorTimeZone?: string;
   // The visitor's assumed working day, for the overlap.
@@ -343,6 +350,7 @@ export function AvailabilityBadge({
   const effectiveStatus: Availability =
     status ?? (!ready || working ? 'available' : 'away');
   const pct = (m: number) => `${(m / DAY) * 100}%`;
+  const here = place ?? city(timeZone);
 
   return (
     <div
@@ -410,7 +418,7 @@ export function AvailabilityBadge({
               <span className="min-w-[4.5ch]">
                 {ready ? clock(ownerMinutes) : ''}
               </span>
-              <span className="sr-only">in {city(timeZone)}</span>
+              <span className="sr-only">in {here}</span>
             </span>
           </button>
 
@@ -431,7 +439,7 @@ export function AvailabilityBadge({
                 <>
                   {' · '}
                   {working ? 'working now' : 'off the clock right now'} in{' '}
-                  {city(timeZone)}
+                  {here}
                 </>
               )}
             </p>
@@ -492,8 +500,8 @@ export function AvailabilityBadge({
             <p className="mt-0.5 text-xs text-[var(--fg-muted)]">
               {ready &&
                 (same
-                  ? `We're both on ${city(timeZone)} time`
-                  : `You're in ${city(zone)}, I'm in ${city(timeZone)}`)}
+                  ? `We're both on ${zoneName ?? city(timeZone)} time`
+                  : `You're in ${city(zone)}, I'm in ${here}`)}
             </p>
           </div>
         </div>

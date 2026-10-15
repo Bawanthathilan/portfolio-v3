@@ -120,6 +120,7 @@ export type Database = {
           desc: string | null;
           display: boolean | null;
           github: string | null;
+          icon: string | null;
           id: number;
           img: string | null;
           name: string | null;
@@ -131,6 +132,7 @@ export type Database = {
           desc?: string | null;
           display?: boolean | null;
           github?: string | null;
+          icon?: string | null;
           id?: number;
           img?: string | null;
           name?: string | null;
@@ -142,6 +144,7 @@ export type Database = {
           desc?: string | null;
           display?: boolean | null;
           github?: string | null;
+          icon?: string | null;
           id?: number;
           img?: string | null;
           name?: string | null;

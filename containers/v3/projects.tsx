@@ -23,6 +23,7 @@ type Project = {
   name: string | null;
   desc: string | null;
   img: string | null;
+  icon: string | null;
   web: string | null;
   github: string | null;
 };
@@ -41,7 +42,21 @@ const ProjectCard = ({ p, i }: { p: Project; i: number }) => {
     >
       <div className="flex items-start justify-between">
         <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-xl bg-[var(--bg)] text-sm font-semibold text-[var(--fg)] transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-rotate-6 group-hover:scale-105 group-hover:duration-200 group-hover:ease-out group-focus-visible:-rotate-6 group-focus-visible:scale-105">
-          {p.img ? (
+          {/* Icon first; the old image (often a screenshot) is the fallback.
+              SVG icons sit centred as a glyph; raster icons (logos) fill the
+              tile like an app icon, since they often have a solid background. */}
+          {p.icon ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={p.icon}
+              alt=""
+              className={
+                p.icon.endsWith('.svg')
+                  ? 'h-5 w-5'
+                  : 'h-full w-full object-cover'
+              }
+            />
+          ) : p.img ? (
             <Image
               src={p.img}
               alt=""

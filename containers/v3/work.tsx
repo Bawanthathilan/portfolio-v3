@@ -14,18 +14,19 @@ const LOGOS: Record<string, string> = {
   'apium innovations': '/logos/apium.jpg'
 };
 
-// Short `Desc` values are job titles; longer ones are expandable details.
-const isTitle = (desc: string | null) => !!desc && desc.length <= 80;
-
 const isCurrent = (end: string | null) =>
   !end || ['current', 'now', 'present'].includes(end.toLowerCase());
 
 const Work = () => {
   const supabase = useSupabaseBrowser();
   const { data } = useQuery(getWorkData(supabase));
-  const [open, setOpen] = useState(0);
+  // `undefined` until the visitor picks a row: then the first row with a
+  // description starts open, like the reference site.
+  const [picked, setPicked] = useState<number | null>();
 
   const items = data ?? [];
+  const firstExpandable = items.findIndex((w) => !!w.description?.length);
+  const open = picked === undefined ? firstExpandable : picked;
 
   return (
     <Section
@@ -35,7 +36,8 @@ const Work = () => {
     >
       <ul className="space-y-1">
         {items.map((w, i) => {
-          const expandable = !!w.Desc && !isTitle(w.Desc);
+          // `Desc` is the job title; `description` holds the bullet points.
+          const expandable = !!w.description?.length;
           const expanded = expandable && open === i;
           const name = w.Company_name ?? '';
           const period = `${w.startYear ?? ''} – ${
@@ -45,7 +47,7 @@ const Work = () => {
             <li key={w.id}>
               <button
                 type="button"
-                onClick={() => expandable && setOpen(expanded ? -1 : i)}
+                onClick={() => expandable && setPicked(expanded ? null : i)}
                 aria-expanded={expandable ? expanded : undefined}
                 className="group -mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-xl px-2 py-2.5 text-left"
               >
@@ -66,7 +68,7 @@ const Work = () => {
                   <span className="block truncate text-sm text-[var(--fg)]">
                     {name}
                   </span>
-                  {isTitle(w.Desc) && (
+                  {w.Desc && (
                     <span className="block truncate text-[13px] text-[var(--fg-muted)]">
                       {w.Desc}
                     </span>
@@ -107,9 +109,9 @@ const Work = () => {
                     }}
                     className="overflow-hidden"
                   >
-                    <p className="whitespace-pre-line pb-4 pl-11 pt-1 text-sm leading-[1.65] text-[var(--fg-muted)]">
-                      {w.Desc}
-                    </p>
+                    <div className="space-y-2 pb-4 pl-11 pt-1 text-sm leading-[1.65] text-[var(--fg-muted)]">
+                      {w.description?.map((line) => <p key={line}>{line}</p>)}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

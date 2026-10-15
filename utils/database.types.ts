@@ -121,6 +121,7 @@ export type Database = {
         Row: {
           Company_name: string | null;
           Desc: string | null;
+          description: string[] | null;
           endYear: string | null;
           id: number;
           position: number | null;
@@ -129,6 +130,7 @@ export type Database = {
         Insert: {
           Company_name?: string | null;
           Desc?: string | null;
+          description?: string[] | null;
           endYear?: string | null;
           id: number;
           position?: number | null;
@@ -137,6 +139,7 @@ export type Database = {
         Update: {
           Company_name?: string | null;
           Desc?: string | null;
+          description?: string[] | null;
           endYear?: string | null;
           id?: number;
           position?: number | null;

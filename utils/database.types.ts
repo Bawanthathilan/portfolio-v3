@@ -33,6 +33,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      certifications: {
+        Row: {
+          badge: string | null;
+          display: boolean;
+          id: number;
+          issuer: string | null;
+          link: string | null;
+          name: string;
+          position: number | null;
+          year: string | null;
+        };
+        Insert: {
+          badge?: string | null;
+          display?: boolean;
+          id?: number;
+          issuer?: string | null;
+          link?: string | null;
+          name: string;
+          position?: number | null;
+          year?: string | null;
+        };
+        Update: {
+          badge?: string | null;
+          display?: boolean;
+          id?: number;
+          issuer?: string | null;
+          link?: string | null;
+          name?: string;
+          position?: number | null;
+          year?: string | null;
+        };
+        Relationships: [];
+      };
       guestbook: {
         Row: {
           created_at: string | null;

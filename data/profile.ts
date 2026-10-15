@@ -29,6 +29,7 @@ export const sections = [
   { id: 'work', label: 'Work' },
   { id: 'projects', label: 'Projects' },
   { id: 'highlights', label: 'Highlights' },
+  { id: 'certifications', label: 'Certifications' },
   { id: 'open-source', label: 'Open source' },
   { id: 'writing', label: 'Writing' },
   { id: 'off-the-clock', label: 'Off the clock' },

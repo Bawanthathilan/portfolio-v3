@@ -24,3 +24,11 @@ export function getGuestbookData(client: TypedSupabaseClient) {
     .order('created_at', { ascending: false })
     .limit(5);
 }
+
+export function getCertificationsData(client: TypedSupabaseClient) {
+  return client
+    .from('certifications')
+    .select()
+    .eq('display', true)
+    .order('position', { ascending: true });
+}

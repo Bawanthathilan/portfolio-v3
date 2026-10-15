@@ -4,7 +4,7 @@
 export const profile = {
   name: 'Bawantha Thilan',
   handle: 'bawantha',
-  role: 'Senior Software Engineer',
+  role: 'Senior Software Engineer | OpenSource Contributor',
   location: 'Colombo, Sri Lanka',
   timeZone: 'Asia/Colombo',
   timeZoneLabel: 'Sri Lanka',

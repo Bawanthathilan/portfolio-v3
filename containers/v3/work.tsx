@@ -51,17 +51,28 @@ const Work = () => {
                 aria-expanded={expandable ? expanded : undefined}
                 className="group -mx-2 flex w-[calc(100%+1rem)] items-start gap-3 rounded-xl px-2 py-2.5 text-left sm:items-center"
               >
-                <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg bg-[var(--card-hover)] text-[13px] font-semibold text-[var(--fg)] ring-1 ring-inset ring-[var(--line)]">
-                  {LOGOS[name.trim().toLowerCase()] ? (
-                    <Image
-                      src={LOGOS[name.trim().toLowerCase()]}
-                      alt=""
-                      width={32}
-                      height={32}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    name.charAt(0)
+                <span className="relative shrink-0">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg bg-[var(--card-hover)] text-[13px] font-semibold text-[var(--fg)] ring-1 ring-inset ring-[var(--line)]">
+                    {LOGOS[name.trim().toLowerCase()] ? (
+                      <Image
+                        src={LOGOS[name.trim().toLowerCase()]}
+                        alt=""
+                        width={32}
+                        height={32}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      name.charAt(0)
+                    )}
+                  </span>
+                  {/* Pinging green dot on the current role */}
+                  {isCurrent(w.endYear) && (
+                    <span
+                      className="sonar absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--status-available)] text-[var(--status-available)] ring-2 ring-[var(--bg)]"
+                      title="Current role"
+                    >
+                      <span className="sr-only">Current role</span>
+                    </span>
                   )}
                 </span>
                 <span className="min-w-0 flex-1">

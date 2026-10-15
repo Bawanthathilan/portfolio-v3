@@ -8,3 +8,6 @@ export const SPOTIFY_CLIENT_SECRET =
   process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
 export const SPOTIFY_REFRESH_TOKEN =
   process.env.NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN;
+// Server-only (no NEXT_PUBLIC_ prefix, so it never reaches the browser).
+// Optional: raises GitHub's API limit for /api/github/prs.
+export const GITHUB_TOKEN = process.env.GITHUB_TOKEN;

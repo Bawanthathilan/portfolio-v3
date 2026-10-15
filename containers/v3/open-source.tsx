@@ -16,7 +16,7 @@ const OpenSource = () => {
 
   if (!data?.items.length) return null;
 
-  const owners = Array.from(new Set(data.items.map((p) => p.owner)));
+  const owners = data.owners;
   const visible = showAll ? data.items : data.items.slice(0, 5);
 
   return (
@@ -59,8 +59,20 @@ const OpenSource = () => {
                   <span className="block truncate text-[13px] text-[var(--fg)] transition-colors duration-150 group-hover:text-[var(--fg-muted)]">
                     {pr.title}
                   </span>
-                  <span className="block truncate font-mono text-[11px] text-[var(--fg-muted)]">
-                    {pr.owner}/{pr.repo}
+                  <span className="flex min-w-0 items-center gap-2 font-mono text-[11px] text-[var(--fg-muted)]">
+                    <span className="truncate">
+                      {pr.owner}/{pr.repo}
+                    </span>
+                    {pr.additions !== null && pr.deletions !== null && (
+                      <span className="shrink-0 tabular-nums">
+                        <span className="text-[var(--diff-add)]">
+                          +{pr.additions.toLocaleString()}
+                        </span>{' '}
+                        <span className="text-[var(--diff-del)]">
+                          −{pr.deletions.toLocaleString()}
+                        </span>
+                      </span>
+                    )}
                   </span>
                 </span>
                 <span className="shrink-0 font-mono text-[11px] text-[var(--fg-muted)]">

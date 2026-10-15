@@ -15,6 +15,8 @@ export interface MergedPr {
   repo: string;
   owner: string;
   closedAt: string;
+  additions: number | null;
+  deletions: number | null;
 }
 
 export interface GithubUser {
@@ -49,31 +51,16 @@ export function useContributions() {
   });
 }
 
-// Merged PRs into repositories I don't own.
+// Latest merged PRs into repos I don't own, with line counts. Served by
+// /api/github/prs, which fetches the per-PR detail once and caches it.
 export function useMergedPrs() {
-  return useQuery<{ total: number; items: MergedPr[] }>({
+  return useQuery<{ total: number; owners: string[]; items: MergedPr[] }>({
     queryKey: ['gh-merged-prs'],
     staleTime: HOUR,
     queryFn: async () => {
-      const q = `author:${profile.github} type:pr is:merged -user:${profile.github}`;
-      const res = await fetch(
-        `https://api.github.com/search/issues?q=${encodeURIComponent(q)}&sort=updated&per_page=50`
-      );
+      const res = await fetch('/api/github/prs');
       if (!res.ok) throw new Error('merged prs');
-      const data = await res.json();
-      return {
-        total: data.total_count,
-        items: data.items.map((i: any) => {
-          const [owner, repo] = i.repository_url.split('/').slice(-2);
-          return {
-            title: i.title,
-            url: i.html_url,
-            owner,
-            repo,
-            closedAt: i.closed_at
-          };
-        })
-      };
+      return res.json();
     }
   });
 }

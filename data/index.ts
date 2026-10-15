@@ -1,36 +1,3 @@
-import { IoLogoJavascript } from 'react-icons/io';
-import { FaFigma, FaReact, FaDocker, FaGit } from 'react-icons/fa';
-import { RiSupabaseLine } from 'react-icons/ri';
-import { DiPhotoshop } from 'react-icons/di';
-import { TbBrandTypescript, TbBrandNextjs } from 'react-icons/tb';
-
-export const menuData = [
-  {
-    name: 'Home',
-    link: '/'
-  },
-  {
-    name: 'Work',
-    link: '/#work'
-  },
-  {
-    name: 'About',
-    link: '/about'
-  },
-  {
-    name: 'Guestbook',
-    link: '/guestbook'
-  },
-  {
-    name: 'Blog',
-    link: 'https://medium.com/@bawantharathnayaka'
-  },
-  {
-    name: 'Contact',
-    link: '/#contact'
-  }
-];
-
 export const comments = [
   {
     name: 'Supabase',
@@ -94,44 +61,5 @@ export const comments = [
     linkedin: 'Sajeth Jonathan',
     comment:
       'Love the design and the clean look. Also, fun to see your Spotify account linked in it 😋'
-  }
-];
-
-export const skills = [
-  {
-    name: 'Javascript',
-    icon: IoLogoJavascript
-  },
-  {
-    name: 'Typescript',
-    icon: TbBrandTypescript
-  },
-  {
-    name: 'React',
-    icon: FaReact
-  },
-  {
-    name: 'Next JS',
-    icon: TbBrandNextjs
-  },
-  {
-    name: 'Figma',
-    icon: FaFigma
-  },
-  {
-    name: 'Docker',
-    icon: FaDocker
-  },
-  {
-    name: 'Photoshop',
-    icon: DiPhotoshop
-  },
-  {
-    name: 'Supabase',
-    icon: RiSupabaseLine
-  },
-  {
-    name: 'FaGit',
-    icon: FaDocker
   }
 ];

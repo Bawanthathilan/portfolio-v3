@@ -85,6 +85,7 @@ export type Database = {
         Row: {
           category: string | null;
           desc: string | null;
+          display: boolean | null;
           github: string | null;
           id: number;
           img: string | null;
@@ -95,6 +96,7 @@ export type Database = {
         Insert: {
           category?: string | null;
           desc?: string | null;
+          display?: boolean | null;
           github?: string | null;
           id?: number;
           img?: string | null;
@@ -105,6 +107,7 @@ export type Database = {
         Update: {
           category?: string | null;
           desc?: string | null;
+          display?: boolean | null;
           github?: string | null;
           id?: number;
           img?: string | null;

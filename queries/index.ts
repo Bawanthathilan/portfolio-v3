@@ -1,7 +1,12 @@
 import { TypedSupabaseClient } from '@/utils/types';
 
 export function getProjectsData(client: TypedSupabaseClient) {
-  return client.from('projects').select().order('id', { ascending: true });
+  // Only projects switched on in the `display` column, newest first.
+  return client
+    .from('projects')
+    .select()
+    .eq('display', true)
+    .order('id', { ascending: false });
 }
 
 export function getAchievementsData(client: TypedSupabaseClient) {

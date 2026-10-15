@@ -272,6 +272,7 @@ export function AvailabilityBadge({
   const [open, setOpen] = useState(false);
   const card = useRef<HTMLDivElement>(null);
   const pill = useRef<HTMLButtonElement>(null);
+  const root = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
   // How much of the card to cut away on the right and bottom to leave just
   // the pill, plus the pill's width so the wrapper holds its place in the
@@ -296,6 +297,21 @@ export function AvailabilityBadge({
   }, []);
 
   useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  // A press anywhere outside closes it. Blur can't be relied on: iOS Safari
+  // doesn't focus buttons on tap or blur them on an outside tap, so a card
+  // opened by touch would otherwise stay stuck open.
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) {
+        clearTimeout(closeTimer.current);
+        setOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -354,6 +370,7 @@ export function AvailabilityBadge({
 
   return (
     <div
+      ref={root}
       className={cn('relative h-8 max-w-full', className)}
       // Hold the pill's place in the row; the card itself is absolute.
       style={{ width: clip.pillWidth || undefined }}

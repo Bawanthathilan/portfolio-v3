@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 export function useHoverCard() {
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>();
+  const root = useRef<HTMLDivElement>(null);
 
   const show = (delay = 0) => {
     clearTimeout(timer.current);
@@ -26,13 +27,33 @@ export function useHoverCard() {
     };
   }, []);
 
+  // A press anywhere outside closes it. Focus can't be relied on for this:
+  // iOS Safari doesn't focus buttons on tap or blur them on an outside tap,
+  // so a card opened by touch would otherwise stay stuck open.
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) {
+        clearTimeout(timer.current);
+        setOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open]);
+
   // Touch taps also fire pointerenter; only real mouse pointers should hover.
   const isMouse = (e: React.PointerEvent) => e.pointerType === 'mouse';
 
   return {
     open,
     toggle: () => setOpen((o) => !o),
+    close: () => {
+      clearTimeout(timer.current);
+      setOpen(false);
+    },
     wrapperProps: {
+      ref: root,
       onPointerEnter: (e: React.PointerEvent) => isMouse(e) && show(100),
       onPointerLeave: (e: React.PointerEvent) => isMouse(e) && hide(),
       onFocus: () => show(),

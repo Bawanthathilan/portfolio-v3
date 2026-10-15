@@ -51,7 +51,7 @@ function timeAgo(iso?: string) {
 }
 
 const SpotifyPill = () => {
-  const { open, toggle, wrapperProps } = useHoverCard();
+  const { open, toggle, close, wrapperProps } = useHoverCard();
   const { data } = useQuery<Track>({
     queryKey: ['spotify'],
     queryFn: async () => (await fetch('/api/spotify')).json(),
@@ -99,6 +99,11 @@ const SpotifyPill = () => {
           <motion.div
             role="dialog"
             aria-label="Spotify"
+            // The open card covers the pill, so a tap on the card (anywhere but
+            // the Spotify link) is how touch users close it again.
+            onClick={(e) => {
+              if (!(e.target as HTMLElement).closest('a')) close();
+            }}
             {...cardMotion}
             className="absolute left-0 top-0 z-30 w-[320px] max-w-[calc(100vw-32px)] rounded-2xl border border-[var(--line)] bg-[var(--card)] p-4 shadow-2xl"
           >

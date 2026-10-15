@@ -30,15 +30,18 @@ const OpenMrsThumb = () => (
 
 // The /dev/3 stage as a badge beside the OpenMRS logo, for the Talk link
 const OpenMrsTalkThumb = () => (
-  <span className="flex h-full w-full items-center justify-center gap-3 bg-[color-mix(in_srgb,#e66d2c_10%,var(--card))]">
-    <Image src={OpenMrsLogo} alt="" width={44} height={44} />
-    <span>
-      <span className="block font-mono text-lg font-medium text-[var(--fg)]">
+  <span className="flex h-full w-full flex-col justify-center gap-2 bg-[color-mix(in_srgb,#e66d2c_10%,var(--card))] px-3.5">
+    <span className="flex items-center gap-2">
+      <Image src={OpenMrsLogo} alt="" width={26} height={26} />
+      <span className="font-mono text-base font-medium text-[var(--fg)]">
         {profile.openmrsStage}
       </span>
-      <span className="block text-xs text-[var(--fg-muted)]">
-        OpenMRS developer stage
+      <span className="rounded-full bg-[color-mix(in_srgb,#e66d2c_22%,transparent)] px-2 py-0.5 text-[11px] font-medium text-[var(--fg)]">
+        {profile.openmrsStageName}
       </span>
+    </span>
+    <span className="text-[11.5px] leading-snug text-[var(--fg-muted)]">
+      {profile.openmrsStageSummary}
     </span>
   </span>
 );
@@ -149,7 +152,7 @@ const Hero = () => {
           I&apos;m a Senior Software Engineer at OREL IT in Colombo, and a{' '}
           <HoverPreviewLink
             href={profile.openmrsTalk}
-            title={`${profile.openmrsStage} developer on OpenMRS Talk`}
+            title="OpenMRS developer stage"
             domain="talk.openmrs.org/u/bawanthathilan"
             image={<OpenMrsTalkThumb />}
           >

@@ -16,6 +16,10 @@ export const profile = {
   medium: 'bawantharathnayaka',
   // OpenMRS developer stage and community forum profile
   openmrsStage: '/dev/3',
+  openmrsStageName: 'Skilled',
+  // One line on what the stage means (OpenMRS developer stages)
+  openmrsStageSummary:
+    'Trusted with code review, CI, leading sprints and pushing to modules.',
   openmrsTalk: 'https://talk.openmrs.org/u/bawanthathilan/summary',
   resume:
     'https://drive.google.com/drive/folders/191j6y4c-BGXbQJD_Lp5nZW7JnGIe2NDS?usp=sharing',

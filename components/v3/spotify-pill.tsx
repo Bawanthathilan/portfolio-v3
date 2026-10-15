@@ -89,7 +89,7 @@ const SpotifyPill = () => {
         onClick={toggle}
         aria-expanded={open}
         aria-label={`Spotify: ${status}`}
-        className="rounded-full bg-[var(--card)] px-3 py-1.5 transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.96]"
+        className="flex h-8 items-center rounded-full bg-[var(--card)] px-3 transition-[background-color,transform] duration-150 ease-out hover:bg-[var(--card-hover)] active:scale-[0.96]"
       >
         {pillRow}
       </button>

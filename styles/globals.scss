@@ -10,6 +10,12 @@
   --bg-elev: #ffffff;
   --card: #f0f0f0;
   --card-hover: #e8e8e8;
+  /* Availability badge: hairline edge + lift shadows, status lights */
+  --badge-edge: rgb(0 0 0 / 0.28);
+  --badge-lift: rgb(0 0 0 / 0.08);
+  --status-available: #16a34a;
+  --status-busy: #d97706;
+  --status-away: #8f8f8f;
   --heat-0: #ebedf0;
   --heat-1: #9be9a8;
   --heat-2: #40c463;
@@ -33,6 +39,11 @@
   --bg-elev: #141414;
   --card: #161616;
   --card-hover: #1f1f1f;
+  --badge-edge: rgb(255 255 255 / 0.22);
+  --badge-lift: rgb(0 0 0 / 0.5);
+  --status-available: #3fcf6e;
+  --status-busy: #f5a524;
+  --status-away: #737373;
   --heat-0: #1b1b1b;
   --heat-1: #0e4429;
   --heat-2: #006d32;

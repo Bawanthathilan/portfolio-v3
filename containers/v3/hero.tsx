@@ -7,7 +7,7 @@ import { GoGitMerge, GoRepo, GoPeople, GoPulse } from 'react-icons/go';
 import Avatar from '@/assets/images/my.webp';
 import { profile } from '@/data/profile';
 import { Doc, Mail, Reveal } from '@/components/v3';
-import LocationPill from '@/components/v3/location-pill';
+import { AvailabilityBadge } from '@/components/lab/availability-badge';
 import { Odometer } from '@/components/lab/odometer';
 import SpotifyPill from '@/components/v3/spotify-pill';
 import {
@@ -81,7 +81,12 @@ const Hero = () => {
       </Reveal>
 
       <Reveal delay={0.05} className="mt-5 flex flex-wrap items-center gap-2">
-        <LocationPill />
+        <AvailabilityBadge
+          timeZone={profile.timeZone}
+          hours={[profile.hours.start, profile.hours.end]}
+          label={profile.location}
+          replyHint="The dock below is the quickest way to reach me"
+        />
         <SpotifyPill />
       </Reveal>
 

@@ -19,13 +19,13 @@ There are no automated tests and no ESLint config.
 
 **Next.js 13 Pages Router**, React 18, TypeScript, Tailwind CSS 3.3.
 
-| Route            | File                              | Notes                                                    |
-| ---------------- | --------------------------------- | -------------------------------------------------------- |
-| `/`              | `pages/index.tsx`                 | Composes the `containers/v3/*` sections                  |
-| `/guestbook`     | `pages/guestbook.tsx`             | Sign in with GitHub (NextAuth) to leave a note           |
-| `/api/auth/*`    | `pages/api/auth/[...nextauth].js` | NextAuth GitHub provider                                 |
-| `/api/spotify`   | `pages/api/spotify.ts`            | Now playing / last played (`utils/spotify.js`)           |
-| `/api/github/prs`| `pages/api/github/prs.ts`         | Merged PRs with line counts, edge-cached for an hour     |
+| Route             | File                              | Notes                                                |
+| ----------------- | --------------------------------- | ---------------------------------------------------- |
+| `/`               | `pages/index.tsx`                 | Composes the `containers/v3/*` sections              |
+| `/guestbook`      | `pages/guestbook.tsx`             | Sign in with GitHub (NextAuth) to leave a note       |
+| `/api/auth/*`     | `pages/api/auth/[...nextauth].js` | NextAuth GitHub provider                             |
+| `/api/spotify`    | `pages/api/spotify.ts`            | Now playing / last played (`utils/spotify.js`)       |
+| `/api/github/prs` | `pages/api/github/prs.ts`         | Merged PRs with line counts, edge-cached for an hour |
 
 `components/layout` wraps every page (via `_app.tsx`) with the navbar, footer and the `/` command dock.
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Card, Section } from '@/components/v3';
+import { AvatarStack } from '@/components/lab/avatar-stack';
 import { useMergedPrs } from '@/queries/github';
 
 const monthYear = (iso: string) =>
@@ -21,31 +22,15 @@ const OpenSource = () => {
   return (
     <Section id="open-source" title="open source" meta={`${data.total} merged`}>
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex -space-x-2">
-          {owners.slice(0, 8).map((o) => (
-            <Link
-              key={o}
-              href={`https://github.com/${o}`}
-              target="_blank"
-              aria-label={o}
-              className="group relative transition-transform duration-150 ease-out hover:z-10 hover:-translate-y-0.5 focus-visible:z-10"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`https://github.com/${o}.png?size=56`}
-                alt=""
-                className="h-7 w-7 rounded-full bg-[var(--card)] ring-2 ring-[var(--bg)]"
-              />
-              {/* Tooltip: waits 80ms before showing, hides faster than it shows */}
-              <span
-                role="tooltip"
-                className="pointer-events-none invisible absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 translate-y-0.5 scale-[0.97] whitespace-nowrap rounded-md bg-[var(--fg)] px-1.5 py-0.5 text-[11px] text-[var(--bg)] opacity-0 transition-[opacity,transform,visibility] duration-100 ease-out group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-hover:delay-[80ms] group-hover:duration-150 group-focus-visible:visible group-focus-visible:translate-y-0 group-focus-visible:scale-100 group-focus-visible:opacity-100"
-              >
-                {o}
-              </span>
-            </Link>
-          ))}
-        </div>
+        <AvatarStack
+          label="Organisations I've contributed to"
+          max={6}
+          people={owners.map((o) => ({
+            name: o,
+            avatar: `https://github.com/${o}.png?size=56`,
+            href: `https://github.com/${o}`
+          }))}
+        />
         <p className="text-[13px] text-[var(--fg-muted)]">
           Shipped into{' '}
           <span className="text-[var(--fg)]">

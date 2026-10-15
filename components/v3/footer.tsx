@@ -1,27 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { profile } from '@/data/profile';
+import { CopyEmail } from '@/components/lab/copy-email';
+import { Signature } from '@/components/lab/signature';
 
 const Footer = () => {
-  const [copied, setCopied] = useState(false);
-
-  const copyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(profile.email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      window.location.href = `mailto:${profile.email}`;
-    }
-  };
-
   return (
     <footer className="mx-auto mt-28 max-w-[672px] px-4 pb-32 text-[13px] text-[var(--fg-muted)]">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="font-serif text-xl italic text-[var(--fg)]">
-            {profile.handle}
-          </span>
+          <Signature label={`${profile.name}'s signature`} className="h-7" />
           <span>
             © {new Date().getFullYear()} {profile.name}
           </span>
@@ -45,13 +33,7 @@ const Footer = () => {
             {label === 'x' ? 'X' : label}
           </Link>
         ))}
-        <button
-          type="button"
-          onClick={copyEmail}
-          className="ml-auto transition-colors hover:text-[var(--fg)]"
-        >
-          {copied ? 'Copied!' : 'Copy email'}
-        </button>
+        <CopyEmail email={profile.email} className="ml-auto" />
       </div>
     </footer>
   );

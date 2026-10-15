@@ -8,14 +8,13 @@ import Avatar from '@/assets/images/my.webp';
 import { profile } from '@/data/profile';
 import { Doc, Mail, Reveal } from '@/components/v3';
 import LocationPill from '@/components/v3/location-pill';
+import { Odometer } from '@/components/lab/odometer';
 import SpotifyPill from '@/components/v3/spotify-pill';
 import {
   useContributions,
   useGithubUser,
   useMergedPrs
 } from '@/queries/github';
-
-const fmt = (n?: number) => (n === undefined ? '—' : n.toLocaleString());
 
 const Hero = () => {
   const { data: user } = useGithubUser();
@@ -26,28 +25,28 @@ const Hero = () => {
     {
       icon: GoGitMerge,
       tint: 'text-deep-purple-400 bg-deep-purple-500/15',
-      value: fmt(prs?.total),
+      value: prs?.total,
       label: 'PRs merged upstream',
       href: `https://github.com/search?q=author%3A${profile.github}+is%3Apr+is%3Amerged&type=pullrequests`
     },
     {
       icon: GoPulse,
       tint: 'text-green-400 bg-green-500/15',
-      value: fmt(contributions?.total),
+      value: contributions?.total,
       label: 'GitHub contributions this year',
       href: profile.socials.github
     },
     {
       icon: GoRepo,
       tint: 'text-light-blue-400 bg-light-blue-500/15',
-      value: fmt(user?.public_repos),
+      value: user?.public_repos,
       label: 'public repositories',
       href: `${profile.socials.github}?tab=repositories`
     },
     {
       icon: GoPeople,
       tint: 'text-amber-400 bg-amber-500/15',
-      value: fmt(user?.followers),
+      value: user?.followers,
       label: 'followers on GitHub',
       href: `${profile.socials.github}?tab=followers`
     }
@@ -135,7 +134,7 @@ const Hero = () => {
               <Icon size={13} />
             </span>
             <div className="mt-3 text-lg font-medium tabular-nums text-[var(--fg)]">
-              {value}
+              {value === undefined ? '—' : <Odometer value={value} />}
             </div>
             <div className="mt-0.5 text-[11px] leading-snug text-[var(--fg-muted)]">
               {label}

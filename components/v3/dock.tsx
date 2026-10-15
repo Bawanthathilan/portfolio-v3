@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, Search } from '@/components/v3';
+import { Search } from '@/components/v3';
+import { BackToTop } from '@/components/lab/back-to-top';
 import { profile, sections } from '@/data/profile';
 import { cn } from '@/utils/cn';
 
@@ -68,7 +68,6 @@ const Dock = () => {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
-  const [showTop, setShowTop] = useState(false);
   const idle = !open && !query;
   const typed = useTypewriter(PLACEHOLDERS, idle);
 
@@ -80,12 +79,9 @@ const Dock = () => {
       e.preventDefault();
       inputRef.current?.focus();
     };
-    const onScroll = () => setShowTop(window.scrollY > 600);
     window.addEventListener('keydown', onKey);
-    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       window.removeEventListener('keydown', onKey);
-      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -218,32 +214,10 @@ const Dock = () => {
         </div>
       </div>
 
-      <AnimatePresence>
-        {showTop && (
-          <motion.button
-            type="button"
-            aria-label="Back to top"
-            initial={{ opacity: 0, transform: 'scale(0.95)' }}
-            animate={{
-              opacity: 1,
-              transform: 'scale(1)',
-              transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] }
-            }}
-            exit={{
-              opacity: 0,
-              transform: 'scale(0.95)',
-              transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
-            }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-5 right-5 z-40 hidden h-11 w-11 place-items-center rounded-full border border-[var(--line)] bg-[var(--bg)] text-[var(--fg)] group shadow-lg transition-transform duration-150 ease-out active:scale-[0.96] sm:grid"
-          >
-            <ArrowUp
-              size={16}
-              className="transition-transform duration-150 ease-out group-hover:-translate-y-0.5"
-            />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Reading-progress back-to-top, desktop only (the dock fills mobile) */}
+      <div className="fixed bottom-5 right-5 z-40 hidden sm:block">
+        <BackToTop />
+      </div>
     </>
   );
 };

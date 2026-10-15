@@ -30,7 +30,7 @@ const Guestbook = () => {
       meta={`${count ?? notes.length} signed`}
       action={{ label: 'Read them all', href: '/guestbook' }}
     >
-      <div className="grid gap-2 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         {notes.slice(0, 5).map((n, i) => (
           <Card key={i} className="flex min-h-[140px] flex-col p-4">
             <p className="line-clamp-3 text-[13px] leading-[1.6] text-[var(--fg)]">

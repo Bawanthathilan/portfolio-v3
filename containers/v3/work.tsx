@@ -49,7 +49,7 @@ const Work = () => {
                 type="button"
                 onClick={() => expandable && setPicked(expanded ? null : i)}
                 aria-expanded={expandable ? expanded : undefined}
-                className="group -mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-xl px-2 py-2.5 text-left"
+                className="group -mx-2 flex w-[calc(100%+1rem)] items-start gap-3 rounded-xl px-2 py-2.5 text-left sm:items-center"
               >
                 <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg bg-[var(--card-hover)] text-[13px] font-semibold text-[var(--fg)] ring-1 ring-inset ring-[var(--line)]">
                   {LOGOS[name.trim().toLowerCase()] ? (
@@ -68,13 +68,17 @@ const Work = () => {
                   <span className="block truncate text-sm text-[var(--fg)]">
                     {name}
                   </span>
-                  {w.Desc && (
-                    <span className="block truncate text-[13px] text-[var(--fg-muted)]">
-                      {w.Desc}
+                  {/* Phones: the dates move under the title and it wraps
+                      instead of truncating, so nothing gets cut off */}
+                  <span className="block text-[13px] text-[var(--fg-muted)] sm:truncate">
+                    {w.Desc}
+                    <span className="tabular-nums sm:hidden">
+                      {w.Desc && ' · '}
+                      {period}
                     </span>
-                  )}
+                  </span>
                 </span>
-                <span className="shrink-0 text-xs tabular-nums text-[var(--fg-muted)]">
+                <span className="hidden shrink-0 text-xs tabular-nums text-[var(--fg-muted)] sm:block">
                   {period}
                 </span>
                 <Chevron

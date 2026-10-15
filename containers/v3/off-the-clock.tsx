@@ -104,7 +104,7 @@ const MunichIllustration = () => (
 
 const VisitedTile = () => (
   <Card className="flex flex-col p-1.5">
-    <div className="relative min-h-[150px] flex-1 overflow-hidden rounded-xl">
+    <div className="relative min-h-[110px] flex-1 overflow-hidden rounded-xl sm:min-h-[150px]">
       {VISITED.photo ? (
         <Image
           src={VISITED.photo}
@@ -312,24 +312,25 @@ const OffTheClock = () => {
 
   return (
     <Section id="off-the-clock" title="off the clock">
-      <div className="grid gap-2 sm:grid-cols-[1.6fr_1fr]">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-[1.6fr_1fr]">
         <PhotoTile
           index={0}
           title="Google I/O Extended Sri Lanka"
           sub={`GDG Sri Lanka · ${PHOTOS.length} photos`}
-          className="sm:row-span-2 sm:min-h-[440px]"
+          className="col-span-2 sm:col-span-1 sm:row-span-2 sm:min-h-[440px]"
           onOpen={setOpen}
         />
 
         <Card className="group flex flex-col justify-between p-1.5">
-          <div className="grid grid-cols-3 gap-1.5">
+          {/* Phones: two covers fit the half-width tile; the third joins on wider screens */}
+          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
             {GAMES.map((g, i) => (
               <div
                 key={g.title}
                 title={g.title}
                 // Covers lift one after another on hover, then settle together
                 style={{ '--d': `${i * 40}ms` } as React.CSSProperties}
-                className={`relative flex aspect-[4/3] items-end sm:aspect-[3/4] overflow-hidden rounded-lg bg-gradient-to-br ${g.tile} p-2 transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:[transition-delay:var(--d)]`}
+                className={`relative aspect-[3/4] items-end ${i > 1 ? 'hidden sm:flex' : 'flex'} overflow-hidden rounded-lg bg-gradient-to-br ${g.tile} p-2 transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:[transition-delay:var(--d)]`}
               >
                 <span className="absolute right-1.5 top-1 text-[10px] font-medium uppercase tracking-wider text-white/60">
                   {g.mark}
@@ -362,7 +363,7 @@ const OffTheClock = () => {
           title="DevFest Sri Lanka 2019"
           sub="GDG Sri Lanka"
           wide
-          className="sm:col-span-2"
+          className="col-span-2"
           onOpen={setOpen}
         />
       </div>

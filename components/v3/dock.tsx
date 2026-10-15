@@ -155,7 +155,8 @@ const Dock = () => {
   return (
     <>
       <div className="fixed inset-x-0 bottom-5 z-40 flex justify-center px-4">
-        <div className="relative w-full max-w-[360px]">
+        {/* Compact on phones, full width once tapped (and on larger screens) */}
+        <div className="relative w-full max-w-[220px] transition-[max-width] duration-200 ease-out focus-within:max-w-[360px] sm:max-w-[360px]">
           {/* No open/close animation: this is summoned from the keyboard and
               should feel instant, like Raycast. */}
           {open && (
@@ -184,7 +185,7 @@ const Dock = () => {
           )}
           <label className="flex h-11 items-center gap-2.5 rounded-full border border-[var(--line)] bg-[color-mix(in_srgb,var(--bg)_90%,transparent)] pl-4 pr-2 shadow-lg backdrop-blur-xl transition-colors focus-within:border-[var(--line-strong)]">
             <Search size={14} className="shrink-0 text-[var(--fg-muted)]" />
-            <span className="relative flex min-w-0 flex-1">
+            <span className="relative flex min-w-0 flex-1 overflow-hidden">
               <input
                 ref={inputRef}
                 value={query}
@@ -214,8 +215,8 @@ const Dock = () => {
         </div>
       </div>
 
-      {/* Reading-progress back-to-top, desktop only (the dock fills mobile) */}
-      <div className="fixed bottom-5 right-5 z-40 hidden sm:block">
+      {/* Reading-progress back-to-top, beside the compact dock on phones */}
+      <div className="fixed bottom-5 right-4 z-40 sm:right-5">
         <BackToTop />
       </div>
     </>

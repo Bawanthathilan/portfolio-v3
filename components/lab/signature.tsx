@@ -16,9 +16,13 @@ import { cn } from '@/utils/cn';
    direction than the other, like a broad-edged pen. */
 
 // "bawantha" in Hershey Script Simplex (public domain), one subpath per pen
-// stroke, generated with hersheytext and joined by each glyph's width.
+// stroke, generated with hersheytext and joined by each glyph's width. The
+// "b" is hand-drawn instead, since the font's version reads as an "l".
 export const BAWANTHA_SIGNATURE =
-  'M0,17 L2,14 5,9 6,7 7,4 7,2 6,1 4,2 3,4 2,8 1,15 1,21 2,22 3,22 5,21 7,19 8,16 8,13 9,17 10,18 12,18 14,17 ' +
+  // "b": redrawn as a stem with a closed bowl (the font's own b read as "l")
+  'M5.8,1.5 L4.2,6 2.8,11.5 1.9,16 1.6,21.8 ' +
+  'M1.9,17.5 L3.6,14.6 5.8,13.3 7.6,13.6 8.5,15.4 8.2,18 6.8,20.6 4.6,22 2.6,22.2 1.6,21.8 ' +
+  'M8.3,16.6 L10.5,17.4 12.5,17.6 14,17 ' +
   'M18,16 L17,14 15,13 13,13 11,14 10,15 9,17 9,19 10,21 12,22 14,22 16,21 17,19 19,13 18,18 18,21 19,22 20,22 22,21 23,20 25,17 ' +
   'M22,13 L20,15 19,18 19,20 20,22 22,22 24,21 26,19 ' +
   'M28,13 L26,19 26,21 27,22 29,22 31,21 33,19 34,16 34,13 ' +

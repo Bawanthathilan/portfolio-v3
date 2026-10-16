@@ -19,6 +19,13 @@ export interface MergedPr {
   deletions: number | null;
 }
 
+export interface ContributedOrg {
+  owner: string;
+  // The repo with the most of my merged PRs in this organisation
+  repo: string;
+  stars: number | null;
+}
+
 export interface GithubUser {
   public_repos: number;
   followers: number;
@@ -54,7 +61,11 @@ export function useContributions() {
 // Latest merged PRs into repos I don't own, with line counts. Served by
 // /api/github/prs, which fetches the per-PR detail once and caches it.
 export function useMergedPrs() {
-  return useQuery<{ total: number; owners: string[]; items: MergedPr[] }>({
+  return useQuery<{
+    total: number;
+    owners: ContributedOrg[];
+    items: MergedPr[];
+  }>({
     queryKey: ['gh-merged-prs'],
     staleTime: HOUR,
     queryFn: async () => {

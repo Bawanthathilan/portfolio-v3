@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Card, Section } from '@/components/v3';
+import { Card, Section, Star } from '@/components/v3';
 import { AvatarStack } from '@/components/lab/avatar-stack';
 import { useMergedPrs } from '@/queries/github';
 
@@ -9,6 +9,13 @@ const monthYear = (iso: string) =>
     month: 'short',
     year: '2-digit'
   });
+
+// 108700 -> "108.7K", like GitHub
+const compact = (n: number) =>
+  new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 1
+  }).format(n);
 
 const OpenSource = () => {
   const { data } = useMergedPrs();
@@ -25,16 +32,42 @@ const OpenSource = () => {
         <AvatarStack
           label="Organisations I've contributed to"
           max={6}
+          tooltipAlign="start"
+          // Dark card tooltip: "owner/repo · ★ 1.2K"
+          tooltipClassName="flex max-w-[calc(100vw-96px)] items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--card)] px-3 py-1.5 font-mono text-[13px] text-[var(--fg)] shadow-lg"
           people={owners.map((o) => ({
-            name: o,
-            avatar: `https://github.com/${o}.png?size=56`,
-            href: `https://github.com/${o}`
+            name:
+              o.stars === null
+                ? `${o.owner}/${o.repo}`
+                : `${o.owner}/${o.repo}, ${compact(o.stars)} stars`,
+            tooltip: (
+              <>
+                {/* Truncates on narrow screens; the stars always stay whole */}
+                <span className="min-w-0 truncate">
+                  {o.owner}/{o.repo}
+                </span>
+                {o.stars !== null && (
+                  <>
+                    <span className="shrink-0 text-[var(--fg-muted)]">·</span>
+                    <span className="flex shrink-0 items-center gap-1 tabular-nums">
+                      <Star size={13} className="text-amber-400" />
+                      {compact(o.stars)}
+                    </span>
+                  </>
+                )}
+              </>
+            ),
+            avatar: `https://github.com/${o.owner}.png?size=56`,
+            href: `https://github.com/${o.owner}/${o.repo}`
           }))}
         />
         <p className="text-[13px] text-[var(--fg-muted)]">
           Shipped into{' '}
           <span className="text-[var(--fg)]">
-            {owners.slice(0, 3).join(', ')}
+            {owners
+              .slice(0, 3)
+              .map((o) => o.owner)
+              .join(', ')}
           </span>
           {owners.length > 3 && ` and ${owners.length - 3} more`}
         </p>

@@ -12,7 +12,13 @@ import {
 import { useReducedMotion } from '@/utils/use-reduced-motion';
 import { cn } from '@/utils/cn';
 
-export type Person = { name: string; avatar?: string; href?: string };
+export type Person = {
+  name: string;
+  avatar?: string;
+  href?: string;
+  // Shown in the tooltip instead of the name (the name stays the label)
+  tooltip?: React.ReactNode;
+};
 
 // A touch of bounce so the fan springs open rather than slides.
 const FAN = { visualDuration: 0.3, bounce: 0.15 };
@@ -45,12 +51,19 @@ export function AvatarStack({
   max = 5,
   size = 28,
   label = 'Members',
+  tooltipAlign = 'center',
+  tooltipClassName,
   className
 }: {
   people: Person[];
   max?: number;
   size?: number;
   label?: string;
+  // 'start' grows the tooltip rightwards from the avatar, for long labels
+  // in a stack that sits at the left edge of the page.
+  tooltipAlign?: 'center' | 'start';
+  // Replaces the default light pill look of the tooltip
+  tooltipClassName?: string;
   className?: string;
 }) {
   // Stacked, each avatar hides about a third of the one before it; fanned,
@@ -91,7 +104,7 @@ export function AvatarStack({
       avatar: person.avatar,
       href: person.href,
       name: person.name,
-      tooltip: person.name,
+      tooltip: person.tooltip ?? person.name,
       tint: TINTS[i % TINTS.length]
     })),
     ...(hidden.length > 0
@@ -194,7 +207,12 @@ export function AvatarStack({
               <span
                 aria-hidden
                 className={cn(
-                  'pointer-events-none absolute bottom-full left-1/2 mb-2 origin-bottom -translate-x-1/2 whitespace-nowrap rounded-full bg-[var(--fg)] px-2.5 py-1 text-xs font-medium text-[var(--bg)]',
+                  'pointer-events-none absolute bottom-full mb-2 whitespace-nowrap',
+                  tooltipClassName ??
+                    'rounded-full bg-[var(--fg)] px-2.5 py-1 text-xs font-medium text-[var(--bg)]',
+                  tooltipAlign === 'start'
+                    ? 'left-0 origin-bottom-left'
+                    : 'left-1/2 origin-bottom -translate-x-1/2',
                   'invisible translate-y-0.5 scale-[0.97] opacity-0 transition-[opacity,transform,visibility] duration-100 ease-out',
                   'group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-hover:duration-150',
                   'group-focus-visible:visible group-focus-visible:translate-y-0 group-focus-visible:scale-100 group-focus-visible:opacity-100 group-focus-visible:duration-150',

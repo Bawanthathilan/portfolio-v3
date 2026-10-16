@@ -21,6 +21,11 @@ export const profile = {
   openmrsStageSummary:
     'Trusted with code review, CI, leading sprints and pushing to modules.',
   openmrsTalk: 'https://talk.openmrs.org/u/bawanthathilan/summary',
+  // Which repo the open-source avatar shows for an organisation. Orgs not
+  // listed fall back to the repo with the most of my recent merged PRs.
+  featuredRepos: {
+    openmrs: 'openmrs-esm-admin-tools'
+  } as Record<string, string>,
   resume:
     'https://drive.google.com/drive/folders/191j6y4c-BGXbQJD_Lp5nZW7JnGIe2NDS?usp=sharing',
   socials: {

@@ -178,6 +178,18 @@ body {
   background-size: 100% 72%;
 }
 
+/* Hovering one row of a list fades the others, so the hovered row stands
+   out. Real pointers only: on touch a tap would leave the list half-faded. */
+.dim-siblings > li {
+  transition: opacity 200ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dim-siblings:has(> li:hover) > li:not(:hover) {
+    opacity: 0.45;
+  }
+}
+
 /* ───── Reduced motion ───── */
 @media (prefers-reduced-motion: reduce) {
   html {

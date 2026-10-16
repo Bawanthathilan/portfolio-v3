@@ -36,9 +36,23 @@ export const profile = {
   }
 };
 
+// LinkedIn recommendation shown in the "kind words" section. `highlight`
+// must appear in `quote` exactly as written.
+export const recommendation = {
+  quote:
+    "I've had a fantastic time working with Bawantha on OpenMRS. He's been a real asset to our community over the years, building several key projects, most recently a metadata extraction tool. Bawantha is easy to work with and goes above and beyond what is asked of him. He is thoughtful, careful and does excellent work. Bawantha would be a real asset to any team lucky enough to have him on it.",
+  highlight: 'goes above and beyond what is asked of him',
+  name: 'Ian Bacher',
+  role: 'Engineering Lead, OpenMRS',
+  avatar: '/people/ian.jpg',
+  profile: 'https://www.linkedin.com/in/ian-bacher-933598176/',
+  link: 'https://www.linkedin.com/in/bawanthathilan/details/recommendations/'
+};
+
 // Each section id doubles as a dock command target.
 export const sections = [
   { id: 'work', label: 'Work' },
+  { id: 'kind-words', label: 'Kind words' },
   { id: 'projects', label: 'Projects' },
   { id: 'highlights', label: 'Highlights' },
   { id: 'certifications', label: 'Certifications' },

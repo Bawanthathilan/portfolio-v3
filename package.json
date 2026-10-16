@@ -6,7 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "format": "npx prettier --write .",
     "prepare": "husky"
   },
@@ -16,17 +15,17 @@
     "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.46.1",
     "@tanstack/react-query": "^5.59.20",
-    "@types/node": "20.2.1",
-    "@types/react": "18.2.6",
-    "@types/react-dom": "18.2.4",
+    "@types/node": "^20",
+    "@types/react": "^18.3",
+    "@types/react-dom": "^18.3",
     "@vercel/analytics": "^1.0.1",
     "@vercel/speed-insights": "^1.0.10",
     "autoprefixer": "10.4.14",
     "clsx": "^2.0.0",
     "framer-motion": "^10.12.12",
     "motion": "^13.4.1",
-    "next": "13.4.3",
-    "next-auth": "^4.22.0",
+    "next": "16.4.2",
+    "next-auth": "^4.24.15",
     "next-themes": "^0.2.1",
     "postcss": "8.4.23",
     "react": "18.2.0",
@@ -35,7 +34,7 @@
     "sass": "^1.62.1",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.2",
-    "typescript": "5.0.4"
+    "typescript": "^5.9"
   },
   "devDependencies": {
     "husky": "^9.0.8",
@@ -43,5 +42,8 @@
     "prettier-plugin-tailwindcss": "^0.4.1",
     "supabase": "^1.219.2"
   },
-  "packageManager": "yarn@4.18.0+sha512.fcb8716fe7cd0eece141ffc18b92193a9df9204c1ba83189c288835223fc0bbe64af473bab0d5e9927a7daeb5caf2bb07eb2787cc9338ca040ea125f2a1f2f7e"
+  "packageManager": "yarn@4.18.0+sha512.fcb8716fe7cd0eece141ffc18b92193a9df9204c1ba83189c288835223fc0bbe64af473bab0d5e9927a7daeb5caf2bb07eb2787cc9338ca040ea125f2a1f2f7e",
+  "engines": {
+    "node": ">=20.9.0"
+  }
 }

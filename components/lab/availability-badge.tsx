@@ -273,6 +273,7 @@ export function AvailabilityBadge({
   const card = useRef<HTMLDivElement>(null);
   const pill = useRef<HTMLButtonElement>(null);
   const root = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
   // How much of the card to cut away on the right and bottom to leave just
   // the pill, plus the pill's width so the wrapper holds its place in the
@@ -297,6 +298,12 @@ export function AvailabilityBadge({
   }, []);
 
   useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  // The closed panel is unreachable by keyboard and screen readers. Set on
+  // the element directly: React 18 has no `inert` prop.
+  useEffect(() => {
+    panel.current?.toggleAttribute('inert', !open);
+  }, [open]);
 
   // A press anywhere outside closes it. Blur can't be relied on: iOS Safari
   // doesn't focus buttons on tap or blur them on an outside tap, so a card
@@ -441,8 +448,7 @@ export function AvailabilityBadge({
 
           <div
             id={`${id}-panel`}
-            // React 18 has no `inert` prop yet; pass the attribute directly.
-            {...(!open ? { inert: '' } : {})}
+            ref={panel}
             className={cn(
               'px-4 pb-4 pt-2 transition-[opacity,filter,transform] ease-out motion-reduce:translate-y-0',
               open

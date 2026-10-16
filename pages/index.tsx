@@ -1,6 +1,7 @@
 import React from 'react';
 import Hero from '@/containers/v3/hero';
 import Work from '@/containers/v3/work';
+import KindWords from '@/containers/v3/kind-words';
 import Projects from '@/containers/v3/projects';
 import Highlights from '@/containers/v3/highlights';
 import Certifications from '@/containers/v3/certifications';
@@ -15,6 +16,7 @@ export default function Home() {
     <>
       <Hero />
       <Work />
+      <KindWords />
       <Projects />
       <Highlights />
       <Certifications />

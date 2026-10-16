@@ -19,7 +19,7 @@ const Highlights = () => {
       title="highlights"
       meta={String(items.length).padStart(2, '0')}
     >
-      <ul>
+      <ul className="dim-siblings">
         {items.map((a) => {
           // Rows with a description expand to show it in full; the rest are
           // plain links.

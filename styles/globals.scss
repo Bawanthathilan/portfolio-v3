@@ -26,6 +26,8 @@
   --heat-2: #40c463;
   --heat-3: #30a14e;
   --heat-4: #216e39;
+  /* Highlighter ink for the quote's key phrase */
+  --marker: rgb(250 204 21 / 0.4);
 }
 
 .dark {
@@ -49,6 +51,7 @@
   --heat-2: #006d32;
   --heat-3: #26a641;
   --heat-4: #39d353;
+  --marker: rgb(250 204 21 / 0.22);
 }
 
 /* ───── Base ───── */
@@ -157,6 +160,36 @@ body {
   animation: caret 1.06s step-end infinite;
 }
 
+/* Highlighter stroke across a phrase, swept in once its section has
+   revealed. Wraps cleanly across lines. */
+.marker {
+  background-image: linear-gradient(var(--marker), var(--marker));
+  background-repeat: no-repeat;
+  background-position: 0 70%;
+  background-size: 0% 72%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0 2px;
+  margin: 0 -2px;
+  transition: background-size 900ms var(--ease-out) 350ms;
+}
+
+.reveal[data-visible='true'] .marker {
+  background-size: 100% 72%;
+}
+
+/* Hovering one row of a list fades the others, so the hovered row stands
+   out. Real pointers only: on touch a tap would leave the list half-faded. */
+.dim-siblings > li {
+  transition: opacity 200ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dim-siblings:has(> li:hover) > li:not(:hover) {
+    opacity: 0.45;
+  }
+}
+
 /* ───── Reduced motion ───── */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -168,6 +201,11 @@ body {
     transform: none;
     filter: none;
     transition: opacity 200ms ease;
+  }
+
+  /* The highlight is there, without the sweep */
+  .marker {
+    transition: none;
   }
 
   /* Stop looping keyframe motion (pings, equaliser, caret). Transitions are

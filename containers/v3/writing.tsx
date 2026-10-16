@@ -34,7 +34,7 @@ const Writing = () => {
       meta={String(posts.length).padStart(2, '0')}
       action={{ label: 'All writing', href: profile.socials.medium }}
     >
-      <ul>
+      <ul className="dim-siblings">
         {posts.slice(0, 5).map((post) => {
           // rss2json returns "YYYY-MM-DD HH:mm:ss"; make it ISO-parsable.
           const date = new Date(post.pubDate.replace(' ', 'T'));
@@ -45,11 +45,11 @@ const Writing = () => {
                 target="_blank"
                 className="group flex items-baseline gap-6 py-2"
               >
-                <span className="w-14 shrink-0 font-mono text-[11px] text-[var(--fg-muted)]">
+                <span className="w-14 shrink-0 font-mono text-[11px] text-[var(--fg-subtle)] transition-colors duration-150 group-hover:text-[var(--fg-muted)]">
                   {date.toLocaleDateString('en-US', { month: 'short' })} &apos;
                   {String(date.getFullYear()).slice(2)}
                 </span>
-                <span className="text-sm text-[var(--fg)] underline decoration-transparent underline-offset-[5px] transition-[color,text-decoration-color] duration-150 group-hover:text-[var(--fg-muted)] group-hover:decoration-[var(--line-strong)]">
+                <span className="text-sm text-[var(--fg)] underline decoration-transparent underline-offset-[5px] transition-[text-decoration-color] duration-150 group-hover:decoration-[var(--line-strong)]">
                   {post.title}
                 </span>
               </Link>

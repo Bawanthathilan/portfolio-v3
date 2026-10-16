@@ -67,11 +67,35 @@ export default async function handler(
       ? `public, s-maxage=${HOUR}, stale-while-revalidate=${24 * HOUR}`
       : 'public, s-maxage=60'
   );
-  // Every organisation contributed to, most recent first.
-  const owners = Array.from(
-    new Set<string>(
-      data.items.map((i: any) => i.repository_url.split('/').slice(-2)[0])
-    )
+  // Every organisation contributed to, most recent first, each with the repo
+  // I've merged the most PRs into there and that repo's star count (shown in
+  // the avatar tooltips). One extra request per organisation.
+  const prsPerRepo = new Map<string, number>();
+  const ownerOrder: string[] = [];
+  for (const i of data.items) {
+    const [owner, repo] = i.repository_url.split('/').slice(-2);
+    if (!ownerOrder.includes(owner)) ownerOrder.push(owner);
+    const key = `${owner}/${repo}`;
+    prsPerRepo.set(key, (prsPerRepo.get(key) ?? 0) + 1);
+  }
+  const owners = await Promise.all(
+    ownerOrder.map(async (owner) => {
+      // A repo picked in profile.featuredRepos wins; otherwise the one with
+      // the most of my recent merged PRs in this organisation.
+      const featured = profile.featuredRepos[owner];
+      const topRepo = featured
+        ? `${owner}/${featured}`
+        : Array.from(prsPerRepo)
+            .filter(([key]) => key.startsWith(`${owner}/`))
+            .sort((a, b) => b[1] - a[1])[0][0];
+      const repo = topRepo.split('/')[1];
+      let stars: number | null = null;
+      const info = await github(
+        `https://api.github.com/repos/${topRepo}`
+      ).catch(() => null);
+      if (info?.ok) stars = (await info.json()).stargazers_count;
+      return { owner, repo, stars };
+    })
   );
   return res.status(200).json({ total: data.total_count, owners, items });
 }

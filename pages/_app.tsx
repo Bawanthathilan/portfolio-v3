@@ -8,11 +8,11 @@ import Head from 'next/head';
 import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider';
 
 const SITE = {
-  url: 'https://bawantha.me',
+  url: 'https://bawanthathilan.vercel.app',
   title: 'Bawantha Thilan — Senior Software Engineer',
   description:
     'Senior Software Engineer at OREL IT and /dev/3 OpenMRS developer. I build full-stack systems and developer tools with React, Next.js and TypeScript.',
-  image: 'https://bawantha.me/og.png',
+  image: 'https://bawanthathilan.vercel.app/og.png',
   imageAlt:
     'Bawantha Thilan, Senior Software Engineer and Open Source Contributor'
 };

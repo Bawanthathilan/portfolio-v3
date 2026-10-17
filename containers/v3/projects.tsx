@@ -7,6 +7,7 @@ import { useQuery } from '@supabase-cache-helpers/postgrest-react-query';
 import { useRepoStars } from '@/queries/github';
 import { ArrowUpRight, Section, Star } from '@/components/v3';
 import { profile } from '@/data/profile';
+import { Bone, SkeletonStatus } from '@/components/lab/skeleton';
 
 // Soft top-left wash per card, cycled by index.
 const TINTS = [
@@ -87,26 +88,48 @@ const ProjectCard = ({ p, i }: { p: Project; i: number }) => {
   );
 };
 
+// Card placeholders: icon tile, then name and two lines of description.
+const ProjectsSkeleton = () => (
+  <SkeletonStatus label="Loading projects">
+    <div className="grid gap-2 sm:grid-cols-2">
+      {['w-28', 'w-36', 'w-24', 'w-32'].map((title, i) => (
+        <div key={i} className="rounded-2xl bg-[var(--card)] p-3">
+          <Bone className="h-10 w-10 rounded-xl" />
+          <div className="space-y-2.5 px-1 pb-1 pt-7">
+            <Bone className={`h-3.5 ${title}`} />
+            <Bone className="h-2.5 w-full" />
+            <Bone className="h-2.5 w-2/3" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </SkeletonStatus>
+);
+
 const Projects = () => {
   const supabase = useSupabaseBrowser();
-  const { data } = useQuery(getProjectsData(supabase));
+  const { data, isLoading } = useQuery(getProjectsData(supabase));
   const projects = (data ?? []) as Project[];
 
   return (
     <Section
       id="projects"
       title="projects"
-      meta={String(projects.length).padStart(2, '0')}
+      meta={isLoading ? '··' : String(projects.length).padStart(2, '0')}
       action={{
         label: 'All projects',
         href: `${profile.socials.github}?tab=repositories`
       }}
     >
-      <div className="grid gap-2 sm:grid-cols-2">
-        {projects.map((p, i) => (
-          <ProjectCard key={p.id} p={p} i={i} />
-        ))}
-      </div>
+      {isLoading ? (
+        <ProjectsSkeleton />
+      ) : (
+        <div className="grid gap-2 sm:grid-cols-2">
+          {projects.map((p, i) => (
+            <ProjectCard key={p.id} p={p} i={i} />
+          ))}
+        </div>
+      )}
     </Section>
   );
 };

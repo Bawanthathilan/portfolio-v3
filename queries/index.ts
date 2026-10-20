@@ -10,7 +10,7 @@ export function getProjectsData(client: TypedSupabaseClient) {
 }
 
 export function getAchievementsData(client: TypedSupabaseClient) {
-  return client.from('achivements').select().order('id', { ascending: true });
+  return client.from('achivements').select().order('id', { ascending: false });
 }
 
 export function getWorkData(client: TypedSupabaseClient) {

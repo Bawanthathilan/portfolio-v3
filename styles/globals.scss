@@ -220,6 +220,16 @@ body {
   }
 }
 
+/* ───── Theme switch ───── */
+/* The circle is drawn by the navbar's script on the new snapshot; turn off
+   the default crossfade so the old page stays solid underneath. Only while
+   that switch runs, so other view transitions keep the default. */
+html[data-theme-reveal]::view-transition-old(root),
+html[data-theme-reveal]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* ───── Reduced motion ───── */
 @media (prefers-reduced-motion: reduce) {
   html {

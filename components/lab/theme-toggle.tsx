@@ -1,8 +1,8 @@
 // Adapted from ui lab by Yash Bavadiya (MIT, see THIRD_PARTY_NOTICES.md):
 // https://github.com/xevrion/ui-lab/blob/main/src/lab/components/theme-toggle.tsx
 // Changes: adds a small `sm` size and the navbar's flat style, Tailwind v3
-// classes and the site's colour variables, no demo.
-import React, { useId } from 'react';
+// classes and the site's colour variables, a forwarded ref, no demo.
+import React, { forwardRef, useId } from 'react';
 import { motion } from 'motion/react';
 import { useReducedMotion } from '@/utils/use-reduced-motion';
 import { cn } from '@/utils/cn';
@@ -45,19 +45,19 @@ const SIZES = {
   lg: { button: 'h-14 w-14', icon: 'h-7 w-7' }
 };
 
-export function ThemeToggle({
-  dark,
-  onChange,
-  size = 'md',
-  label = 'Dark mode',
-  className
-}: {
-  dark: boolean;
-  onChange: (dark: boolean) => void;
-  size?: keyof typeof SIZES;
-  label?: string;
-  className?: string;
-}) {
+export const ThemeToggle = forwardRef<
+  HTMLButtonElement,
+  {
+    dark: boolean;
+    onChange: (dark: boolean) => void;
+    size?: keyof typeof SIZES;
+    label?: string;
+    className?: string;
+  }
+>(function ThemeToggle(
+  { dark, onChange, size = 'md', label = 'Dark mode', className },
+  ref
+) {
   const reduceMotion = useReducedMotion();
   // React's ids can carry characters that break inside url(#...).
   const maskId = `moon-${useId().replace(/[^\w-]/g, '')}`;
@@ -67,6 +67,7 @@ export function ThemeToggle({
 
   return (
     <button
+      ref={ref}
       type="button"
       aria-label={label}
       aria-pressed={dark}
@@ -154,4 +155,4 @@ export function ThemeToggle({
       </motion.svg>
     </button>
   );
-}
+});

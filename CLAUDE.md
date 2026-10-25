@@ -26,6 +26,7 @@ There are no automated tests and no ESLint config.
 | `/api/auth/*`     | `pages/api/auth/[...nextauth].js` | NextAuth GitHub provider                             |
 | `/api/spotify`    | `pages/api/spotify.ts`            | Now playing / last played (`utils/spotify.js`)       |
 | `/api/github/prs` | `pages/api/github/prs.ts`         | Merged PRs with line counts, edge-cached for an hour |
+| `/api/psn/games`  | `pages/api/psn/games.ts`          | Recently played PS games via `psn-api` (`PSN_NPSSO`) |
 
 `components/layout` wraps every page (via `_app.tsx`) with the navbar, footer and the `/` command dock.
 

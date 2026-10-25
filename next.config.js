@@ -16,6 +16,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'pbs.twimg.com' },
       { protocol: 'https', hostname: 'lumoz-v2.web.app' },
       { protocol: 'https', hostname: 'image.api.playstation.com' },
+      { protocol: 'https', hostname: 'psnobj.prod.dl.playstation.net' },
       { protocol: 'https', hostname: 'media.rockstargames.com' }
     ]
   }

@@ -2245,6 +2245,7 @@ __metadata:
     postcss: "npm:8.4.23"
     prettier: "npm:^3.2.4"
     prettier-plugin-tailwindcss: "npm:^0.4.1"
+    psn-api: "npm:^2.18.1"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
     react-icons: "npm:^4.11.0"
@@ -2459,6 +2460,13 @@ __metadata:
     object-assign: "npm:^4.1.1"
     react-is: "npm:^16.13.1"
   checksum: 10c0/59ece7ca2fb9838031d73a48d4becb9a7cc1ed10e610517c7d8f19a1e02fa47f7c27d557d8a5702bec3cfeccddc853579832b43f449e54635803f277b1c78077
+  languageName: node
+  linkType: hard
+
+"psn-api@npm:^2.18.1":
+  version: 2.18.1
+  resolution: "psn-api@npm:2.18.1"
+  checksum: 10c0/fa9e6e0fe08d9acda449ef5b988989c8e8d3b37502523c8a6cd447f59588a62c4d2cf405623034241d6b7ab0738581e348359f6aec0e148f1053181d283e0857
   languageName: node
   linkType: hard
 

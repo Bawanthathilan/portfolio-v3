@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight, Card, Section } from '@/components/v3';
+import { usePlayedGames } from '@/queries/psn';
 
 const CLOUDINARY = 'https://res.cloudinary.com/sliit123/image/upload';
 
@@ -51,7 +52,9 @@ const SUMMIT: Photo[] = [
   }
 ];
 
-const GAMES = [
+// Shown until PlayStation answers, and whenever it can't (no NPSSO, or it
+// expired).
+const FALLBACK_GAMES = [
   {
     title: 'EA FC 26',
     mark: 'FC',
@@ -71,6 +74,15 @@ const GAMES = [
     tile: 'from-[#134e4a] via-[#0e7490] to-[#f59e0b]'
   }
 ];
+
+// Colour behind each cover while its image loads, cycled for fetched games.
+const TILES = FALLBACK_GAMES.map((g) => g.tile);
+
+// "A, B & C"
+const listNames = (names: string[]) =>
+  names.length > 1
+    ? `${names.slice(0, -1).join(', ')} & ${names[names.length - 1]}`
+    : names[0] ?? '';
 
 const Caption = ({
   title,
@@ -316,6 +328,15 @@ const Lightbox = ({
 };
 
 const OffTheClock = () => {
+  const { data: played } = usePlayedGames();
+  const games = played?.length
+    ? played.map((g, i) => ({
+        title: g.name,
+        mark: '',
+        img: g.image,
+        tile: TILES[i % TILES.length]
+      }))
+    : FALLBACK_GAMES;
   const [open, setOpen] = useState<{ photos: Photo[]; index: number } | null>(
     null
   );
@@ -348,7 +369,7 @@ const OffTheClock = () => {
         <Card className="group flex flex-col justify-between p-1.5">
           {/* Phones: two covers fit the half-width tile; the third joins on wider screens */}
           <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-            {GAMES.map((g, i) => (
+            {games.map((g, i) => (
               <div
                 key={g.title}
                 title={g.title}
@@ -356,9 +377,11 @@ const OffTheClock = () => {
                 style={{ '--d': `${i * 40}ms` } as React.CSSProperties}
                 className={`relative aspect-[3/4] items-end ${i > 1 ? 'hidden sm:flex' : 'flex'} overflow-hidden rounded-lg bg-gradient-to-br ${g.tile} p-2 transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:[transition-delay:var(--d)]`}
               >
-                <span className="absolute right-1.5 top-1 text-[10px] font-medium uppercase tracking-wider text-white/60">
-                  {g.mark}
-                </span>
+                {g.mark && (
+                  <span className="absolute right-1.5 top-1 text-[10px] font-medium uppercase tracking-wider text-white/60">
+                    {g.mark}
+                  </span>
+                )}
                 <span className="text-[11px] font-semibold leading-tight text-white">
                   {g.title}
                 </span>
@@ -375,7 +398,7 @@ const OffTheClock = () => {
           </div>
           <Caption
             title="Playing now"
-            sub="EA FC 26, GTA V & Horizon Zero Dawn"
+            sub={listNames(games.map((g) => g.title))}
             arrow={false}
           />
         </Card>

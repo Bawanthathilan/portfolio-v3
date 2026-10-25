@@ -12,5 +12,5 @@ export const SPOTIFY_REFRESH_TOKEN =
 // Optional: raises GitHub's API limit for /api/github/prs.
 export const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 // Server-only. The NPSSO cookie from a signed-in playstation.com session, used
-// by /api/psn/games to read recently played games. It lasts about two months.
+// by /api/psn/games to read recently played games. It lasts about two months .
 export const PSN_NPSSO = process.env.PSN_NPSSO;

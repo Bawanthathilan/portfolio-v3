@@ -357,7 +357,9 @@ const OffTheClock = () => {
 
   return (
     <Section id="off-the-clock" title="off the clock">
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-[1.6fr_1fr]">
+      {/* minmax(0, …): fr columns otherwise grow to fit their longest line,
+          so a long list of game names would squeeze the summit tile */}
+      <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-2 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <FanTile
           photos={SUMMIT}
           title="Google Summer of Code Mentor Summit 2025"

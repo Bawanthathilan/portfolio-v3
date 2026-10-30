@@ -258,6 +258,21 @@ const FanTile = ({
   </button>
 );
 
+const CloseIcon = ({ size }: { size: number }) => (
+  <svg
+    aria-hidden
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+  >
+    <path d="M18 6L6 18M6 6l12 12" />
+  </svg>
+);
+
 const Lightbox = ({
   photos,
   index,
@@ -312,31 +327,21 @@ const Lightbox = ({
       aria-modal="true"
       aria-label="Photos"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/85 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/[0.85] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { duration: 0.2 } }}
       exit={{ opacity: 0, transition: { duration: 0.15 } }}
     >
       {/* Top right, clear of the notch: on phones the bottom bar can sit
-          under the browser's own toolbar, so this one is always reachable */}
+          under the browser's own toolbar, so this one is always reachable.
+          Brighter than the other controls so it's easy to spot. */}
       <button
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className={`${navButton} absolute right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-10`}
+        className="absolute right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-10 grid h-11 w-11 place-items-center rounded-full bg-white/20 text-white ring-1 ring-inset ring-white/25 backdrop-blur-md transition-[background-color,transform] duration-150 ease-out hover:bg-white/30 active:scale-[0.96]"
       >
-        <svg
-          aria-hidden
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        >
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+        <CloseIcon size={18} />
       </button>
       {/* Modals stay centred, so they scale from the centre */}
       <motion.div
@@ -411,6 +416,14 @@ const Lightbox = ({
           className={navButton}
         >
           <ArrowUpRight className="rotate-45" size={14} />
+        </button>
+        <button
+          type="button"
+          aria-label="Close photos"
+          onClick={onClose}
+          className={`${navButton} ml-3`}
+        >
+          <CloseIcon size={14} />
         </button>
       </div>
     </motion.div>

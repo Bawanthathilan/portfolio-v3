@@ -5,6 +5,8 @@ import { ArrowUpRight, Section } from '@/components/v3';
 import { usePlayedGames } from '@/queries/psn';
 import type { PlayedGame } from '@/pages/api/psn/games';
 import { Dialog } from '@/components/lab/dialog';
+import { Spinner } from '@/components/lab/spinner';
+import { cn } from '@/utils/cn';
 
 const CLOUDINARY = 'https://res.cloudinary.com/sliit123/image/upload';
 
@@ -267,6 +269,25 @@ const Lightbox = ({
   onClose: () => void;
   onStep: (dir: 1 | -1) => void;
 }) => {
+  // Photos that have finished loading in this lightbox; going back to one
+  // shouldn't flash the spinner again.
+  const [loaded, setLoaded] = useState<Set<string>>(() => new Set());
+  const src = photos[index].src;
+  const isLoaded = loaded.has(src);
+  const markLoaded = (url: string) =>
+    setLoaded((prev) => (prev.has(url) ? prev : new Set(prev).add(url)));
+  // The photos either side load in the background, so stepping to them is
+  // usually instant.
+  const neighbours =
+    photos.length > 1
+      ? Array.from(
+          new Set([
+            photos[(index + 1) % photos.length].src,
+            photos[(index - 1 + photos.length) % photos.length].src
+          ])
+        ).filter((url) => url !== src)
+      : [];
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -291,15 +312,36 @@ const Lightbox = ({
       aria-modal="true"
       aria-label="Photos"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/85 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { duration: 0.2 } }}
       exit={{ opacity: 0, transition: { duration: 0.15 } }}
     >
+      {/* Top right, clear of the notch: on phones the bottom bar can sit
+          under the browser's own toolbar, so this one is always reachable */}
+      <button
+        type="button"
+        aria-label="Close"
+        onClick={onClose}
+        className={`${navButton} absolute right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-10`}
+      >
+        <svg
+          aria-hidden
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
       {/* Modals stay centred, so they scale from the centre */}
       <motion.div
         onClick={(e) => e.stopPropagation()}
-        className="relative h-[min(75vh,720px)] w-full max-w-4xl"
+        className="relative h-[min(75vh,720px)] w-full max-w-4xl supports-[height:100dvh]:h-[min(70dvh,720px)]"
         initial={{ transform: 'scale(0.96)' }}
         animate={{
           transform: 'scale(1)',
@@ -310,16 +352,42 @@ const Lightbox = ({
           transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
         }}
       >
+        {/* Shown until the photo arrives; the photo then fades in over it */}
+        <div
+          className={cn(
+            'absolute inset-0 grid place-items-center text-white transition-opacity duration-200 ease-out',
+            isLoaded && 'opacity-0'
+          )}
+        >
+          {!isLoaded && <Spinner label="Loading photo" />}
+        </div>
         {/* Swapping photos is instant: arrow keys get used a lot here */}
         <Image
           key={index}
-          src={photos[index].src}
+          src={src}
           alt={photos[index].alt}
           fill
           sizes="90vw"
-          className="object-contain"
+          onLoad={() => markLoaded(src)}
+          className={cn(
+            'object-contain transition-opacity duration-200 ease-out',
+            !isLoaded && 'opacity-0'
+          )}
           priority
         />
+        {neighbours.map((url) => (
+          <Image
+            key={url}
+            src={url}
+            alt=""
+            aria-hidden
+            fill
+            sizes="90vw"
+            onLoad={() => markLoaded(url)}
+            className="invisible"
+            priority
+          />
+        ))}
       </motion.div>
       <div
         onClick={(e) => e.stopPropagation()}
@@ -343,24 +411,6 @@ const Lightbox = ({
           className={navButton}
         >
           <ArrowUpRight className="rotate-45" size={14} />
-        </button>
-        <button
-          type="button"
-          aria-label="Close"
-          onClick={onClose}
-          className={`${navButton} ml-3`}
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          >
-            <path d="M18 6L6 18M6 6l12 12" />
-          </svg>
         </button>
       </div>
     </motion.div>

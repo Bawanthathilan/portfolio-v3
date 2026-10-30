@@ -220,6 +220,30 @@ body {
   }
 }
 
+/* ───── Spinner (components/lab/spinner.tsx) ───── */
+/* Linear because a spinner has no start or end; any easing would read as a
+   stutter once per turn. 700ms a turn is deliberately fast: a quicker spinner
+   makes the same wait feel shorter. */
+.loader-spin {
+  animation: loader-spin 700ms linear infinite;
+}
+
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
 /* ───── Theme switch ───── */
 /* The circle is drawn by the navbar's script on the new snapshot; turn off
    the default crossfade so the old page stays solid underneath. Only while
@@ -241,6 +265,12 @@ html[data-theme-reveal]::view-transition-new(root) {
     transform: none;
     filter: none;
     transition: opacity 200ms ease;
+  }
+
+  /* Nothing turns, but it still pulses so it never looks frozen. Set with
+     !important to win over the animation clamp below. */
+  .loader-spin {
+    animation: loader-pulse 1.6s ease-in-out infinite !important;
   }
 
   /* Bones stay put: no sweep */

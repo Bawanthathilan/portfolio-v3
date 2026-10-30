@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUpRight, Card, Section } from '@/components/v3';
+import { ArrowUpRight, Section } from '@/components/v3';
 import { usePlayedGames } from '@/queries/psn';
+import type { PlayedGame } from '@/pages/api/psn/games';
+import { Dialog } from '@/components/lab/dialog';
 
 const CLOUDINARY = 'https://res.cloudinary.com/sliit123/image/upload';
 
@@ -78,6 +80,30 @@ const FALLBACK_GAMES = [
 // Colour behind each cover while its image loads, cycled for fetched games.
 const TILES = FALLBACK_GAMES.map((g) => g.tile);
 
+// Covers: "45m" under an hour, then whole hours ("23h", "1,204h").
+const shortPlayTime = (minutes: number) =>
+  minutes < 60
+    ? `${minutes}m`
+    : `${Math.floor(minutes / 60).toLocaleString('en')}h`;
+
+// The dialog has room for minutes too: "43h 53m".
+const longPlayTime = (minutes: number) => {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return h ? `${h.toLocaleString('en')}h ${m}m` : `${m}m`;
+};
+
+const relative = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+const DAY = 24 * 60 * 60 * 1000;
+
+// "today", "yesterday", "5 days ago", "3 months ago"
+function playedAgo(iso: string) {
+  const days = Math.round((new Date(iso).getTime() - Date.now()) / DAY);
+  if (days > -30) return relative.format(days, 'day');
+  if (days > -365) return relative.format(Math.round(days / 30), 'month');
+  return relative.format(Math.round(days / 365), 'year');
+}
+
 // "A, B & C"
 const listNames = (names: string[]) =>
   names.length > 1
@@ -87,20 +113,34 @@ const listNames = (names: string[]) =>
 const Caption = ({
   title,
   sub,
-  arrow = true
+  arrow = true,
+  hint
 }: {
   title: string;
   sub: string;
   arrow?: boolean;
+  // Text beside the title, e.g. "View all". It sits on the title's line so
+  // the subtitle keeps the tile's full width.
+  hint?: string;
 }) => (
   <div className="flex items-end justify-between gap-3 px-2 pb-1 pt-3">
-    <div className="min-w-0">
-      <h3 className="text-sm font-medium text-[var(--fg)]">{title}</h3>
+    <div className="min-w-0 flex-1">
+      <div className="flex items-baseline justify-between gap-2">
+        <h3 className="truncate text-sm font-medium text-[var(--fg)]">
+          {title}
+        </h3>
+        {hint && (
+          <span className="flex shrink-0 items-center gap-1 text-xs text-[var(--fg-muted)] transition-colors duration-150 group-hover:text-[var(--fg)]">
+            {hint}
+            <ArrowUpRight className="transition-transform duration-150 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </span>
+        )}
+      </div>
       <p className="mt-0.5 truncate text-[13px] text-[var(--fg-muted)]">
         {sub}
       </p>
     </div>
-    {arrow && (
+    {arrow && !hint && (
       <ArrowUpRight className="mb-1 shrink-0 text-[var(--fg-muted)] transition-[transform,color] duration-150 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--fg)]" />
     )}
   </div>
@@ -327,6 +367,60 @@ const Lightbox = ({
   );
 };
 
+// Every game PSN knows I've played, most recent first.
+const GamesDialog = ({
+  games,
+  open,
+  onOpenChange
+}: {
+  games: PlayedGame[];
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) => {
+  const total = games.reduce((sum, g) => sum + (g.playMinutes ?? 0), 0);
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Games I've played"
+      description={`${games.length} games on PlayStation · ${shortPlayTime(total)} in total`}
+    >
+      {/* Only the list scrolls; the title stays put */}
+      <ul className="-mx-6 -mb-6 mt-4 min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-3">
+        {games.map((g) => (
+          <li
+            key={`${g.name}|${g.platform}`}
+            className="flex items-center gap-3 rounded-xl px-3 py-2"
+          >
+            <Image
+              src={g.icon}
+              alt=""
+              width={44}
+              height={44}
+              className="h-11 w-11 shrink-0 rounded-lg bg-[var(--card)] object-cover"
+            />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm text-[var(--fg)]">
+                {g.name}
+              </span>
+              <span className="block truncate text-xs text-[var(--fg-muted)]">
+                {[g.platform, `played ${playedAgo(g.lastPlayed)}`]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </span>
+            </span>
+            {g.playMinutes !== null && (
+              <span className="shrink-0 text-[13px] tabular-nums text-[var(--fg)]">
+                {longPlayTime(g.playMinutes)}
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Dialog>
+  );
+};
+
 const OffTheClock = () => {
   const { data: played } = usePlayedGames();
   const games = played?.length
@@ -334,9 +428,13 @@ const OffTheClock = () => {
         title: g.name,
         mark: '',
         img: g.image,
-        tile: TILES[i % TILES.length]
+        tile: TILES[i % TILES.length],
+        played: g.playMinutes ? shortPlayTime(g.playMinutes) : null
       }))
-    : FALLBACK_GAMES;
+    : FALLBACK_GAMES.map((g) => ({ ...g, played: null }));
+  // The full list only exists once PSN has answered.
+  const [gamesOpen, setGamesOpen] = useState(false);
+  const canOpenGames = !!played?.length;
   const [open, setOpen] = useState<{ photos: Photo[]; index: number } | null>(
     null
   );
@@ -368,13 +466,19 @@ const OffTheClock = () => {
           onOpen={() => setOpen({ photos: SUMMIT, index: 1 })}
         />
 
-        <Card className="group flex flex-col justify-between p-1.5">
+        <button
+          type="button"
+          disabled={!canOpenGames}
+          aria-haspopup="dialog"
+          onClick={() => setGamesOpen(true)}
+          className="group flex flex-col justify-between rounded-2xl bg-[var(--card)] p-1.5 text-left transition-[background-color,transform] duration-150 ease-out enabled:hover:bg-[var(--card-hover)] enabled:active:scale-[0.985]"
+        >
           {/* Phones: two covers fit the half-width tile; the third joins on wider screens */}
           <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-            {games.map((g, i) => (
+            {games.slice(0, 3).map((g, i) => (
               <div
                 key={g.title}
-                title={g.title}
+                title={g.played ? `${g.title} · ${g.played} played` : g.title}
                 // Covers lift one after another on hover, then settle together
                 style={{ '--d': `${i * 40}ms` } as React.CSSProperties}
                 className={`relative aspect-[3/4] items-end ${i > 1 ? 'hidden sm:flex' : 'flex'} overflow-hidden rounded-lg bg-gradient-to-br ${g.tile} p-2 transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:[transition-delay:var(--d)]`}
@@ -395,15 +499,22 @@ const OffTheClock = () => {
                   // Keep the title art (top of each cover) in the crop
                   className="object-cover object-top"
                 />
+                {g.played && (
+                  <span className="absolute bottom-1.5 left-1.5 z-10 rounded-full bg-black/60 px-1.5 py-0.5 text-[10px] font-medium tabular-nums text-white backdrop-blur-sm">
+                    {g.played}
+                    <span className="sr-only"> played</span>
+                  </span>
+                )}
               </div>
             ))}
           </div>
           <Caption
             title="Playing now"
-            sub={listNames(games.map((g) => g.title))}
+            sub={listNames(games.slice(0, 3).map((g) => g.title))}
             arrow={false}
+            hint={canOpenGames ? 'View all' : undefined}
           />
-        </Card>
+        </button>
 
         <PhotoTile
           photo={PHOTOS[0]}
@@ -421,6 +532,14 @@ const OffTheClock = () => {
           onOpen={() => setOpen({ photos: PHOTOS, index: 1 })}
         />
       </div>
+
+      {played && (
+        <GamesDialog
+          games={played}
+          open={gamesOpen}
+          onOpenChange={setGamesOpen}
+        />
+      )}
 
       <AnimatePresence>
         {open !== null && (

@@ -1,4 +1,5 @@
 import React from 'react';
+import 'lenis/dist/lenis.css';
 import '@/styles/globals.scss';
 import Layout from '@/components/layout';
 import { ThemeProvider } from 'next-themes';

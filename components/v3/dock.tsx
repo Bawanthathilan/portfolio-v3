@@ -4,6 +4,7 @@ import { Search } from '@/components/v3';
 import { BackToTop } from '@/components/lab/back-to-top';
 import { profile, sections } from '@/data/profile';
 import { cn } from '@/utils/cn';
+import { getSmoothScroll } from '@/utils/smooth-scroll';
 
 // TS 5.0's DOM types predate 'instant'; browsers support it.
 type Scroll = 'instant' | 'smooth';
@@ -86,12 +87,15 @@ const Dock = () => {
   }, []);
 
   const commands = useMemo<Command[]>(() => {
-    const go = (id: string) => (scroll: Scroll) =>
-      router.pathname === '/'
-        ? document
-            .getElementById(id)
-            ?.scrollIntoView({ behavior: scroll as ScrollBehavior })
-        : router.push(`/#${id}`);
+    const go = (id: string) => (scroll: Scroll) => {
+      if (router.pathname !== '/') return router.push(`/#${id}`);
+      const target = document.getElementById(id);
+      if (!target) return;
+      // Glide with the rest of the page's scrolling when smooth scroll is on
+      const lenis = getSmoothScroll();
+      if (lenis) lenis.scrollTo(target, { immediate: scroll === 'instant' });
+      else target.scrollIntoView({ behavior: scroll as ScrollBehavior });
+    };
     const open = (url: string) => () => window.open(url, '_blank');
     const all: Command[] = [
       ...sections.map((s) => ({

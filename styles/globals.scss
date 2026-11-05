@@ -220,6 +220,13 @@ body {
   }
 }
 
+/* ───── Smooth scroll (utils/smooth-scroll.ts) ───── */
+/* Lenis moves the page a little every frame; the browser's own smooth
+   scrolling would ease each of those steps again and make it drag. */
+html.lenis {
+  scroll-behavior: auto;
+}
+
 /* ───── Spinner (components/lab/spinner.tsx) ───── */
 /* Linear because a spinner has no start or end; any easing would read as a
    stutter once per turn. 700ms a turn is deliberately fast: a quicker spinner

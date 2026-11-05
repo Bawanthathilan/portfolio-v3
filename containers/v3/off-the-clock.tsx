@@ -7,6 +7,7 @@ import type { PlayedGame } from '@/pages/api/psn/games';
 import { Dialog } from '@/components/lab/dialog';
 import { Spinner } from '@/components/lab/spinner';
 import { cn } from '@/utils/cn';
+import { pauseSmoothScroll, resumeSmoothScroll } from '@/utils/smooth-scroll';
 
 const CLOUDINARY = 'https://res.cloudinary.com/sliit123/image/upload';
 
@@ -312,9 +313,11 @@ const Lightbox = ({
     window.addEventListener('keydown', onKey);
     const overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    pauseSmoothScroll();
     return () => {
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = overflow;
+      resumeSmoothScroll();
     };
   }, [onClose, onStep]);
 

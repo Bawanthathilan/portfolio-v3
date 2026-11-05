@@ -2,12 +2,14 @@
 // https://github.com/xevrion/ui-lab/blob/main/src/lab/components/dialog.tsx
 // Changes: just the dialog (no demo, no nested dialogs), Tailwind v3 classes
 // and the site's colour variables, a close button, and a panel that scrolls
-// its body when the content is taller than the screen.
+// its body when the content is taller than the screen, and it pauses the
+// site's smooth scrolling while open.
 import React, { useEffect, useId, useRef, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useIsPresent } from 'motion/react';
 import { useReducedMotion } from '@/utils/use-reduced-motion';
 import { cn } from '@/utils/cn';
+import { pauseSmoothScroll, resumeSmoothScroll } from '@/utils/smooth-scroll';
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const OPEN = { duration: 0.2, ease: EASE_OUT };
@@ -30,12 +32,14 @@ function lockScroll() {
     paddingRight: body.style.paddingRight
   };
   body.style.overflow = 'hidden';
+  pauseSmoothScroll();
   if (gap > 0) body.style.paddingRight = `${padding + gap}px`;
 }
 
 function unlockScroll() {
   document.body.style.overflow = savedBody.overflow;
   document.body.style.paddingRight = savedBody.paddingRight;
+  resumeSmoothScroll();
 }
 
 const subscribeNoop = () => () => {};
@@ -200,6 +204,8 @@ function Layer({
           ref={panelRef}
           role="dialog"
           aria-modal="true"
+          // The list inside scrolls natively while the page is paused
+          data-lenis-prevent
           aria-labelledby={`${id}-title`}
           aria-describedby={description ? `${id}-description` : undefined}
           tabIndex={-1}

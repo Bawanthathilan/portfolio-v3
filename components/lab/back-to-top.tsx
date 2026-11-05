@@ -3,11 +3,13 @@
 // Changes: page scroll only (no scroll-container target or external jump
 // trigger), Tailwind v3 classes and site colour variables. Press and hover
 // motion moved off the elements Motion animates, since Tailwind v3 shares
-// one `transform` that Motion's inline style would override.
+// one `transform` that Motion's inline style would override. Goes through
+// the site's smooth scroll (utils/smooth-scroll.ts) when that's running.
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion } from 'motion/react';
 import { useReducedMotion } from '@/utils/use-reduced-motion';
 import { cn } from '@/utils/cn';
+import { getSmoothScroll } from '@/utils/smooth-scroll';
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 // A gentle start that keeps accelerating, like something taking off.
@@ -78,6 +80,33 @@ export function BackToTop({
     const write = (v: number) => window.scrollTo(0, v);
     if (reduceMotion) return write(0);
     returning.current = true;
+    const duration = Math.min(0.9, 0.45 + from / 4000);
+    // With smooth scroll on, the trip goes through it, so the two never
+    // fight over the scroll position. It hands back to the wheel by itself.
+    const lenis = getSmoothScroll();
+    if (lenis) {
+      // A wheel or touch on the way takes over, so the button resets too
+      const reset = () => {
+        returning.current = false;
+        setLaunched(false);
+      };
+      window.addEventListener('wheel', reset, { once: true, passive: true });
+      window.addEventListener('touchstart', reset, {
+        once: true,
+        passive: true
+      });
+      lenis.scrollTo(0, {
+        duration,
+        easing: (t) =>
+          t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+        onComplete: () => {
+          reset();
+          window.removeEventListener('wheel', reset);
+          window.removeEventListener('touchstart', reset);
+        }
+      });
+      return;
+    }
     const stop = () => {
       trip.current?.stop();
       returning.current = false;
@@ -91,7 +120,7 @@ export function BackToTop({
     const previous = root.style.scrollBehavior;
     root.style.scrollBehavior = 'auto';
     trip.current = animate(from, 0, {
-      duration: Math.min(0.9, 0.45 + from / 4000),
+      duration,
       ease: [0.65, 0, 0.35, 1],
       onUpdate: write,
       onComplete: () => {

@@ -81,7 +81,7 @@ const Hero = () => {
           width={64}
           height={64}
           priority
-          className="h-16 w-16 rounded-full object-cover ring-1 ring-[var(--line)]"
+          className="h-16 w-16 rounded-2xl object-cover ring-1 ring-[var(--line)]"
         />
         <div>
           <h1 className="text-[26px] font-medium leading-tight tracking-[-0.02em] text-[var(--fg)]">

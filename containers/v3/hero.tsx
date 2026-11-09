@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Script from 'next/script';
 import { FaGithub, FaLinkedin, FaMedium } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import Avatar from '@/assets/images/my.webp';
@@ -62,7 +63,56 @@ const GithubThumb = ({ repos }: { repos?: number }) => (
   </span>
 );
 
+// Calera's button is drawn in its own (open) shadow root at 44px and 15px
+// text. This restyles it as one of the hero's pills, in the page's colours
+// for either theme. `:host .btn` outranks the widget's own `.btn`, so it wins
+// whichever stylesheet lands first. Its popup keeps Calera's styling.
+const CALERA_BUTTON_CSS = `
+  :host {
+    --site-fg: var(--fg);
+    --site-card: var(--card);
+    --site-card-hover: var(--card-hover);
+  }
+  :host .btn {
+    height: 32px;
+    padding: 0 16px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--site-card);
+    color: var(--site-fg);
+    transition:
+      background-color 150ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  :host .btn:hover { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) {
+    :host .btn:hover { background: var(--site-card-hover); }
+  }
+  :host .btn:active { transform: scale(0.96); }
+`;
+
+function useCaleraButtonStyle() {
+  const widget = useRef<HTMLElement>(null);
+  useEffect(() => {
+    let cancelled = false;
+    customElements.whenDefined('calera-widget').then(() => {
+      const root = widget.current?.shadowRoot;
+      if (cancelled || !root || root.querySelector('style[data-site]')) return;
+      const style = document.createElement('style');
+      style.dataset.site = '';
+      style.textContent = CALERA_BUTTON_CSS;
+      root.prepend(style);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return widget;
+}
+
 const Hero = () => {
+  const calera = useCaleraButtonStyle();
   const { data: user } = useGithubUser();
 
   const socials = [
@@ -169,6 +219,11 @@ const Hero = () => {
         >
           <Mail /> Say hi
         </Link>
+        {/* Calera booking button: the script defines <calera-widget>, which
+            draws its own button and popup. Loaded once the page is idle so
+            it never holds up the hero. */}
+        <calera-widget ref={calera} data-id="wgt_e020937da8834270" />
+        <Script src="https://www.calera.app/widget.js" strategy="lazyOnload" />
         <div className="ml-2 flex items-center gap-1">
           {socials.map(({ href, label, icon: Icon }) => (
             <Link
